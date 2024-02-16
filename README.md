@@ -9,6 +9,8 @@
   - Storage
 - Tailwindcss
 
-We implement Supabase auth on server side in this version, before enter each route supabase checks the login user on server side to redirect to desired page for better user experiences.
+## Feacures
 
-It is fairly easy to implement Supabase auth on server with Nextjs 14.
+- theme is persist on server side so when page gets refreshed we won't see a flicker/flash or a blank screen, next-themes package is applied to achieve server side render
+
+- Supabase auth is implemented on server side, before enter each route supabase checks the login user on server side to redirect to desired page for better user experiences.

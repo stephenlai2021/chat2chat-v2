@@ -3,10 +3,9 @@ import { redirect } from "next/navigation";
 
 /* supabase */
 import getUserSession from "@/lib/supabase/getUserSession";
-import createSupabaseServerClient from "@/lib/supabase/server";
 
 /* components */
-import Main from "@/temp/(dashbboard)/Main";
+import Main from "./Main";
 
 export default async function DashoardPage() {
   const {

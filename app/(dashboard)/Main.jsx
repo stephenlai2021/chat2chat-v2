@@ -21,8 +21,6 @@ function Main({ userCred }) {
 
   const [user, setUser] = useState({});
   const [selectedChatroom, setSelectedChatroom] = useState(null);
-
-  const router = useRouter();
   
   const getLoginUserData = async () => {
     const docRef = doc(firestore, "users", userCred.email);

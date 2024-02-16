@@ -68,9 +68,20 @@ export async function middleware(request) {
     }
   );
 
-  await supabase.auth.getUser();
-
-  return response;
+  /* protected route */
+  const { data } = await supabase.auth.getSession();
+	const url = new URL(request.url);
+	if (data.session) {
+		if (url.pathname === "/login" || url.pathname === "/register") {
+			return NextResponse.redirect(new URL("/", request.url));
+		}
+		return response;
+	} else {
+    if (url.pathname === "/") {
+			return NextResponse.redirect(new URL("/login", request.url));
+		}
+		return response;
+	}
 }
 
 export const config = {

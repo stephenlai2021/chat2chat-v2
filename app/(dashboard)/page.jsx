@@ -12,9 +12,9 @@ export default async function DashoardPage() {
     data: { session },
   } = await getUserSession();
 
-  if (!session) redirect("/login");
-  console.log('user credential: | dashboard server: ', session.user)
-  const userCred = session.user
+  // if (!session) redirect("/login");
+  // console.log('user credential: | dashboard server: ', session.user)
+  const userCred = session?.user
 
   return <Main userCred={userCred} />;
 }

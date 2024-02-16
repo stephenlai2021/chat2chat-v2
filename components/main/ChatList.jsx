@@ -309,7 +309,6 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
                     </a>
                   </li>
                   <li>
-                    {/* <a> */}
                     <ul className="menu bg-base-200 w-ful rounded-box">
                       <li>
                         <details>
@@ -349,7 +348,6 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
                         <a onClick={logoutClick}>Logout</a>
                       </li>
                     </ul>
-                    {/* </a> */}
                   </li>
                 </ul>
               </div>

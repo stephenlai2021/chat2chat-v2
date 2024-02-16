@@ -42,6 +42,9 @@ import { themes, languages } from "@/data/utils";
 import { toast } from "react-hot-toast";
 import { useFirebase } from "@/hooks/useFirebase";
 
+/* next-themes */
+import { useTheme } from "next-themes"
+
 /* react-icons */
 import { IoIosSend } from "react-icons/io";
 import { IoPersonAddSharp } from "react-icons/io5";
@@ -68,6 +71,8 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
   const router = useRouter();
 
   const supabase = useSupabaseClient();
+
+  const { setTheme } = useTheme()
 
   // const t = useTranslations('ChatList');
 
@@ -260,17 +265,10 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
             <div className="text-xl font-bold text-base-content pl-3">
               {activeTab == "privateChat"
                 ? "Private Chat"
-                // ? "Chatrooms"
-                // ? t('chatrooms')
                 : activeTab == "groupChat"
                 ? "Group Chat"
                 : activeTab == "add"
                 ? "Add friend"
-                // ? t('add')
-                // : activeTab == "settings"
-                // ? "Settings"
-                // : activeTab == "user"
-                // ? "Profile"
                 : ""}
             </div>
           </div>
@@ -315,7 +313,7 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
                           <summary className="">Theme</summary>
                           <ul>
                             {themes.map((theme) => (
-                              <div key={theme.label} className="form-control">
+                              <div key={theme.label} className="form-control" onClick={() => setTheme(theme.value)}>
                                 <label className="label cursor-pointer gap-4">
                                   <span className="label-text">
                                     {theme.label}

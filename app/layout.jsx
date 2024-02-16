@@ -6,6 +6,9 @@ import { Inter } from "next/font/google";
 /* utils */
 import { Toaster } from "react-hot-toast";
 
+/* daisy-ui theme */
+import DaisyUIThemeProvider from "@/providers/daisyui-theme-provider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -25,15 +28,14 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="aqua">
-      <body
-        className={`${inter.className}`}
-        suppressHydrationWarning                
-      >
-        <div className="max-w-[1200px] mx-auto bg-base-200">
-          <Toaster position="bottom-center" />
-          {children}
-        </div>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className}`}>
+        <DaisyUIThemeProvider>
+          <div className="max-w-[1200px] mx-auto bg-base-200">
+            <Toaster position="bottom-center" />
+            {children}
+          </div>
+        </DaisyUIThemeProvider>
       </body>
     </html>
   );

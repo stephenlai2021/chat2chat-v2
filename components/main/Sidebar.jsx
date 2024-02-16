@@ -13,6 +13,9 @@ import { SlSettings } from "react-icons/sl";
 import { RiUserAddLine } from "react-icons/ri";
 import { BsChatDots } from "react-icons/bs";
 
+/* next-themes */
+import { useTheme } from "next-themes";
+
 /* utils */
 import { themes, languages } from "@/data/utils";
 
@@ -22,6 +25,8 @@ export default function Sidabar({
   handleTabClick,
   logoutClick,
 }) {
+  const { setTheme } = useTheme();
+
   return (
     <div className="bg-base-30 shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
       {/* add icon */}
@@ -82,47 +87,47 @@ export default function Sidabar({
                 </a>
               </li>
               <li>
-                {/* <a> */}
-                  <ul className="menu bg-base-200 w-ful rounded-box">
-                    <li>
-                      <details>
-                        <summary className="">Theme</summary>
-                        <ul>
-                          {themes.map((theme) => (
-                            <div key={theme.label} className="form-control">
-                              <label className="label cursor-pointer gap-4">
-                                <span className="label-text">
-                                  {theme.label}
-                                </span>
-                                <input
-                                  type="radio"
-                                  name="theme-radios"
-                                  className="radio theme-controller"
-                                  value={theme.value}
-                                />
-                              </label>
-                            </div>
-                          ))}
-                        </ul>
-                      </details>
-                    </li>
-                    <li>
-                      <details>
-                        <summary>Language</summary>
-                        <ul>
-                          {languages.map((language) => (
-                            <li key={language.label}>
-                              <a>{language.value}</a>
-                            </li>
-                          ))}
-                        </ul>
-                      </details>
-                    </li>
-                    <li>
-                      <a onClick={logoutClick}>Logout</a>
-                    </li>
-                  </ul>
-                {/* </a> */}
+                <ul className="menu bg-base-200 w-ful rounded-box">
+                  <li>
+                    <details>
+                      <summary className="">Theme</summary>
+                      <ul>
+                        {themes.map((theme) => (
+                          <div
+                            key={theme.label}
+                            className="form-control"
+                            onClick={() => setTheme(theme.value)}
+                          >
+                            <label className="label cursor-pointer gap-4">
+                              <span className="label-text">{theme.label}</span>
+                              <input
+                                type="radio"
+                                name="theme-radios"
+                                className="radio theme-controller"
+                                value={theme.value}
+                              />
+                            </label>
+                          </div>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                  <li>
+                    <details>
+                      <summary>Language</summary>
+                      <ul>
+                        {languages.map((language) => (
+                          <li key={language.label}>
+                            <a>{language.value}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                  <li>
+                    <a onClick={logoutClick}>Logout</a>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>

@@ -68,7 +68,7 @@ export async function middleware(request) {
     }
   );
 
-  /* protected route */
+  /* protect routes from typing in address bar */
   const { data } = await supabase.auth.getSession();
 	const url = new URL(request.url);
 	if (data.session) {

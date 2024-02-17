@@ -62,12 +62,14 @@ function Main({ data }) {
             selectedChatroom == null ? "chatroom-hide" : "chatroom-mobile"
           } shadow-inner w-9/12 flex flex-col items-center justify-center h-full chatroom-none`}
         >
-          {/* <div className="text-2xl text-gray-400"> */}
-          <img
+          <div className="text-3xl text-base-content italic">
+            Chat2Chat
+          </div>
+          {/* <img
             src="./begin_chat.svg"
             alt="begin-chat illustration"
             className="m-5 max-w-xs"
-          />
+          /> */}
           {/* <div className="text-xl italic text-base-content">Begin chat</div> */}
           {/* <p>Begin chat</p> */}
           {/* </div> */}

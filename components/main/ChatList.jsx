@@ -551,8 +551,9 @@ function ChatList({ userData, setSelectedChatroom }) {
             userChatrooms.length === 0 &&
             !chatListLoading && (
               <div className="mt-10 px-3 flex flex-col items-center justify-center">
-                <img src="./begin_chat.svg" alt="" className="max-w-sm m-5" />
-                Woops, you have no chat list yet, please add frined to begin chat
+                <img src="./begin_chat.svg" alt="" className="max-w-[300px] m-5" />
+                {/* Woops, you have no chat list yet, please add frined to begin chat */}
+                Add frined to begin chat !
               </div>
             )}
         </div>

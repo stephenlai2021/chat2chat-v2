@@ -13,7 +13,7 @@
 //   const {
 //     data: { session },
 //   } = await getUserSession();
-  
+
 //   const userCred = session?.user
 
 //   return <Main userCred={userCred} />;
@@ -26,27 +26,34 @@ import getUserSession from "@/lib/supabase/getUserSession";
 import Main from "./Main";
 
 /* firebase */
-import { firestore } from '@/lib/firebase/client'
-import { doc, getDoc } from 'firebase/firestore'
+import { firestore } from "@/lib/firebase/client";
+import { doc, getDoc } from "firebase/firestore";
 
 export default async function DashoardPage() {
-  /* get user data */
+  /*
+    get user data and pass down to Main component(client component)
+  */
   const {
     data: { session },
-  } = await getUserSession();  
-  const userCred = session?.user  
+  } = await getUserSession();
+  const userCred = session?.user
   const docRef = doc(firestore, "users", userCred.email);
   const docSnap = await getDoc(docRef);
-  
+
   if (docSnap.exists()) {
-    // const data = docSnap.data();
-    const data = {
-      name: docSnap.data().name,
-      avatarUrl: docSnap.data().avatarUrl,
-      id: docSnap.data().id,
-      email: docSnap.data().email,
-    }
-    console.log('user data | dashboard page: ', data)
+    const data = docSnap.data();
     return <Main data={data} />;
   }
 }
+
+// export default async function DashoardPage() {
+//   /* 
+//     get user credential and pass down to Main component(client component)
+//   */
+//   const {
+//     data: { session },
+//   } = await getUserSession();
+//   const userCred = session?.user;
+  
+//   return <Main userCred={userCred} />;
+// }

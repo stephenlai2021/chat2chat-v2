@@ -6,16 +6,15 @@ function UsersCard({
   name,
   avatarUrl,
   email,
+  newMessage,
   lastMessage,
   lastMessageSentTime,
-  timeStamp,
-  status,
   found,
-  // selectedChatroom
+  
+  status,
+  timeStamp,
   otherData,
 }) {
-  // console.log('other data: ', otherData)
-
   /* 時間格式 */
   const formatTimeAgo = (timestamp) => {
     const date = timestamp?.toDate();
@@ -27,9 +26,8 @@ function UsersCard({
     <div
       className={`
       ${found == "false" ? "hover:cursor-pointer" : ""} 
-      hover:bg-base-100 px-4 w-full flex items-center justify-between rounded p-3 relative 
+      hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative 
       `}
-      // ${otherData?.email == email ? "bg-base-300" : ""}
     >
       {/* Avatar on the left */}
       <div className="flex-shrink-0 mr-4 relative">
@@ -43,11 +41,15 @@ function UsersCard({
             }
             alt="Avatar"
           />
-          <span
-            className={`absolute bottom-0 right-0 w-3 h-3 border border-2 rounded-full ${
-              status === "online" ? "bg-green-500" : "bg-gray-500"
+          {/* <span
+            className={`absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full ${
+              status ? "bg-red-500" : "bg-gray-500"
             }`}
-          ></span>
+          ></span> */}
+
+          {newMessage && (
+            <span className="bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full" />
+          )}
         </div>
       </div>
 
@@ -60,11 +62,14 @@ function UsersCard({
             {lastMessageSentTime ? formatTimeAgo(lastMessageSentTime) : ""}
           </div>
         </div>
+        
+        {/* When we add friend, if user found, render email instead of last mesage */}
         {email && !lastMessage ? (
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {email}
           </p>
         ) : (
+          // if there is last message, render it instead of email
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {lastMessage}
           </p>

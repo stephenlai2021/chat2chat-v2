@@ -63,7 +63,9 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     }
   }, [messages]);
 
-  /* get messages */
+  /* 
+    get messages 
+  */
   useEffect(() => {
     // Do not delete this line !!!
     if (!chatRoomId) return;
@@ -120,7 +122,9 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         // update last message in chatrooms collection
         const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
         await updateDoc(chatroomRef, {
-          lastMessage: message ? message : "[Image]",
+          // lastMessage: message ? message : "[Image]",
+          newMessage: true,
+          lastMessage: message ? message : "",
           lastMessageSentTime: serverTimestamp(),
         });
       } catch (error) {
@@ -184,13 +188,13 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
               <div className="w-9 h-9 rounded-full">
                 <img src={otherUser?.avatarUrl} />
               </div>
-              <span
+              {/* <span
                 className={`absolute bottom-0 right-0 w-[10px] h-[10px] border border-2 rounded-full ${
                   otherUser?.status === "online"
                     ? "bg-green-500"
                     : "bg-gray-500"
                 }`}
-              ></span>
+              /> */}
             </div>
 
             {/* user name */}

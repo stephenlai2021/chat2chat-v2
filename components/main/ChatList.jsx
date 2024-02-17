@@ -142,6 +142,7 @@ function ChatList({ userData, setSelectedChatroom }) {
     // Do not delete this line !!!
     if (!userData.id) return;
 
+    setLoading(true);
     const chatroomsQuery = query(
       collection(firestore, "chatrooms"),
       where("users", "array-contains", userData.id)
@@ -152,6 +153,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         chatrooms.push({ id: doc.id, ...doc.data() });
       });
       setUserChatrooms(chatrooms);
+      if (userChatrooms.length !== 0) setLoading(false);
       console.log("get chatrooms | chat list: ", chatrooms);
     });
     return () => unsubChatrooms();
@@ -217,11 +219,13 @@ function ChatList({ userData, setSelectedChatroom }) {
         timestamp: serverTimestamp(),
         lastMessage: null,
         lastMessageSentTime: null,
+        
+        // 這是新加的 field, 要注意既有的 chatrooms 都沒有, 所以讀取時會報錯 !!!
+        newMessage: false
       };
 
       await addDoc(collection(firestore, "chatrooms"), chatroomData);
-      setActiveTab("chatrooms");
-      // setUserByEmail("");
+      setActiveTab("privateChat");
     } catch (error) {
       console.error("Error creating or checking chatroom:", error);
     }
@@ -251,6 +255,14 @@ function ChatList({ userData, setSelectedChatroom }) {
       router.push("/login");
     }
   };
+
+  /* handle chatroom list loading time */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   return (
     <div className="flex h-full">
@@ -408,8 +420,8 @@ function ChatList({ userData, setSelectedChatroom }) {
                         name={user.name}
                         avatarUrl={user.avatarUrl}
                         email={user.email}
-                        status={user.status}
-                        lastMessage={user.lastMessage}
+                        // status={user.status}
+                        // lastMessage={user.lastMessage}
                         found={"true"}
                       />
                       <IoPersonAddSharp
@@ -421,7 +433,8 @@ function ChatList({ userData, setSelectedChatroom }) {
               </div>
             </>
           )}
-          {activeTab === "privateChat" && userChatrooms.length !== 0 && (
+          {/* {activeTab === "privateChat" && userChatrooms.length !== 0 && ( */}
+          {activeTab === "privateChat" && !loading && (
             <>
               {userChatrooms.map((chatroom) => (
                 <div
@@ -446,24 +459,27 @@ function ChatList({ userData, setSelectedChatroom }) {
                       chatroom.usersData[
                         chatroom.users.find((id) => id !== userData?.id)
                       ].email
-                    }
-                    status={
-                      chatroom.usersData[
-                        chatroom.users.find((id) => id !== userData?.id)
-                      ].status
-                    }
+                    }                    
+                    newMessage={chatroom.newMessage}
                     lastMessage={chatroom.lastMessage}
                     lastMessageSentTime={chatroom.lastMessageSentTime}
-                    timeStamp={chatroom.timestamp}
                     loginUser={userData}
                     found={"false"}
                     otherData={otherData}
+
+                    // status={
+                    //   chatroom.usersData[
+                    //     chatroom.users.find((id) => id !== userData?.id)
+                    //   ].status
+                    // }
+                    // timeStamp={chatroom.timestamp}
                   />
                 </div>
               ))}
             </>
           )}
-          {activeTab === "privateChat" && userChatrooms.length === 0 && (
+          {/* {activeTab === "privateChat" && userChatrooms.length === 0 && ( */}
+          {activeTab === "privateChat" && loading && (
             <>
               {"abcd".split("").map((i) => (
                 <UsersCardSkeleton key={i} />

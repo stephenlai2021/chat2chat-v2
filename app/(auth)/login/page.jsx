@@ -44,11 +44,11 @@ function Main() {
     const newErrors = {};
     if (!email.trim() || !emailRegex.test(email)) {
       newErrors.email = "Invalid email address";
-      setLoading(false)
+      setLoading(false);
     }
     if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
-      setLoading(false)
+      setLoading(false);
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
@@ -87,12 +87,14 @@ function Main() {
       if (error) {
         console.log(error);
         toast.error(`${error.message}: either email or password is wrong !`);
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
-      if (data?.user === null) return
+      if (data?.user === null) return;
 
-      /* set user status is optional, because it cost too much ! */
+      /* 
+        set user status is optional, because it cost too much ! 
+      */
       // const user = data?.user;
       // setUserStatusOnline(user);
 
@@ -105,16 +107,19 @@ function Main() {
   // }, [loading])
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen font-primary px-8 m-2">
+    <div className="flex flex-col justify-center items-center h-screen font-primary px-8">
+      {/* Login Form  */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 w-full max-w-[600px] shadow-l pt-10 pl-10 pr-10 form-padding"
+        className="space-y-4 w-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         <h1 className="font-secondary text-xl text-center font-semibold text-base-content">
           CHAT<span className="font-bold text-[#eeab63ff]">2</span>CHAT
         </h1>
+
+        {/* Email */}
         <div>
-          <label className="label">
+          <label className="labe">
             <span className="text-base label-text">Email</span>
           </label>
           <input
@@ -126,8 +131,10 @@ function Main() {
           />
           {errors.email && <span className="text-red-500">{errors.email}</span>}
         </div>
+
+        {/* Password */}
         <div>
-          <label className="label">
+          <label className="labe">
             <span className="text-base label-text">Password</span>
           </label>
           <input
@@ -141,8 +148,10 @@ function Main() {
             <span className="text-red-500">{errors.password}</span>
           )}
         </div>
+
+        {/* Signin Button */}
         <div>
-          <button type="submit" className="btn btn-block btn-accent">
+          <button type="submit" className="btn btn-block btn-accent text-accent-content rounded-xl">
             {loading ? (
               <span className="loading loading-spinner loading-sm text-accent-content"></span>
             ) : (
@@ -150,6 +159,7 @@ function Main() {
             )}
           </button>
         </div>
+
         <span className="text-base-content">
           Don't have an account?{" "}
           <Link href="/register" className="text-base-content hover:underline">
@@ -158,9 +168,10 @@ function Main() {
         </span>
       </form>
 
+      {/* Signin with Google Button   */}
       <div className="max-w-[600px] w-full px-10 form-padding">
         <div className="divider divider-base-300 text-base-content">OR</div>
-        <button className="btn bg-red-400 w-full" onClick={() => signIn()}>
+        <button className="btn bg-info text-info-content w-full rounded-xl" onClick={() => signIn()}>
           <FcGoogle className="w-[20px] h-[20px]" />
           Sign in with Google
         </button>

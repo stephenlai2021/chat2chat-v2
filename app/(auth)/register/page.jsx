@@ -20,11 +20,7 @@ import {
   getRedirectResult,
   signInWithRedirect,
 } from "firebase/auth";
-import {
-  doc,
-  setDoc,
-  serverTimestamp
-} from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 function Main() {
   const [name, setName] = useState("");
@@ -66,7 +62,8 @@ function Main() {
       console.error("No file selected.");
       return;
     }
-    const storageRef = ref(storage, `images/${file.name}`);
+    // const storageRef = ref(storage, `images/${file.name}`);
+    const storageRef = ref(storage, `${name}/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -111,15 +108,19 @@ function Main() {
     const newErrors = {};
     if (!name.trim()) {
       newErrors.name = "Name is required";
+      setLoading(false);
     }
     if (!email.trim() || !emailRegex.test(email)) {
       newErrors.email = "Invalid email address";
+      setLoading(false);
     }
     if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+      setLoading(false);
     }
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
+      setLoading(false);
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
@@ -129,54 +130,81 @@ function Main() {
     evt.preventDefault();
     setLoading(true);
 
-    try {
-      if (validateForm()) {
-        const { data, error  } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: "http://localhost:3000" }
-        });
-        if (data) console.log('signup | data: ', data?.user)
-        if (error) {
-          console.log('signup | error: ', error)
-          return
-        }
+    // try {
+    //   if (validateForm()) {
+    //     const { data, error  } = await supabase.auth.signUp({
+    //       email,
+    //       password,
+    //       options: { emailRedirectTo: "http://localhost:3000" }
+    //     });
+    //     if (data) console.log('signup | data: ', data?.user)
+    //     if (error) {
+    //       console.log('signup | error: ', error)
+    //       return
+    //     }
 
-        /* create user data with firestore */
-        const docRef = doc(firestore, "users", email);
-        await setDoc(docRef, {
-          id: data?.user?.id,
-          name,
-          email,
-          avatarUrl,
-          status: "online",
-          createdAt: serverTimestamp(),
-        });
-        console.log('You are online')            
+    //     /* create user data with firestore */
+    //     const docRef = doc(firestore, "users", email);
+    //     await setDoc(docRef, {
+    //       id: data?.user?.id,
+    //       name,
+    //       email,
+    //       avatarUrl,
+    //     });
+    //     console.log('You are online')
 
-        router.push("/");
-        setErrors({});
+    //     router.push("/");
+    //     setErrors({});
+    //   }
+    // } catch (error) {
+    //   console.error("Error registering user:", error.message);
+    //   toast.error(error.message);
+    //   setErrors({});
+    // }
+    // setLoading(false);
+
+    if (validateForm()) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        // options: { emailRedirectTo: "http://localhost:3000/confirm" },
+        options: { emailRedirectTo: "http://localhost:3000" },
+      });
+
+      if (error) {
+        console.log("signup error: ", error);
+        toast.error(error.message);
+        setLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error("Error registering user:", error.message);
-      toast.error(error.message);
-      setErrors({});
+
+      if (data?.user === null) return;
+
+      const docRef = doc(firestore, "users", email);
+      await setDoc(docRef, {
+        id: data?.user?.id,
+        name,
+        email,
+        avatarUrl,
+      });
+      console.log("user data created !");
+      router.push("/");
     }
-    setLoading(false);
   };
+
   return (
-    <div className="flex justify-center items-center h-screen font-primary p-8 m-2">
+    <div className="flex justify-center items-center h-screen font-primary px-8">
       {/*form*/}
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 w-full max-w-2xl shadow-lg p-10 form-padding"
+        className="space-y-4 w-full h-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         <h1 className="font-secondary text-xl text-center font-semibold text-base-content">
           CHAT<span className="font-bold text-[#eeab63ff]">2</span>CHAT
         </h1>
 
         {/* Display the avatar and upload button */}
-        {/* <div className="flex items-center space-y-2 justify-between p-2">
+        <div className="flex items-center space-y-2 justify-between p-2">
           <img
             src={avatarUrl ? avatarUrl : "./avatar.png"}
             alt="Avatar"
@@ -189,44 +217,47 @@ function Main() {
           >
             Upload Image
           </button>
-        </div> */}
+        </div>
 
+        {/* Name */}
         <div>
-          <label className="label">
+          <label>
             <span className="text-base label-text">Name</span>
           </label>
           <input
             type="text"
             placeholder="Name"
-            className="w-full input input-bordered pl-1 text-base"
+            className="w-full input input-bordered rounded-md text-base-content pl-2"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           {errors.name && <span className="text-red-500">{errors.name}</span>}
         </div>
 
+        {/* Email */}
         <div>
-          <label className="label">
+          <label>
             <span className="text-base label-text">Email</span>
           </label>
           <input
             type="text"
             placeholder="Email"
-            className="w-full input input-bordered pl-1 text-base"
+            className="w-full input input-bordered rounded-md text-base-content pl-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && <span className="text-red-500">{errors.email}</span>}
         </div>
 
+        {/* Password */}
         <div>
-          <label className="label">
+          <label>
             <span className="text-base label-text">Password</span>
           </label>
           <input
             type="password"
             placeholder="Enter Password"
-            className="w-full input input-bordered pl-1 text-base"
+            className="w-full input input-bordered rounded-md text-base-content pl-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -235,14 +266,15 @@ function Main() {
           )}
         </div>
 
+        {/* Confirm Password */}
         <div>
-          <label className="label">
+          <label>
             <span className="text-base label-text">Confirm Password</span>
           </label>
           <input
             type="password"
             placeholder="Confirm Password"
-            className="w-full input input-bordered pl-1 text-base"
+            className="w-full input input-bordered rounded-md text-base-content pl-2"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
@@ -270,7 +302,7 @@ function Main() {
       </form>
 
       {/* image preview modal */}
-      {/* <dialog id="dashboard" className="modal">
+      <dialog id="dashboard" className="modal">
         <div className="modal-box relative">
           <form method="dialog" className="flex justify-center">
             {imagePreview && (
@@ -310,7 +342,7 @@ function Main() {
             ✕
           </button>
         </div>
-      </dialog> */}
+      </dialog>
     </div>
   );
 }

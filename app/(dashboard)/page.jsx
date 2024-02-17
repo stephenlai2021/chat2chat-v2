@@ -39,7 +39,13 @@ export default async function DashoardPage() {
   const docSnap = await getDoc(docRef);
   
   if (docSnap.exists()) {
-    const data = docSnap.data();
+    // const data = docSnap.data();
+    const data = {
+      name: docSnap.data().name,
+      avatarUrl: docSnap.data().avatarUrl,
+      id: docSnap.data().id,
+      email: docSnap.data().email,
+    }
     console.log('user data | dashboard page: ', data)
     return <Main data={data} />;
   }

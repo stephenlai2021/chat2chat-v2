@@ -550,9 +550,9 @@ function ChatList({ userData, setSelectedChatroom }) {
           {activeTab === "privateChat" &&
             userChatrooms.length === 0 &&
             !chatListLoading && (
-              <div className="mt-10 px-3 flex items-center justify-center">
-                <img src="./add-friends.svg" alt="add-friend illustrations" />
-                You have no chat list yet, please add frined to chat
+              <div className="mt-10 px-3 flex flex-col items-center justify-center">
+                <img src="./begin_chat.svg" alt="" className="max-w-sm m-5" />
+                Woops, you have no chat list yet, please add frined to begin chat
               </div>
             )}
         </div>

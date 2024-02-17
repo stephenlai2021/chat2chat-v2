@@ -32,10 +32,12 @@ import Sidebar from "./Sidebar";
 import BottomNavbar from "./BottomNavbar";
 import MainNavbar from "./Navbar";
 import UsersCardSkeleton from "../skeleton/UsersCardSkeleton";
+import AddFriendModal from "../modal/AddFriendModal";
+import CreateGroupModal from "../modal/CreateGroupModal";
 // import LoadingSkeleton from "@/components/skeleton/LoadingSkeleton";
 
 /* next-intl */
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 /* utils */
 import { themes, languages } from "@/data/utils";
@@ -43,7 +45,7 @@ import { toast } from "react-hot-toast";
 import { useFirebase } from "@/hooks/useFirebase";
 
 /* next-themes */
-import { useTheme } from "next-themes"
+import { useTheme } from "next-themes";
 
 /* react-icons */
 import { IoIosSend } from "react-icons/io";
@@ -64,15 +66,13 @@ function ChatList({ userData, setSelectedChatroom }) {
   const [userInfo, setUserInfo] = useState("");
   const [foundUsers, setFoundUsers] = useState("");
   const [loading, setLoading] = useState(false);
-  const [otherData, setOtherData] = useState({})
+  const [createChatLoading, setCreateChatLoading] = useState(false);
+  const [chatListLoading, setChatListLoading] = useState(true);
+  const [otherData, setOtherData] = useState({});
 
+  const { setTheme } = useTheme();
   const router = useRouter();
-
   const supabase = useSupabaseClient();
-
-  const { setTheme } = useTheme()
-
-  // const t = useTranslations('ChatList');
 
   const handleTabClick = (tab) => setActiveTab(tab);
 
@@ -112,9 +112,11 @@ function ChatList({ userData, setSelectedChatroom }) {
     setFoundUsers("");
   };
 
+  const openGreateGroupModal = () => {};
+
   /* reset user info if switch to chatrooms menu */
   useEffect(() => {
-    if (activeTab == "chatrooms") {
+    if (activeTab == "privateChat") {
       setUserInfo("");
       setFoundUsers("");
     }
@@ -142,7 +144,7 @@ function ChatList({ userData, setSelectedChatroom }) {
     // Do not delete this line !!!
     if (!userData.id) return;
 
-    setLoading(true);
+    // setChatListLoading(true);
     const chatroomsQuery = query(
       collection(firestore, "chatrooms"),
       where("users", "array-contains", userData.id)
@@ -153,8 +155,8 @@ function ChatList({ userData, setSelectedChatroom }) {
         chatrooms.push({ id: doc.id, ...doc.data() });
       });
       setUserChatrooms(chatrooms);
-      if (userChatrooms.length !== 0) setLoading(false);
-      console.log("get chatrooms | chat list: ", chatrooms);
+      if (chatrooms.length !== 0) setChatListLoading(false);
+      console.log("get chatrooms: ", chatrooms);
     });
     return () => unsubChatrooms();
   }, [userData]);
@@ -190,6 +192,8 @@ function ChatList({ userData, setSelectedChatroom }) {
       return;
     }
 
+    setCreateChatLoading(true);
+
     // 檢查聊天室是否存在
     const existingChatroomsQuery = query(
       collection(firestore, "chatrooms"),
@@ -205,6 +209,7 @@ function ChatList({ userData, setSelectedChatroom }) {
       if (existingChatroomsSnapshot.docs.length > 0) {
         console.log(`chatroom for ${user.name} is already existed`);
         toast(`${user.name} is already in your chat list`, { icon: "😎" });
+        setCreateChatLoading(false);
         return;
       }
 
@@ -219,13 +224,15 @@ function ChatList({ userData, setSelectedChatroom }) {
         timestamp: serverTimestamp(),
         lastMessage: null,
         lastMessageSentTime: null,
-        
-        // 這是新加的 field, 要注意既有的 chatrooms 都沒有, 所以讀取時會報錯 !!!
-        newMessage: false
+
+        // 以下是是新加的 field, 要注意既有的 chatrooms 都沒有, 所以讀取時會報錯 !!!
+        newMessage: false,
+        lastImage: null,
       };
 
       await addDoc(collection(firestore, "chatrooms"), chatroomData);
       setActiveTab("privateChat");
+      setCreateChatLoading(false);
     } catch (error) {
       console.error("Error creating or checking chatroom:", error);
     }
@@ -239,9 +246,9 @@ function ChatList({ userData, setSelectedChatroom }) {
         chatroom.usersData[chatroom.users.find((id) => id !== userData.id)],
     };
     setSelectedChatroom(data);
-    
-    const tempData = data.otherData
-    setOtherData(tempData)
+
+    const tempData = data.otherData;
+    setOtherData(tempData);
   };
 
   const logoutClick = async () => {
@@ -256,13 +263,12 @@ function ChatList({ userData, setSelectedChatroom }) {
     }
   };
 
-  /* handle chatroom list loading time */
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false);
+      setChatListLoading(false);
     }, 5000);
     return () => clearTimeout(timer);
-  }, [loading]);
+  }, []);
 
   return (
     <div className="flex h-full">
@@ -276,6 +282,7 @@ function ChatList({ userData, setSelectedChatroom }) {
       <div className="shadow-inner h-screen flex flex-col w-[300px] min-w-[200px] users-mobile">
         {/* Navbar */}
         <div className="navbar h-[60px] bg-base-30">
+          {/* Tab title on the left side */}
           <div className="flex-1">
             <div className="text-xl font-bold text-base-content pl-3">
               {activeTab == "privateChat"
@@ -288,8 +295,8 @@ function ChatList({ userData, setSelectedChatroom }) {
             </div>
           </div>
 
+          {/* Avatar icon on the right side */}
           <div className="flex-none hidden navbar-show">
-            {/* avatar icon */}
             <div className="drawer z-[200]">
               <input
                 id="navbar-drawer-settings"
@@ -318,17 +325,52 @@ function ChatList({ userData, setSelectedChatroom }) {
                         name={userData.name}
                         email={userData.email}
                         avatarUrl={userData.avatarUrl}
+                        found={true}
                       />
                     </a>
                   </li>
+                  {/* Menu list */}
                   <li>
                     <ul className="menu bg-base-200 w-ful rounded-box">
+                      <div className="divider" />
+                      {/* Add friend */}
+                      <li>
+                        <a
+                          onClick={() =>
+                            document
+                              .getElementById("add-friend-modal")
+                              .showModal()
+                          }
+                        >
+                          Add friend
+                        </a>
+                      </li>
+
+                      {/* Create group */}
+                      <li>
+                        <a
+                          onClick={() =>
+                            document
+                              .getElementById("create-group-modal")
+                              .showModal()
+                          }
+                        >
+                          Create Group
+                        </a>
+                      </li>
+                      <div className="divider" />
+
+                      {/* Theme */}
                       <li>
                         <details>
                           <summary className="">Theme</summary>
                           <ul>
                             {themes.map((theme) => (
-                              <div key={theme.label} className="form-control" onClick={() => setTheme(theme.value)}>
+                              <div
+                                key={theme.label}
+                                className="form-control"
+                                onClick={() => setTheme(theme.value)}
+                              >
                                 <label className="label cursor-pointer gap-4">
                                   <span className="label-text">
                                     {theme.label}
@@ -345,6 +387,8 @@ function ChatList({ userData, setSelectedChatroom }) {
                           </ul>
                         </details>
                       </li>
+
+                      {/* Language */}
                       <li>
                         <details>
                           <summary>Language</summary>
@@ -357,6 +401,9 @@ function ChatList({ userData, setSelectedChatroom }) {
                           </ul>
                         </details>
                       </li>
+                      <div className="divider" />
+
+                      {/* Logout */}
                       <li>
                         <a onClick={logoutClick}>Logout</a>
                       </li>
@@ -420,23 +467,31 @@ function ChatList({ userData, setSelectedChatroom }) {
                         name={user.name}
                         avatarUrl={user.avatarUrl}
                         email={user.email}
+                        lastMessage={user.lastMessage}
+                        found={true}
                         // status={user.status}
-                        // lastMessage={user.lastMessage}
-                        found={"true"}
                       />
-                      <IoPersonAddSharp
-                        className="w-5 h-5 text-base-content absolute right-5 top-4 hover:cursor-pointer"
-                        onClick={() => createChat(user)}
-                      />
+                      {createChatLoading ? (
+                        <span className="loading loading-spinner loading-sm text-base-content absolute right-5 top-[50%] translate-y-[-50%]"></span>
+                      ) : (
+                        <IoPersonAddSharp
+                          className="w-5 h-5 text-base-content absolute right-5 top-[50%] translate-y-[-50%] hover:cursor-pointer"
+                          onClick={() => createChat(user)}
+                        />
+                      )}
                     </div>
                   ))}
               </div>
             </>
           )}
-          {/* {activeTab === "privateChat" && userChatrooms.length !== 0 && ( */}
-          {activeTab === "privateChat" && !loading && (
+
+          {/*
+            1. 如果讀取到聊天室資料, 停止加載, 並立即渲染聊天室UI
+            2. 過了 5 秒後加載圖標會自動停止, 如果有讀取到聊天室資料, 渲染聊天室UI, 反之不做任何渲染 
+          */}
+          {activeTab === "privateChat" && !chatListLoading && (
             <>
-              {userChatrooms.map((chatroom) => (
+              {userChatrooms?.map((chatroom) => (
                 <div
                   key={chatroom.id}
                   onClick={() => {
@@ -459,12 +514,13 @@ function ChatList({ userData, setSelectedChatroom }) {
                       chatroom.usersData[
                         chatroom.users.find((id) => id !== userData?.id)
                       ].email
-                    }                    
+                    }
                     newMessage={chatroom.newMessage}
+                    lastImage={chatroom.lastImage}
                     lastMessage={chatroom.lastMessage}
                     lastMessageSentTime={chatroom.lastMessageSentTime}
                     loginUser={userData}
-                    found={"false"}
+                    found={false}
                     otherData={otherData}
 
                     // status={
@@ -478,14 +534,27 @@ function ChatList({ userData, setSelectedChatroom }) {
               ))}
             </>
           )}
-          {/* {activeTab === "privateChat" && userChatrooms.length === 0 && ( */}
-          {activeTab === "privateChat" && loading && (
+
+          {/* 組件載入後立刻顯示加載圖示 */}
+          {activeTab === "privateChat" && chatListLoading && (
             <>
               {"abcd".split("").map((i) => (
                 <UsersCardSkeleton key={i} />
               ))}
             </>
           )}
+
+          {/* 
+            經過 5 秒後停止加載圖標, 如果讀到的聊天室資料是空的, 印出 "您還沒有任何聊天室, 請加朋友聊天"
+          */}
+          {activeTab === "privateChat" &&
+            userChatrooms.length === 0 &&
+            !chatListLoading && (
+              <div className="mt-10 px-3 flex items-center justify-center">
+                <img src="./add-friends.svg" alt="add-friend illustrations" />
+                You have no chat list yet, please add frined to chat
+              </div>
+            )}
         </div>
 
         <BottomNavbar
@@ -494,6 +563,35 @@ function ChatList({ userData, setSelectedChatroom }) {
           handleTabClick={handleTabClick}
         />
       </div>
+
+      {/* <AddFriendModal id="addFriendModal" />
+      <CreateGroupModal id="createGroupModal" /> */}
+
+      {/* add-friend-modal */}
+      <dialog id="add-friend-modal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">Hello!</h3>
+          <p className="py-4">Press ESC key or click on ✕ button to close</p>
+        </div>
+      </dialog>
+
+      {/* create-group-modal */}
+      <dialog id="create-group-modal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">Hello!</h3>
+          <p className="py-4">Press ESC key or click on ✕ button to close</p>
+        </div>
+      </dialog>
     </div>
   );
 }

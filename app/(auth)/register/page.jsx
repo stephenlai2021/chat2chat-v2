@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 
 /* next */
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 /* utils */
@@ -14,13 +15,23 @@ import { toast } from "react-hot-toast";
 import useSupabaseClient from "@/lib/supabase/client";
 
 /* firebase */
-import { auth, googleAuthProvider, firestore } from "@/lib/firebase/client";
+import {
+  auth,
+  googleAuthProvider,
+  firestore,
+  storage,
+} from "@/lib/firebase/client";
 import {
   signInWithEmailAndPassword,
   getRedirectResult,
   signInWithRedirect,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+/* react-icons */
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 function Main() {
   const [name, setName] = useState("");
@@ -31,8 +42,10 @@ function Main() {
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [showUploadBtn, setShowUploadBtn] = useState(false);
+  const [confirm, setConfirm] = useState(false);
 
   const router = useRouter();
   const inputFile = useRef(null);
@@ -53,6 +66,7 @@ function Main() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
+      setShowUploadBtn(true);
     };
     reader.readAsDataURL(selectedFile);
   };
@@ -62,8 +76,9 @@ function Main() {
       console.error("No file selected.");
       return;
     }
-    // const storageRef = ref(storage, `images/${file.name}`);
-    const storageRef = ref(storage, `${name}/${file.name}`);
+    setShowUploadBtn(false);
+
+    const storageRef = ref(storage, `${name}/avatar/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -188,9 +203,16 @@ function Main() {
         avatarUrl,
       });
       console.log("user data created !");
-      router.push("/");
+      setConfirm(true)
+      // router.push("/");
     }
   };
+
+  if (confirm) return (<>
+    <div className="h-screen flex items-center justify-center">
+      Please check your email box to confirm your signup
+    </div>
+  </>)
 
   return (
     <div className="flex justify-center items-center h-screen font-primary px-8">
@@ -302,7 +324,7 @@ function Main() {
       </form>
 
       {/* image preview modal */}
-      <dialog id="dashboard" className="modal">
+      {/* <dialog id="dashboard" className="modal">
         <div className="modal-box relative">
           <form method="dialog" className="flex justify-center">
             {imagePreview && (
@@ -341,6 +363,66 @@ function Main() {
           >
             ✕
           </button>
+        </div>
+      </dialog> */}
+
+      <dialog id="dashboard" className="modal">
+        <div className="modal-box">
+          {/* close button */}
+          <button
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={closeAndClearModal}
+          >
+            ✕
+          </button>
+
+          <div className="pt-2 relative flex flex-col justify-center items-center">
+            {/* image preview section */}
+            {imagePreview && (
+              <div className="relative">
+                <div className="flex justify-center relative">
+                  {/* upload icon */}
+                  {showUploadBtn && (
+                    <div className="backdrop-opacity-30 backdrop-invert bg-base-100/30 rounded-full p-1 w-16 h-16 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hover:cursor-pointer">
+                      <AiOutlineCloudUpload
+                        className="text-base-content w-full h-full"
+                        onClick={handleUpload}
+                      />
+                    </div>
+                  )}
+
+                  {/* image preview */}
+                  <Image
+                    src={imagePreview}
+                    alt="Uploaded"
+                    width={200}
+                    height={200}
+                    className="mb-4 rounded"
+                  />
+
+                  {/* radial progress */}
+                  {uploadProgress !== null && (
+                    <div
+                      className="w-16 h-16 backdrop-opacity-30 backdrop-invert bg-base-100/30 radial-progress text-base-content absolute z-[500] top-[50%] translate-y-[-50%]"
+                      style={{ "--value": uploadProgress }}
+                      role="progressbar"
+                    >
+                      {uploadProgress.toFixed(0)}%
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* file input section */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={inputFile}
+              className="mt-2 file-input file-input-bordered file-input-primary text-base-content w-full max-w-xs"
+              onChange={handleFileChange}
+            />
+          </div>
         </div>
       </dialog>
     </div>

@@ -29,10 +29,10 @@ import Main from "./Main";
 import { firestore } from "@/lib/firebase/client";
 import { doc, getDoc } from "firebase/firestore";
 
+/*
+  get user data and pass down to Main component(client component)
+*/
 export default async function DashoardPage() {
-  /*
-    get user data and pass down to Main component(client component)
-  */
   const {
     data: { session },
   } = await getUserSession();
@@ -46,10 +46,10 @@ export default async function DashoardPage() {
   }
 }
 
+/* 
+  get user credential and pass down to Main component(client component)
+*/
 // export default async function DashoardPage() {
-//   /* 
-//     get user credential and pass down to Main component(client component)
-//   */
 //   const {
 //     data: { session },
 //   } = await getUserSession();

@@ -1,15 +1,10 @@
 /* components */
 import UsersCard from "./UsersCard";
+import AddFriendModal from "../modal/AddFriendModal";
+import CreateGroupModal from "../modal/CreateGroupModal";
 
 /* react-icons */
-import { IoMdChatboxes } from "react-icons/io";
-import { IoPersonAddSharp } from "react-icons/io5";
-import { IoSettingsSharp } from "react-icons/io5";
-import { IoMdAdd } from "react-icons/io";
 import { RxAvatar } from "react-icons/rx";
-import { FiUserPlus } from "react-icons/fi";
-import { RiUserSearchFill } from "react-icons/ri";
-import { SlSettings } from "react-icons/sl";
 import { RiUserAddLine } from "react-icons/ri";
 import { BsChatDots } from "react-icons/bs";
 
@@ -19,17 +14,20 @@ import { useTheme } from "next-themes";
 /* utils */
 import { themes, languages } from "@/data/utils";
 
+/* react */
+import { useState } from "react";
+
 export default function Sidabar({
   userData,
   activeTab,
   handleTabClick,
   logoutClick,
-}) {
+}) {;
   const { setTheme } = useTheme();
 
   return (
     <div className="bg-base-30 shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
-      {/* add icon */}
+      {/* Add friend icon */}
       <div
         className={`${
           activeTab == "add" ? "menu-active border-base-content" : ""
@@ -41,7 +39,7 @@ export default function Sidabar({
         />
       </div>
 
-      {/* chatroom icon */}
+      {/* Chat icon */}
       <div
         className={`${
           activeTab == "privateChat" ? "menu-active border-base-content" : ""
@@ -53,7 +51,7 @@ export default function Sidabar({
         />
       </div>
 
-      {/* bottom icon */}
+      {/* Avatar icon in the bottom */}
       <div className="mt-auto mb-3">
         <div className="drawer z-[100]">
           <input
@@ -83,11 +81,25 @@ export default function Sidabar({
                     name={userData.name}
                     email={userData.email}
                     avatarUrl={userData.avatarUrl}
+                    found={true}
                   />
                 </a>
               </li>
               <li>
                 <ul className="menu bg-base-200 w-ful rounded-box">
+                  <div className="divider" />
+                  {/* Add friend */}
+                  <li>
+                    <a onClick={()=>document.getElementById('addFriendModal').showModal()}>Add friend</a>
+                  </li>
+
+                  {/* Create group */}
+                  <li>
+                  <a onClick={()=>document.getElementById('createGroupModal').showModal()}>Create Group</a>
+                  </li>
+                  <div className="divider" />
+
+                  {/* Theme */}
                   <li>
                     <details>
                       <summary className="">Theme</summary>
@@ -112,6 +124,8 @@ export default function Sidabar({
                       </ul>
                     </details>
                   </li>
+
+                  {/* Language */}
                   <li>
                     <details>
                       <summary>Language</summary>
@@ -124,6 +138,9 @@ export default function Sidabar({
                       </ul>
                     </details>
                   </li>
+                  <div className="divider" />
+
+                  {/* Logout Button */}
                   <li>
                     <a onClick={logoutClick}>Logout</a>
                   </li>
@@ -133,6 +150,9 @@ export default function Sidabar({
           </div>
         </div>
       </div>
+
+      <AddFriendModal id="addFriendModal" />
+      <CreateGroupModal id="createGroupModal" />
     </div>
   );
 }

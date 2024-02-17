@@ -85,11 +85,12 @@ function Main() {
       });
 
       if (error) {
-        console.log(error);
+        console.log("login error", error);
         toast.error(`${error.message}: either email or password is wrong !`);
         setLoading(false);
         return;
       }
+
       if (data?.user === null) return;
 
       /* 
@@ -113,6 +114,7 @@ function Main() {
         onSubmit={handleSubmit}
         className="space-y-4 w-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
+        {/* Title */}
         <h1 className="font-secondary text-xl text-center font-semibold text-base-content">
           CHAT<span className="font-bold text-[#eeab63ff]">2</span>CHAT
         </h1>
@@ -151,7 +153,10 @@ function Main() {
 
         {/* Signin Button */}
         <div>
-          <button type="submit" className="btn btn-block btn-accent text-accent-content rounded-xl">
+          <button
+            type="submit"
+            className="btn btn-block btn-accent text-accent-content rounded-xl"
+          >
             {loading ? (
               <span className="loading loading-spinner loading-sm text-accent-content"></span>
             ) : (
@@ -171,7 +176,10 @@ function Main() {
       {/* Signin with Google Button   */}
       <div className="max-w-[600px] w-full px-10 form-padding">
         <div className="divider divider-base-300 text-base-content">OR</div>
-        <button className="btn bg-info text-info-content w-full rounded-xl" onClick={() => signIn()}>
+        <button
+          className="btn bg-info text-info-content w-full rounded-xl"
+          onClick={() => signIn()}
+        >
           <FcGoogle className="w-[20px] h-[20px]" />
           Sign in with Google
         </button>

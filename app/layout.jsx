@@ -2,6 +2,7 @@ import "./globals.css";
 
 /* next */
 import { Inter } from "next/font/google";
+// import { Lateef } from "next/font/google";
 
 /* utils */
 import { Toaster } from "react-hot-toast";
@@ -10,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import DaisyUIThemeProvider from "@/providers/daisyui-theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
+// const inter = Lateef({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Chat2Chat",

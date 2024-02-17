@@ -1,16 +1,21 @@
 "use client";
 
+/* utils */
 import moment from "moment";
+
+/* react-icons */
+import { IoImageOutline } from "react-icons/io5";
 
 function UsersCard({
   name,
   avatarUrl,
   email,
   newMessage,
+  lastImage,
   lastMessage,
   lastMessageSentTime,
   found,
-  
+
   status,
   timeStamp,
   otherData,
@@ -25,12 +30,12 @@ function UsersCard({
   return (
     <div
       className={`
-      ${found == "false" ? "hover:cursor-pointer" : ""} 
+      ${!found ? "hover:cursor-pointer" : ""} 
       hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative 
       `}
     >
-      {/* Avatar on the left */}
       <div className="flex-shrink-0 mr-4 relative">
+        {/* Render avatar && new-message-indicator */}
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <img
             className="w-full h-full object-cover"
@@ -41,11 +46,6 @@ function UsersCard({
             }
             alt="Avatar"
           />
-          {/* <span
-            className={`absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full ${
-              status ? "bg-red-500" : "bg-gray-500"
-            }`}
-          ></span> */}
 
           {newMessage && (
             <span className="bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full" />
@@ -53,6 +53,7 @@ function UsersCard({
         </div>
       </div>
 
+      {/* Render name and last-message-sent-time */}
       <div className="flex-1">
         <div className="flex items-center justify-between text-desktop text-phone border-1 border-green-30">
           <h2 className="border-1 border-blue-30 text-md font-semibold truncate text-base-content">
@@ -62,17 +63,36 @@ function UsersCard({
             {lastMessageSentTime ? formatTimeAgo(lastMessageSentTime) : ""}
           </div>
         </div>
-        
+
         {/* When we add friend, if user found, render email instead of last mesage */}
-        {email && !lastMessage ? (
+        {found && (
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {email}
           </p>
-        ) : (
-          // if there is last message, render it instead of email
+        )}
+        {/* {!found && (
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {lastMessage}
           </p>
+        )} */}
+
+        {!found && lastMessage && !lastImage && (
+          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
+            {lastMessage}
+          </p>
+        )}
+
+        {!found && !lastMessage && lastImage && (
+          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
+            <IoImageOutline class="w-5 h-5" />
+          </p>
+        )}
+
+        {!found && lastMessage && lastImage && (
+          <div className="border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone">
+            <IoImageOutline className="w-5 h-5" />
+            <span className="ml-2 truncate">{lastMessage}</span>
+          </div>
         )}
       </div>
     </div>

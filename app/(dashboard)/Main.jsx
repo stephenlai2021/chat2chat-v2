@@ -15,7 +15,7 @@ import ChatRoom from "../../components/chatroom/ChatRoom";
 function Main({ data }) {
   const [user, setUser] = useState({});
   const [selectedChatroom, setSelectedChatroom] = useState(null);
-  
+
   const getLoginUserData = async () => {
     const docRef = doc(firestore, "users", userCred.email);
     const docSnap = await getDoc(docRef);
@@ -60,9 +60,17 @@ function Main({ data }) {
         <div
           className={`${
             selectedChatroom == null ? "chatroom-hide" : "chatroom-mobile"
-          } shadow-inner w-9/12 flex items-center justify-center h-full chatroom-none`}
+          } shadow-inner w-9/12 flex flex-col items-center justify-center h-full chatroom-none`}
         >
-          <div className="text-2xl text-gray-400">Select a chatroom</div>
+          {/* <div className="text-2xl text-gray-400"> */}
+          <img
+            src="./begin_chat.svg"
+            alt="begin-chat illustration"
+            className="m-5 max-w-xs"
+          />
+          {/* <div className="text-xl italic text-base-content">Begin chat</div> */}
+          {/* <p>Begin chat</p> */}
+          {/* </div> */}
         </div>
       )}
     </div>

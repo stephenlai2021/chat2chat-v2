@@ -90,7 +90,9 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     return () => unsubMsgs();
   }, [chatRoomId]);
 
-  /* put messages in db */
+  /* 
+    put messages in db 
+  */
   const sendMessage = async () => {
     // if (message == "" && image == null) return;
 
@@ -124,6 +126,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         await updateDoc(chatroomRef, {
           // lastMessage: message ? message : "[Image]",
           newMessage: true,
+          lastImage: image ? image : "",
           lastMessage: message ? message : "",
           lastMessageSentTime: serverTimestamp(),
         });
@@ -220,7 +223,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
             />
           ))}
 
-        {/* hide loading screen after 2 seconds */}
+        {/* hide loading screen after 5 seconds */}
         {loading && <MessageSkeleton />}
       </div>
 

@@ -3,9 +3,6 @@
 /* react */
 import { useEffect, useState } from "react";
 
-/* next */
-import { useRouter } from "next/navigation";
-
 /* firebase */
 import { firestore } from "@/lib/firebase/client";
 import { doc, getDoc } from "firebase/firestore";
@@ -13,12 +10,9 @@ import { doc, getDoc } from "firebase/firestore";
 /* components */
 import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
-import LoadingSkeleton from "@/components/skeleton/LoadingSkeleton";
 
-function Main({ userCred }) {
-  // console.log('user credentail | dashboard client: ', userCred)
-  // console.log('user email: ', loginUser.email)
-
+// function Main({ userCred }) {
+function Main({ data }) {
   const [user, setUser] = useState({});
   const [selectedChatroom, setSelectedChatroom] = useState(null);
   
@@ -34,9 +28,9 @@ function Main({ userCred }) {
     }
   };
 
-  useEffect(() => {
-    getLoginUserData();
-  }, [userCred]);
+  // useEffect(() => {
+  //   getLoginUserData();
+  // }, [userCred]);
 
   return (
     <div className="flex h-screen">
@@ -45,7 +39,8 @@ function Main({ userCred }) {
           selectedChatroom == null ? "users-mobile" : "users-hide"
         }`}
       >
-        <ChatList userData={user} setSelectedChatroom={setSelectedChatroom} />
+        {/* <ChatList userData={user} setSelectedChatroom={setSelectedChatroom} /> */}
+        <ChatList userData={data} setSelectedChatroom={setSelectedChatroom} />
       </div>
 
       {selectedChatroom && (

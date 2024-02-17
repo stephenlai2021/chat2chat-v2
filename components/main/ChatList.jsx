@@ -57,9 +57,7 @@ import { RiUserAddLine } from "react-icons/ri";
 import { IoIosSearch } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
-function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
-  // console.log('user data | chat list: ', userData)
-
+function ChatList({ userData, setSelectedChatroom }) {
   const [activeTab, setActiveTab] = useState("privateChat");
   const [users, setUsers] = useState([]);
   const [userChatrooms, setUserChatrooms] = useState([]);
@@ -122,7 +120,10 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
     }
   }, [activeTab]);
 
-  /* get users */
+  /* 
+    Donot delete this block !!! 
+    get users once
+  */
   // useEffect(() => {
   //   const usersRef = collection(firestore, "users");
   //   const unsubUsers = onSnapshot(usersRef, (snapshot) => {
@@ -134,7 +135,9 @@ function ChatList({ userData, selectedChatroom, setSelectedChatroom }) {
   //   return () => unsubUsers();
   // }, []);
 
-  /* get chatrooms */
+  /* 
+    get chatrooms once
+  */
   useEffect(() => {
     // Do not delete this line !!!
     if (!userData.id) return;

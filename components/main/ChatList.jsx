@@ -66,6 +66,7 @@ function ChatList({ userData, setSelectedChatroom }) {
   const [userInfo, setUserInfo] = useState("");
   const [foundUsers, setFoundUsers] = useState("");
   const [loading, setLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading]=useState(false)
   const [createChatLoading, setCreateChatLoading] = useState(false);
   const [chatListLoading, setChatListLoading] = useState(true);
   const [otherData, setOtherData] = useState({});
@@ -255,11 +256,14 @@ function ChatList({ userData, setSelectedChatroom }) {
     /* set user status is optional, because it cost too much ! */
     // setUserStatusOffline()
 
+    setLogoutLoading(true)
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.log("signout error: ", error);
+      setLogoutLoading(false)
     } else {
       router.push("/login");
+      setLogoutLoading(false)
     }
   };
 
@@ -277,6 +281,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         activeTab={activeTab}
         handleTabClick={handleTabClick}
         logoutClick={logoutClick}
+        logoutLoading={logoutLoading}
       />
 
       <div className="shadow-inner h-screen flex flex-col w-[300px] min-w-[200px] users-mobile">

@@ -39,7 +39,6 @@ function Main({ data }) {
           selectedChatroom == null ? "users-mobile" : "users-hide"
         }`}
       >
-        {/* <ChatList userData={user} setSelectedChatroom={setSelectedChatroom} /> */}
         <ChatList userData={data} setSelectedChatroom={setSelectedChatroom} />
       </div>
 
@@ -65,14 +64,6 @@ function Main({ data }) {
           <div className="text-3xl text-base-content italic">
             Chat2Chat
           </div>
-          {/* <img
-            src="./begin_chat.svg"
-            alt="begin-chat illustration"
-            className="m-5 max-w-xs"
-          /> */}
-          {/* <div className="text-xl italic text-base-content">Begin chat</div> */}
-          {/* <p>Begin chat</p> */}
-          {/* </div> */}
         </div>
       )}
     </div>

@@ -112,6 +112,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
 
   return (
     <div className="relative flex items-center px-0 py-0 shadow-inner">
+      
       {/* image icon */}
       <div className="absolute left-4 mr-4">
         <IoImageOutline
@@ -144,6 +145,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
         </div>
       )} */}
 
+      {/* When user type something in message input, show clear button */}
       {message && (
         <div className="border- absolute left-12 top-[50%] translate-y-[-50%] py-2 px-1">
           <IoCloseCircleOutline
@@ -167,96 +169,13 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
         />
       )}
 
+      {/* if message input is not empty, show submit icon  */}
       {message && (
         <LuSend
           onClick={sendMessage}
           className={`absolute right-4 ml-4 text-base-content cursor-pointer w-[20px] h-[20px]`}
         />
       )}
-
-      {/* image preview modal */}
-      {/* <dialog id="imagePreviewModal" className="modal">
-        <div className="modal-box">
-          <button
-            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={closeAndClearModal}
-          >
-            ✕
-          </button>
-
-          <div className="pt-2 relative flex flex-col justify-center items-center">
-            {imagePreview && (
-              <div className="relative">
-                <div className="flex justify-center relative">
-                  {showUploadBtn && (
-                    <div className="backdrop-opacity-30 backdrop-invert bg-base-100/30 rounded-full p-1 w-16 h-16 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hover:cursor-pointer">
-                      <AiOutlineCloudUpload
-                        className="text-base-content w-full h-full"
-                        onClick={handleUpload}
-                      />
-                    </div>
-                  )}
-
-               
-                  <Image
-                    src={imagePreview}
-                    alt="Uploaded"
-                    width={200}
-                    height={200}
-                    className="mb-4 rounded"
-                  />
-
-                  
-                  {uploadProgress !== null && (
-                    <div
-                      className="w-16 h-16 backdrop-opacity-30 backdrop-invert bg-base-100/30 radial-progress text-base-content absolute z-[500] top-[50%] translate-y-[-50%]"
-                      style={{ "--value": uploadProgress }}
-                      role="progressbar"
-                    >
-                      {uploadProgress.toFixed(0)}%
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-           
-            <div className="">
-             
-              {imagePreview && (
-                <div className="relative">
-                  {message && (
-                    <div className="border- absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
-                      <IoCloseCircleOutline
-                        className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
-                        onClick={() => setMessage("")}
-                      />
-                    </div>
-                  )}
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Caption(optional)"
-                    className={`bg-base-300 rounded-md input-m ${
-                      message ? "pl-8" : "pl-4"
-                    } pr-4 py-3 w-full max-w-xs text-base-content`}
-                  />
-                </div>
-              )}
-
-           
-              <input
-                type="file"
-                accept="image/*"
-                ref={inputFile}
-                className="mt-2 file-input file-input-bordered file-input-primary text-base-content w-full max-w-xs"
-                onChange={handleFileChange}
-              />
-            </div>
-          </div>
-        </div>
-      </dialog> */}
 
       <ImagePreviewModal
         id="imagePreviewModal"

@@ -22,7 +22,9 @@ export default function Sidabar({
   activeTab,
   handleTabClick,
   logoutClick,
-}) {;
+  logoutLoading,
+}) {
+  const [loading, setLoading] = useState(false);
   const { setTheme } = useTheme();
 
   return (
@@ -68,6 +70,7 @@ export default function Sidabar({
               <RxAvatar className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" />
             </label>
           </div>
+
           <div className="drawer-side">
             <label
               htmlFor="sidebar-drawer-settings"
@@ -90,12 +93,24 @@ export default function Sidabar({
                   <div className="divider" />
                   {/* Add friend */}
                   <li>
-                    <a onClick={()=>document.getElementById('addFriendModal').showModal()}>Add friend</a>
+                    <a
+                      onClick={() =>
+                        document.getElementById("addFriendModal").showModal()
+                      }
+                    >
+                      Add friend
+                    </a>
                   </li>
 
                   {/* Create group */}
                   <li>
-                  <a onClick={()=>document.getElementById('createGroupModal').showModal()}>Create Group</a>
+                    <a
+                      onClick={() =>
+                        document.getElementById("createGroupModal").showModal()
+                      }
+                    >
+                      Create Group
+                    </a>
                   </li>
                   <div className="divider" />
 
@@ -142,7 +157,15 @@ export default function Sidabar({
 
                   {/* Logout Button */}
                   <li>
-                    <a onClick={logoutClick}>Logout</a>
+                    <button
+                      onClick={logoutClick}
+                      className={`${logoutLoading ? "btn-disabled" : ""}`}
+                    >
+                      <span className={`${logoutLoading ? 'text-base-100' : ''}`}>Logout</span>
+                      {logoutLoading && (
+                        <span className="ml-2 loading loading-spinner loading-xs text-base-100" />
+                      )}
+                    </button>
                   </li>
                 </ul>
               </li>

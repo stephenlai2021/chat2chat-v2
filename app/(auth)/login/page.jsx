@@ -74,7 +74,7 @@ function Main() {
     });
   };
 
-  const handleSubmit = async (evt) => {
+  const handleLogin = async (evt) => {
     evt.preventDefault();
     setLoading(true);
 
@@ -103,15 +103,10 @@ function Main() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log('loading state: ', loading)
-  // }, [loading])
-
   return (
     <div className="flex flex-col justify-center items-center h-screen font-primary px-8">
-      {/* Login Form  */}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleLogin}
         className="space-y-4 w-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         {/* Title */}
@@ -127,7 +122,7 @@ function Main() {
           <input
             type="text"
             placeholder="Email"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -142,7 +137,7 @@ function Main() {
           <input
             type="password"
             placeholder="Enter Password"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -155,16 +150,18 @@ function Main() {
         <div>
           <button
             type="submit"
-            className="btn btn-block btn-accent text-accent-content rounded-xl"
+            className={`${
+              loading ? "btn-disabled" : ""
+            } btn btn-block btn-accent text-accent-content rounded-xl`}
           >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm text-accent-content"></span>
-            ) : (
-              "Sign In"
+            <span>Sign in</span>
+            {loading && (
+              <span className="loading loading-spinner loading-xs text-accent-conten ml-2"></span>
             )}
           </button>
         </div>
 
+        {/* Register link  */}
         <span className="text-base-content">
           Don't have an account?{" "}
           <Link href="/register" className="text-base-content hover:underline">

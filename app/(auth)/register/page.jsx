@@ -188,16 +188,16 @@ function Main() {
 
   return (
     <div className="flex justify-center items-center h-screen font-primary px-8">
-      {/*form*/}
       <form
         onSubmit={handleRegister}
         className="space-y-4 w-full h-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
+        {/* Title */}
         <h1 className="font-secondary text-xl text-center font-semibold text-base-content">
           CHAT<span className="font-bold text-[#eeab63ff]">2</span>CHAT
         </h1>
 
-        {/* Display the avatar and upload button */}
+        {/* Display avatar and upload button */}
         <div className="flex items-center space-y-2 justify-between p-2">
           <img
             src={avatarUrl ? avatarUrl : "./avatar.png"}
@@ -279,16 +279,16 @@ function Main() {
           )}
         </div>
 
-        <div>
-          <button type="submit" className="btn btn-block btn-accent">
-            {loading ? (
-              <span className="loading loading-spinner loading-sm text-base-content"></span>
-            ) : (
-              "Sign Up"
-            )}
-          </button>
-        </div>
-
+        {/* Signup Button */}
+        <button type="submit" className="btn btn-block btn-accent">
+          {loading ? (
+            <span className="loading loading-spinner loading-sm text-base-content"></span>
+          ) : (
+            "Sign Up"
+          )}
+        </button>
+        
+        {/* Login link  */}
         <span className="text-base-content">
           Already have an account?{" "}
           <Link href="/login" className="text-base-content hover:underline">
@@ -296,58 +296,6 @@ function Main() {
           </Link>
         </span>
       </form>
-
-      {/* image preview modal */}
-      {/* <dialog id="imagePreviewModal" className="modal">
-        <div className="modal-box">
-          <button
-            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={closeAndClearModal}
-          >
-            ✕
-          </button>
-
-          <div className="pt-2 relative flex flex-col justify-center items-center">
-            {imagePreview && (
-              <div className="relative">
-                <div className="flex justify-center relative">
-                  {showUploadBtn && (
-                    <div className="backdrop-opacity-30 backdrop-invert bg-base-100/30 rounded-full p-1 w-16 h-16 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hover:cursor-pointer">
-                      <AiOutlineCloudUpload
-                        className="text-base-content w-full h-full"
-                        onClick={handleUpload}
-                      />
-                    </div>
-                  )}
-                  <Image
-                    src={imagePreview}
-                    alt="Uploaded"
-                    width={200}
-                    height={200}
-                    className="mb-4 rounded"
-                  />
-                  {uploadProgress !== null && (
-                    <div
-                      className="w-16 h-16 backdrop-opacity-30 backdrop-invert bg-base-100/30 radial-progress text-base-content absolute z-[500] top-[50%] translate-y-[-50%]"
-                      style={{ "--value": uploadProgress }}
-                      role="progressbar"
-                    >
-                      {uploadProgress.toFixed(0)}%
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputFile}
-              className="mt-2 file-input file-input-bordered file-input-primary text-base-content w-full max-w-xs"
-              onChange={handleFileChange}
-            />
-          </div>
-        </div>
-      </dialog> */}
 
       <ImagePreviewModal
         id="imagePreviewModal"
@@ -358,7 +306,6 @@ function Main() {
         handleFileChange={handleFileChange}
         uploadProgress={uploadProgress}
         inputFile={inputFile}
-        // from="RegisterForm"
       />
     </div>
   );

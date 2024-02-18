@@ -84,7 +84,7 @@ function UsersCard({
 
         {!found && !lastMessage && lastImage && (
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
-            <IoImageOutline class="w-5 h-5" />
+            <IoImageOutline className="w-5 h-5" />
           </p>
         )}
 

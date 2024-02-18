@@ -87,9 +87,15 @@
   .time-stamp-desktop {
     max-width: 60px;
   }
+  .avatar-margin-desktop {
+    margin-left: 16px;
+  }
 }
 
 @media (max-width: 800px) {
+  .avatar-margin-mobile {
+    margin-left: 6px;
+  }
   .reset-bg {
     background: var(--fallback-b2,oklch(var(--b2)));
   }

@@ -30,8 +30,8 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className}`}>
+    <html lang="en">
+      <body className={`${inter.className}`} suppressHydrationWarning>
         <DaisyUIThemeProvider>
           <div className="max-w-[1200px] mx-auto bg-base-200">
             <Toaster position="bottom-center" />

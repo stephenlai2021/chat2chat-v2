@@ -33,6 +33,9 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
+/* components */
+import ImagePreviewModal from "@/components/modal/ImagePreviewModal";
+
 function Main() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -106,7 +109,7 @@ function Main() {
           // Clear image preview
           setImagePreview(null);
           inputFile.current.value = "";
-          document.getElementById("dashboard").close();
+          document.getElementById("imagePreviewModal").close();
         });
       }
     );
@@ -115,7 +118,7 @@ function Main() {
   const closeAndClearModal = () => {
     inputFile.current.value = "";
     setImagePreview(null);
-    document.getElementById("dashboard").close();
+    document.getElementById("imagePreviewModal").close();
   };
 
   const validateForm = () => {
@@ -141,49 +144,16 @@ function Main() {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const handleSubmit = async (evt) => {
+  const handleRegister = async (evt) => {
     evt.preventDefault();
     setLoading(true);
-
-    // try {
-    //   if (validateForm()) {
-    //     const { data, error  } = await supabase.auth.signUp({
-    //       email,
-    //       password,
-    //       options: { emailRedirectTo: "http://localhost:3000" }
-    //     });
-    //     if (data) console.log('signup | data: ', data?.user)
-    //     if (error) {
-    //       console.log('signup | error: ', error)
-    //       return
-    //     }
-
-    //     /* create user data with firestore */
-    //     const docRef = doc(firestore, "users", email);
-    //     await setDoc(docRef, {
-    //       id: data?.user?.id,
-    //       name,
-    //       email,
-    //       avatarUrl,
-    //     });
-    //     console.log('You are online')
-
-    //     router.push("/");
-    //     setErrors({});
-    //   }
-    // } catch (error) {
-    //   console.error("Error registering user:", error.message);
-    //   toast.error(error.message);
-    //   setErrors({});
-    // }
-    // setLoading(false);
 
     if (validateForm()) {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        // options: { emailRedirectTo: "http://localhost:3000/confirm" },
-        options: { emailRedirectTo: "http://localhost:3000" },
+        // options: { emailRedirectTo: "http://localhost:3000" },
+        options: { emailRedirectTo: "https://chat2chat-v2.netlify.app" },
       });
 
       if (error) {
@@ -203,22 +173,24 @@ function Main() {
         avatarUrl,
       });
       console.log("user data created !");
-      setConfirm(true)
-      // router.push("/");
+      setConfirm(true);
     }
   };
 
-  if (confirm) return (<>
-    <div className="h-screen flex items-center justify-center">
-      Please check your email box to confirm your signup
-    </div>
-  </>)
+  if (confirm)
+    return (
+      <>
+        <div className="h-screen flex items-center justify-center">
+          Please check your email box to confirm your signup
+        </div>
+      </>
+    );
 
   return (
     <div className="flex justify-center items-center h-screen font-primary px-8">
       {/*form*/}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleRegister}
         className="space-y-4 w-full h-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         <h1 className="font-secondary text-xl text-center font-semibold text-base-content">
@@ -235,7 +207,9 @@ function Main() {
           <button
             type="button"
             className="btn btn-outlin btn-info btn-md"
-            onClick={() => document.getElementById("dashboard").showModal()}
+            onClick={() =>
+              document.getElementById("imagePreviewModal").showModal()
+            }
           >
             Upload Image
           </button>
@@ -324,51 +298,8 @@ function Main() {
       </form>
 
       {/* image preview modal */}
-      {/* <dialog id="dashboard" className="modal">
-        <div className="modal-box relative">
-          <form method="dialog" className="flex justify-center">
-            {imagePreview && (
-              <div className="relative">
-                <img
-                  src="./upload-icon.png"
-                  alt="upload icon"
-                  className="w-[40px] absolute top-[-20px] left-[50%] translate-x-[-50%] hover:cursor-pointer"
-                  onClick={handleUpload}
-                />
-                <div className="flex justify-center">
-                  <img
-                    src={imagePreview}
-                    alt="Uploaded"
-                    className="max-h-60 max-w-xs mb-4 rounded"
-                  />
-                </div>
-                <progress
-                  value={uploadProgress}
-                  className="progress progress-primary absolute bottom-0 left-0 z-50"
-                  max="100"
-                ></progress>
-              </div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputFile}
-              className="text-primary-content mt-2 file-input file-input-bordered file-input-primary w-full max-w-xs"
-              onChange={handleFileChange}
-            />
-          </form>
-          <button
-            className="btn btn-sm btn-circle btn-ghost absolute top-0 right-2 top-2"
-            onClick={closeAndClearModal}
-          >
-            ✕
-          </button>
-        </div>
-      </dialog> */}
-
-      <dialog id="dashboard" className="modal">
+      {/* <dialog id="imagePreviewModal" className="modal">
         <div className="modal-box">
-          {/* close button */}
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             onClick={closeAndClearModal}
@@ -377,11 +308,9 @@ function Main() {
           </button>
 
           <div className="pt-2 relative flex flex-col justify-center items-center">
-            {/* image preview section */}
             {imagePreview && (
               <div className="relative">
                 <div className="flex justify-center relative">
-                  {/* upload icon */}
                   {showUploadBtn && (
                     <div className="backdrop-opacity-30 backdrop-invert bg-base-100/30 rounded-full p-1 w-16 h-16 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hover:cursor-pointer">
                       <AiOutlineCloudUpload
@@ -390,8 +319,6 @@ function Main() {
                       />
                     </div>
                   )}
-
-                  {/* image preview */}
                   <Image
                     src={imagePreview}
                     alt="Uploaded"
@@ -399,8 +326,6 @@ function Main() {
                     height={200}
                     className="mb-4 rounded"
                   />
-
-                  {/* radial progress */}
                   {uploadProgress !== null && (
                     <div
                       className="w-16 h-16 backdrop-opacity-30 backdrop-invert bg-base-100/30 radial-progress text-base-content absolute z-[500] top-[50%] translate-y-[-50%]"
@@ -413,8 +338,6 @@ function Main() {
                 </div>
               </div>
             )}
-
-            {/* file input section */}
             <input
               type="file"
               accept="image/*"
@@ -424,7 +347,18 @@ function Main() {
             />
           </div>
         </div>
-      </dialog>
+      </dialog> */}
+
+      <ImagePreviewModal
+        id="imagePreviewModal"
+        closeAndClearModal={closeAndClearModal}
+        imagePreview={imagePreview}
+        showUploadBtn={showUploadBtn}
+        handleUpload={handleUpload}
+        handleFileChange={handleFileChange}
+        uploadProgress={uploadProgress}
+        inputFile={inputFile}
+      />
     </div>
   );
 }

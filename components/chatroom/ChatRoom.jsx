@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 /* next */
+import Image from "next/image";
 import backgroundImage from "../../public/avatar.png";
 
 /* firebase */
@@ -43,6 +44,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const [image, setImage] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isMessageBottom, setIsMessageBottom] = useState(false);
 
   /* get other user data in realtime */
   useEffect(() => {
@@ -107,7 +109,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
           sender: me.id,
           content: message,
           time: serverTimestamp(),
-          image
+          image,
         };
 
         /* 
@@ -124,7 +126,6 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         // update last message in chatrooms collection
         const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
         await updateDoc(chatroomRef, {
-          // lastMessage: message ? message : "[Image]",
           newMessage: true,
           lastImage: image ? image : "",
           lastMessage: message ? message : "",
@@ -134,11 +135,6 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         console.error("Error sending message:", error.message);
       }
     }
-    //  else {
-    //   setMessage("");
-    //   setImage(null);
-    //   return;
-    // }
 
     // Scroll to the bottom after sending a message
     if (messagesContainerRef.current) {
@@ -146,6 +142,17 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         messagesContainerRef.current.scrollHeight;
     }
   };
+
+  /*
+    After user click chat list and open chatroom, 
+    scroll to the bottom after messages fully loaded 
+    It is not working !!!
+  */
+  useEffect(() => {
+    if (!loading && messages.length !== 0) {
+      messagesContainerRef.scrollTop = messagesContainerRef.scrollHeight;
+    }
+  }, [loading, messages]);
 
   const gotoUsersMenu = () => {
     setSelectedChatroom(null);
@@ -162,20 +169,23 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   return (
     <div className="flex flex-col h-screen shadow-inner">
       {/* top menu */}
-      <div className="h-[64px] flex items-center shadow-inner bg-base-30">       
+      <div className="h-[64px] flex items-center shadow-inner bg-base-30">
         {loading && !otherUser ? (
           <div className="hidden show-flex">
+            {/* arrow icon loading skeleton */}
             <div className="flex items-end ml-4 pb-1">
               <div className="skeleton rounded w-[18px] h-[18px] pt-"></div>
             </div>
-            <div className="skeleton rounded-full w-9 h-9 ml-2"></div>
+            {/* user avatar loading skeleton */}
+            <div className="skeleton rounded-full w-9 h-9 ml-[6px]"></div>
+            {/* user name loading skeleton */}
             <div className="flex items-end pb-1 border-1 ml-2">
               <div className="skeleton rounded w-[72px] h-4"></div>
             </div>
           </div>
         ) : (
           <>
-            {/* left arrow icon */}
+            {/* arrow icon */}
             <div
               className={`${
                 selectedChatroom ? "arrow-show" : "hidden"
@@ -186,18 +196,16 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
             </div>
 
             {/* user avatar */}
-            <div className="avatar ml-4
-             relative">
+            <div className="border- border-base-content avatar avatar-margin-mobile avatar-margin-desktop relative">
               <div className="w-9 h-9 rounded-full">
-                <img src={otherUser?.avatarUrl} />
+                {otherUser?.avatarUrl ? (
+                  <img src={otherUser?.avatarUrl} />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-primary flex justify-center items-center text-xl shadow-lg font-bold">
+                    {otherUser?.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
-              {/* <span
-                className={`absolute bottom-0 right-0 w-[10px] h-[10px] border border-2 rounded-full ${
-                  otherUser?.status === "online"
-                    ? "bg-green-500"
-                    : "bg-gray-500"
-                }`}
-              /> */}
             </div>
 
             {/* user name */}
@@ -211,7 +219,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-4 px-6 chatroom-padding"
+        className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-4 px-6 chatroom-padding pt-[56px]"
       >
         {!loading &&
           messages?.map((message) => (

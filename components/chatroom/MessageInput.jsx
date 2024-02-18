@@ -19,6 +19,7 @@ import { LuSend } from "react-icons/lu";
 
 /* utils */
 import EmojiPicker from "emoji-picker-react";
+import ImagePreviewModal from "../modal/ImagePreviewModal";
 
 function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
   const [file, setFile] = useState(null);
@@ -26,7 +27,6 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showUploadBtn, setShowUploadBtn] = useState(false);
-  // const [caption, setCaption] = useState("");
 
   const inputFile = useRef(null);
   const messageInput = useRef(null);
@@ -85,7 +85,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
           // Clear image preview
           setImagePreview(null);
           inputFile.current.value = "";
-          document.getElementById("dashboard").close();
+          document.getElementById("imagePreviewModal").close();
         });
       }
     );
@@ -107,7 +107,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
   const closeAndClearModal = () => {
     inputFile.current.value = "";
     setImagePreview(null);
-    document.getElementById("dashboard").close();
+    document.getElementById("imagePreviewModal").close();
   };
 
   return (
@@ -115,7 +115,9 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
       {/* image icon */}
       <div className="absolute left-4 mr-4">
         <IoImageOutline
-          onClick={() => document.getElementById("dashboard").showModal()}
+          onClick={() =>
+            document.getElementById("imagePreviewModal").showModal()
+          }
           className={`cursor-pointer text-gray-40 text-base-content w-[24px] h-[24px]`}
         />
       </div>
@@ -173,7 +175,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
       )}
 
       {/* image preview modal */}
-      <dialog id="dashboard" className="modal">
+      {/* <dialog id="imagePreviewModal" className="modal">
         <div className="modal-box">
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -183,11 +185,9 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
           </button>
 
           <div className="pt-2 relative flex flex-col justify-center items-center">
-            {/* image preview section */}
             {imagePreview && (
               <div className="relative">
                 <div className="flex justify-center relative">
-                  {/* upload icon */}
                   {showUploadBtn && (
                     <div className="backdrop-opacity-30 backdrop-invert bg-base-100/30 rounded-full p-1 w-16 h-16 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hover:cursor-pointer">
                       <AiOutlineCloudUpload
@@ -197,7 +197,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
                     </div>
                   )}
 
-                  {/* image preview */}
+               
                   <Image
                     src={imagePreview}
                     alt="Uploaded"
@@ -206,7 +206,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
                     className="mb-4 rounded"
                   />
 
-                  {/* radial progress */}
+                  
                   {uploadProgress !== null && (
                     <div
                       className="w-16 h-16 backdrop-opacity-30 backdrop-invert bg-base-100/30 radial-progress text-base-content absolute z-[500] top-[50%] translate-y-[-50%]"
@@ -220,9 +220,9 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
               </div>
             )}
 
-            {/* caption input && file input section */}
+           
             <div className="">
-              {/* caption input */}
+             
               {imagePreview && (
                 <div className="relative">
                   {message && (
@@ -245,7 +245,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
                 </div>
               )}
 
-              {/* file input */}
+           
               <input
                 type="file"
                 accept="image/*"
@@ -256,7 +256,20 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
             </div>
           </div>
         </div>
-      </dialog>
+      </dialog> */}
+
+      <ImagePreviewModal
+        id="imagePreviewModal"
+        handleFileChange={handleFileChange}
+        handleUpload={handleUpload}
+        closeAndClearModal={closeAndClearModal}
+        imagePreview={imagePreview}
+        uploadProgress={uploadProgress}
+        message={message}
+        setMessage={setMessage}
+        inputFile={inputFile}
+        showUploadBtn={showUploadBtn}
+      />
     </div>
   );
 }

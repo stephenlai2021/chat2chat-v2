@@ -269,6 +269,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
         setMessage={setMessage}
         inputFile={inputFile}
         showUploadBtn={showUploadBtn}
+        from="MessageInput"
       />
     </div>
   );

@@ -223,7 +223,7 @@ function Main() {
           <input
             type="text"
             placeholder="Name"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -238,7 +238,7 @@ function Main() {
           <input
             type="text"
             placeholder="Email"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -253,7 +253,7 @@ function Main() {
           <input
             type="password"
             placeholder="Enter Password"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -270,7 +270,7 @@ function Main() {
           <input
             type="password"
             placeholder="Confirm Password"
-            className="w-full input input-bordered rounded-md text-base-content pl-2"
+            className="auth-input"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
@@ -358,6 +358,7 @@ function Main() {
         handleFileChange={handleFileChange}
         uploadProgress={uploadProgress}
         inputFile={inputFile}
+        // from="RegisterForm"
       />
     </div>
   );

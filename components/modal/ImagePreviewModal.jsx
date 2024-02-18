@@ -16,10 +16,12 @@ export default function ImagePreviewModal({
   inputFile,
   handleFileChange,
   showUploadBtn,
+  from,
 }) {
   return (
     <dialog id={id} className="modal">
       <div className="modal-box">
+        {/* close button */}
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={closeAndClearModal}
@@ -66,41 +68,40 @@ export default function ImagePreviewModal({
           )}
 
           {/* message input && file input */}
-          <>
-            {imagePreview && (
-              <div className="relative">
-                {message && (
-                  <div className="border- absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
-                    <IoCloseCircleOutline
-                      className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
-                      onClick={() => setMessage("")}
-                    />
-                  </div>
-                )}
-                {/* message input */}
-                {message && (
-                  <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Caption(optional)"
-                    className={`bg-base-300 rounded-md input-m ${
-                      message ? "pl-8" : "pl-4"
-                    } pr-4 py-3 w-full max-w-xs text-base-content`}
-                  />
-                )}
+          {/* <div> */}
+          <div className="relative">
+            {imagePreview && from == "MessageInput" && message && (
+              <div className="border- absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
+                <IoCloseCircleOutline
+                  className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
+                  onClick={() => setMessage("")}
+                />
               </div>
             )}
 
-            {/* file input */}
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputFile}
-              className="mt-2 file-input file-input-bordered file-input-primary text-base-content w-full max-w-xs"
-              onChange={handleFileChange}
-            />
-          </>
+            {/* message input */}
+            {imagePreview && from == "MessageInput" && (
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Caption(optional)"
+                className={`bg-base-300 rounded-md input-m ${
+                  message ? "pl-8" : "pl-4"
+                } pr-4 py-3 w-full max-w-xs text-base-content`}
+              />
+            )}
+          </div>
+
+          {/* file input */}
+          <input
+            type="file"
+            accept="image/*"
+            ref={inputFile}
+            className="mt-2 file-input file-input-bordered file-input-primary text-base-content w-full max-w-xs"
+            onChange={handleFileChange}
+          />
+          {/* </div> */}
         </div>
       </div>
     </dialog>

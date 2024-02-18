@@ -66,6 +66,13 @@
   }
 }
 
+@layer components {
+  /* auth - register && login */
+  .auth-input {
+    @apply w-full input input-bordered rounded-md text-base-content pl-2;
+  }
+}
+
 /* .image-background {} */
 
 .text-wrap {

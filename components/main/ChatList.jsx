@@ -215,7 +215,8 @@ function ChatList({ userData, setSelectedChatroom }) {
 
       if (existingChatroomsSnapshot.docs.length > 0) {
         console.log(`chatroom for ${user.name} is already existed`);
-        toast(`${user.name} with email: ${user.email} is already in your chat list`, { icon: "😎" });
+        // toast(`${user.name} with email: ${user.email} is already in your chat list`, { icon: "😎" });
+        toast(`${user.name} is already in your chat list`, { icon: "😎" });
         setCreateChatLoading(false);
         // setFoundUser({ isClick: false, ...user });
         return;

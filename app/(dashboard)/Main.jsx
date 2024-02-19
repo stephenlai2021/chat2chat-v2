@@ -61,15 +61,12 @@ function Main({ data }) {
             selectedChatroom == null ? "chatroom-hide" : "chatroom-mobile"
           } shadow-inner w-9/12 flex flex-col items-center justify-center h-full chatroom-none`}
         >
-          {/* <div className="backdrop-opacity-95 backdrop-invert bg-white/30"> */}
-          {/* <div className="backdrop-blur-sm bg-white/30"> */}
-            <img
-              src="./undraw_chat_mobile-removebg.png"
-              alt="cha illustration"
-              className="max-w-[400px]"
-            />
-            <div className="text-3xl text-base-content italic">Chat2Chat</div>
-          {/* </div> */}
+          <img
+            src="./undraw_chat_mobile-removebg.png"
+            alt="cha illustration"
+            className="max-w-[400px]"
+          />
+          {/* <div className="text-3xl text-base-content italic">Chat2Chat</div> */}
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ import CreateGroupModal from "../modal/CreateGroupModal";
 import { RxAvatar } from "react-icons/rx";
 import { RiUserAddLine } from "react-icons/ri";
 import { BsChatDots } from "react-icons/bs";
+import { GrGroup } from "react-icons/gr";
 
 /* next-themes */
 import { useTheme } from "next-themes";
@@ -29,19 +30,7 @@ export default function Sidabar({
 
   return (
     <div className="bg-base-30 shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
-      {/* Add friend icon */}
-      <div
-        className={`${
-          activeTab == "add" ? "menu-active border-base-content" : ""
-        } border- w-full py-3 px-5 flex items-center justify-center`}
-      >
-        <RiUserAddLine
-          className={`w-[20px] h-[20px] hover:cursor-pointer text-base-content`}
-          onClick={() => handleTabClick("add")}
-        />
-      </div>
-
-      {/* Chat icon */}
+      {/* chat icon */}
       <div
         className={`${
           activeTab == "privateChat" ? "menu-active border-base-content" : ""
@@ -53,7 +42,19 @@ export default function Sidabar({
         />
       </div>
 
-      {/* Avatar icon in the bottom */}
+      {/* group icon */}
+      <div
+        className={`${
+          activeTab == "groupChat" ? "menu-active border-base-content" : ""
+        } border- w-full py-3 px-5 flex items-center justify-center`}
+      >
+        <GrGroup
+          className={`w-[20px] h-[20px] hover:cursor-pointer text-base-content`}
+          onClick={() => handleTabClick("groupChat")}
+        />
+      </div>
+
+      {/* Avatar icon */}
       <div className="mt-auto mb-3">
         <div className="drawer z-[100]">
           <input
@@ -91,29 +92,6 @@ export default function Sidabar({
               <li>
                 <ul className="menu bg-base-200 w-ful rounded-box">
                   <div className="divider" />
-                  {/* Add friend */}
-                  <li>
-                    <a
-                      onClick={() =>
-                        document.getElementById("addFriendModal").showModal()
-                      }
-                    >
-                      Add friend
-                    </a>
-                  </li>
-
-                  {/* Create group */}
-                  <li>
-                    <a
-                      onClick={() =>
-                        document.getElementById("createGroupModal").showModal()
-                      }
-                    >
-                      Create Group
-                    </a>
-                  </li>
-                  <div className="divider" />
-
                   {/* Theme */}
                   <li>
                     <details>
@@ -139,7 +117,6 @@ export default function Sidabar({
                       </ul>
                     </details>
                   </li>
-
                   {/* Language */}
                   <li>
                     <details>
@@ -154,14 +131,17 @@ export default function Sidabar({
                     </details>
                   </li>
                   <div className="divider" />
-
                   {/* Logout Button */}
                   <li>
                     <button
                       onClick={logoutClick}
                       className={`${logoutLoading ? "btn-disabled" : ""}`}
                     >
-                      <span className={`${logoutLoading ? 'text-base-100' : ''}`}>Logout</span>
+                      <span
+                        className={`${logoutLoading ? "text-base-100" : ""}`}
+                      >
+                        Logout
+                      </span>
                       {logoutLoading && (
                         <span className="ml-2 loading loading-spinner loading-xs text-base-100" />
                       )}
@@ -173,9 +153,6 @@ export default function Sidabar({
           </div>
         </div>
       </div>
-
-      <AddFriendModal id="addFriendModal" />
-      <CreateGroupModal id="createGroupModal" />
     </div>
   );
 }

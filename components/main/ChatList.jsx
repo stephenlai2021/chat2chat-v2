@@ -34,6 +34,7 @@ import MainNavbar from "./Navbar";
 import UsersCardSkeleton from "../skeleton/UsersCardSkeleton";
 import AddFriendModal from "../modal/AddFriendModal";
 import CreateGroupModal from "../modal/CreateGroupModal";
+import BrandTitle from "./BrandTitle";
 // import LoadingSkeleton from "@/components/skeleton/LoadingSkeleton";
 
 /* next-intl */
@@ -58,6 +59,13 @@ import { RxAvatar } from "react-icons/rx";
 import { RiUserAddLine } from "react-icons/ri";
 import { IoIosSearch } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoPersonAddOutline } from "react-icons/io5";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { IoIosPersonAdd } from "react-icons/io";
+import { MdPersonAddAlt } from "react-icons/md";
+import { BsPersonAdd } from "react-icons/bs";
+import { GrGroup } from "react-icons/gr";
+import { MdGroupAdd } from "react-icons/md";
 
 function ChatList({ userData, setSelectedChatroom }) {
   const [activeTab, setActiveTab] = useState("privateChat");
@@ -66,10 +74,11 @@ function ChatList({ userData, setSelectedChatroom }) {
   const [userInfo, setUserInfo] = useState("");
   const [foundUsers, setFoundUsers] = useState("");
   const [loading, setLoading] = useState(false);
-  const [logoutLoading, setLogoutLoading]=useState(false)
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const [createChatLoading, setCreateChatLoading] = useState(false);
   const [chatListLoading, setChatListLoading] = useState(true);
   const [otherData, setOtherData] = useState({});
+  const [foundUser, setFoundUser] = useState("");
 
   const { setTheme } = useTheme();
   const router = useRouter();
@@ -78,7 +87,6 @@ function ChatList({ userData, setSelectedChatroom }) {
   const handleTabClick = (tab) => setActiveTab(tab);
 
   const searchUserByNameOrEmail = async () => {
-    // if (!userInfo) return;
     console.log("user info: ", userInfo);
 
     setLoading(true);
@@ -112,8 +120,6 @@ function ChatList({ userData, setSelectedChatroom }) {
     setUserInfo("");
     setFoundUsers("");
   };
-
-  const openGreateGroupModal = () => {};
 
   /* reset user info if switch to chatrooms menu */
   useEffect(() => {
@@ -192,8 +198,8 @@ function ChatList({ userData, setSelectedChatroom }) {
       toast(`You cannot add yourself !`, { icon: "😅" });
       return;
     }
-
     setCreateChatLoading(true);
+    // setFoundUser({ isClick: true, ...user });
 
     // 檢查聊天室是否存在
     const existingChatroomsQuery = query(
@@ -209,8 +215,9 @@ function ChatList({ userData, setSelectedChatroom }) {
 
       if (existingChatroomsSnapshot.docs.length > 0) {
         console.log(`chatroom for ${user.name} is already existed`);
-        toast(`${user.name} is already in your chat list`, { icon: "😎" });
+        toast(`${user.name} with email: ${user.email} is already in your chat list`, { icon: "😎" });
         setCreateChatLoading(false);
+        // setFoundUser({ isClick: false, ...user });
         return;
       }
 
@@ -234,6 +241,10 @@ function ChatList({ userData, setSelectedChatroom }) {
       await addDoc(collection(firestore, "chatrooms"), chatroomData);
       setActiveTab("privateChat");
       setCreateChatLoading(false);
+      // setFoundUser({ isClick: false, ...user });
+      setUserInfo("");
+      setFoundUsers("");
+      document.getElementById("add-friend-modal").close();
     } catch (error) {
       console.error("Error creating or checking chatroom:", error);
     }
@@ -256,21 +267,26 @@ function ChatList({ userData, setSelectedChatroom }) {
     /* set user status is optional, because it cost too much ! */
     // setUserStatusOffline()
 
-    setLogoutLoading(true)
+    setLogoutLoading(true);
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.log("signout error: ", error);
-      setLogoutLoading(false)
+      setLogoutLoading(false);
     } else {
       router.push("/login");
-      setLogoutLoading(false)
+      setLogoutLoading(false);
     }
+  };
+
+  const resestAddFriendInfo = () => {
+    setUserInfo("");
+    setFoundUsers("");
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setChatListLoading(false);
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -287,20 +303,29 @@ function ChatList({ userData, setSelectedChatroom }) {
       <div className="shadow-inner h-screen flex flex-col w-[300px] min-w-[200px] users-mobile">
         {/* Navbar */}
         <div className="navbar h-[60px] bg-base-30">
-          {/* Tab title on the left side */}
-          <div className="flex-1">
-            <div className="text-xl font-bold text-base-content pl-3">
-              {activeTab == "privateChat"
-                ? "Private Chat"
-                : activeTab == "groupChat"
-                ? "Group Chat"
-                : activeTab == "add"
-                ? "Add friend"
-                : ""}
-            </div>
-          </div>
+          <BrandTitle />
 
-          {/* Avatar icon on the right side */}
+          {/* add friend icon */}
+          <BsPersonAdd
+            className={`${
+              activeTab == "privateChat" ? "navbar-show" : "hidden"
+            } w-[23px] h-[23px] mr-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
+            onClick={() =>
+              document.getElementById("add-friend-modal").showModal()
+            }
+          />
+
+          {/* add group icon */}
+          <MdGroupAdd
+            className={`${
+              activeTab == "groupChat" ? "navbar-show" : "hidden"
+            } w-[23px] h-[23px] mr-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
+            onClick={() =>
+              document.getElementById("create-group-modal").showModal()
+            }
+          />
+
+          {/* avatar icon wrapper with drawer */}
           <div className="flex-none hidden navbar-show">
             <div className="drawer z-[200]">
               <input
@@ -338,33 +363,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                   <li>
                     <ul className="menu bg-base-200 w-ful rounded-box">
                       <div className="divider" />
-                      {/* Add friend */}
-                      <li>
-                        <a
-                          onClick={() =>
-                            document
-                              .getElementById("add-friend-modal")
-                              .showModal()
-                          }
-                        >
-                          Add friend
-                        </a>
-                      </li>
-
-                      {/* Create group */}
-                      <li>
-                        <a
-                          onClick={() =>
-                            document
-                              .getElementById("create-group-modal")
-                              .showModal()
-                          }
-                        >
-                          Create Group
-                        </a>
-                      </li>
-                      <div className="divider" />
-
                       {/* Theme */}
                       <li>
                         <details>
@@ -392,7 +390,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                           </ul>
                         </details>
                       </li>
-
                       {/* Language */}
                       <li>
                         <details>
@@ -407,7 +404,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                         </details>
                       </li>
                       <div className="divider" />
-
                       {/* Logout */}
                       <li>
                         <a onClick={logoutClick}>Logout</a>
@@ -422,14 +418,9 @@ function ChatList({ userData, setSelectedChatroom }) {
 
         {/* Body */}
         <div className="pt-1 overflow-y-auto h-full shadow-inner">
-          {activeTab === "add" && (
+          {/* {activeTab === "add" && (
             <>
-              {/* search friend by name or email */}
               <div className="my-3 px-3 input-padding">
-                <div className="label">
-                  <span className="label-text">Find your friend</span>
-                </div>
-
                 <div className="relative">
                   {userInfo && (
                     <div className="border- absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
@@ -460,7 +451,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                 </div>
               </div>
 
-              {/* users found by name or email  */}
               <div className="relative mt-8 flex flex-col">
                 {loading && <UsersCardSkeleton />}
 
@@ -474,7 +464,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                         email={user.email}
                         lastMessage={user.lastMessage}
                         found={true}
-                        // status={user.status}
                       />
                       {createChatLoading ? (
                         <span className="loading loading-spinner loading-sm text-base-content absolute right-5 top-[50%] translate-y-[-50%]"></span>
@@ -487,7 +476,17 @@ function ChatList({ userData, setSelectedChatroom }) {
                     </div>
                   ))}
               </div>
+              {foundUsers.length > 1 &&
+                foundUsers.length < foundUsers.length - 1 && (
+                  <div className="divider" />
+                )}
             </>
+          )} */}
+
+          {activeTab === "groupChat" && (
+            <div className="h-full flex flex-col items-center justify-center">
+              <h1>Group Chat</h1>
+            </div>
           )}
 
           {/*
@@ -527,13 +526,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                     loginUser={userData}
                     found={false}
                     otherData={otherData}
-
-                    // status={
-                    //   chatroom.usersData[
-                    //     chatroom.users.find((id) => id !== userData?.id)
-                    //   ].status
-                    // }
-                    // timeStamp={chatroom.timestamp}
                   />
                 </div>
               ))}
@@ -556,9 +548,12 @@ function ChatList({ userData, setSelectedChatroom }) {
             userChatrooms.length === 0 &&
             !chatListLoading && (
               <div className="mt-10 px-3 flex flex-col items-center justify-center">
-                <img src="./begin_chat.svg" alt="" className="max-w-[300px] m-5" />
-                {/* Woops, you have no chat list yet, please add frined to begin chat */}
-                Add frined to begin chat !
+                <img
+                  src="./begin_chat.svg"
+                  alt=""
+                  className="max-w-[300px] m-5"
+                />
+                {/* Add frined to begin chat ! */}
               </div>
             )}
         </div>
@@ -570,19 +565,87 @@ function ChatList({ userData, setSelectedChatroom }) {
         />
       </div>
 
-      {/* <AddFriendModal id="addFriendModal" />
-      <CreateGroupModal id="createGroupModal" /> */}
-
-      {/* add-friend-modal */}
+      {/* add-friend modal  */}
       <dialog id="add-friend-modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={resestAddFriendInfo}
+            >
               ✕
             </button>
           </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
+          <h3 className="font-bold text-lg">Add friend</h3>
+
+          {/* search friend by name or email */}
+          <div className="my-3 input-paddin">
+            <div className="relative">
+              {userInfo && (
+                <div className="absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
+                  <IoCloseCircleOutline
+                    className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
+                    onClick={resetUserInfoAndFoundUsers}
+                  />
+                </div>
+              )}
+              <input
+                type="text"
+                value={userInfo}
+                onChange={(e) => setUserInfo(e.target.value)}
+                onKeyDown={handleUserInfoKeyDown}
+                placeholder="Enter name or email"
+                className={`bg-base-300 rounded-md ${
+                  userInfo ? "pl-8" : "pl-4"
+                } pr-8 py-3 w-full text-base-content`}
+              />
+              {userInfo && (
+                <div className="border- absolute right-1 top-[50%] translate-y-[-50%] py-2 px-1">
+                  <IoIosSearch
+                    className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
+                    onClick={searchUserByNameOrEmail}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* users found by name or email  */}
+          <div className="relative mt-8 flex flex-col">
+            {loading && <UsersCardSkeleton />}
+
+            {!loading &&
+              foundUsers &&
+              foundUsers.map((user) => (
+                <>
+                  <div
+                    key={user.id}
+                    className={`relative mb-2 shadow-sm ${
+                      createChatLoading ? "btn-disabled" : ""
+                    }`}
+                  >
+                    <UsersCard
+                      name={user.name}
+                      avatarUrl={user.avatarUrl}
+                      email={user.email}
+                      lastMessage={user.lastMessage}
+                      found={true}
+                    />
+                    <span
+                      className={`${
+                        createChatLoading ? "block" : "hidden"
+                      } loading loading-spinner loading-sm text-base-content absolute right-5 top-[50%] translate-y-[-50%]`}
+                    />
+                    <IoIosPersonAdd
+                      className={`${
+                        createChatLoading ? "hidden" : "block"
+                      } w-6 h-6 text-base-content absolute right-5 top-[50%] translate-y-[-50%] hover:cursor-pointer`}
+                      onClick={() => createChat(user)}
+                    />
+                  </div>
+                </>
+              ))}
+          </div>
         </div>
       </dialog>
 
@@ -594,8 +657,8 @@ function ChatList({ userData, setSelectedChatroom }) {
               ✕
             </button>
           </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
+          <h3 className="font-bold text-lg">Create Group</h3>
+          <p className="py-4">Please select your group members !</p>
         </div>
       </dialog>
     </div>

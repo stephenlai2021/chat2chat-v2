@@ -74,6 +74,9 @@
 }
 
 /* .image-background {} */
+.avatar-bg {
+  background-image: url("/avatar.png");
+}
 
 .text-wrap {
   word-wrap: break-word;
@@ -87,7 +90,7 @@
   background-image: url('avatar.png');
 } */
 
-@media (min-width: 800px) {
+@media (min-width: 800px) {  
   .text-desktop {
     max-width: 205px;
   }
@@ -100,6 +103,9 @@
 }
 
 @media (max-width: 800px) {
+  .chatlist-mb-mobile {
+    margin-bottom: 56px;
+  }
   .avatar-margin-mobile {
     margin-left: 6px;
   }
@@ -179,7 +185,7 @@
 
 @media (max-width: 360px) {
   .text-phone {
-    max-width: 260px;
+    max-width: 175px;
   }
   .chatroom-padding {
     padding-left: 16px;

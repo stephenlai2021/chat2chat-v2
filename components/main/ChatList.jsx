@@ -193,13 +193,12 @@ function ChatList({ userData, setSelectedChatroom }) {
     });
   };
 
-  const createChat = async (user) => {
+  const createChat = async (user, foundUsersLength) => {
     if (user.email === userData.email) {
       toast(`You cannot add yourself !`, { icon: "😅" });
       return;
     }
     setCreateChatLoading(true);
-    // setFoundUser({ isClick: true, ...user });
 
     // 檢查聊天室是否存在
     const existingChatroomsQuery = query(
@@ -214,11 +213,20 @@ function ChatList({ userData, setSelectedChatroom }) {
       const existingChatroomsSnapshot = await getDocs(existingChatroomsQuery);
 
       if (existingChatroomsSnapshot.docs.length > 0) {
-        console.log(`chatroom for ${user.name} is already existed`);
-        // toast(`${user.name} with email: ${user.email} is already in your chat list`, { icon: "😎" });
-        toast(`${user.name} is already in your chat list`, { icon: "😎" });
+        if (foundUsersLength > 1) {
+          console.log(
+            `${user.name} with email: ${user.email} is already in your chat list`
+          );
+          toast(
+            `${user.name} with email: ${user.email} is already in your chat list`,
+            { icon: "😎" }
+          );
+        } else {
+          console.log(`chatroom for ${user.name} is already existed`);
+          toast(`${user.name} is already in your chat list`, { icon: "😎" });
+        }
+
         setCreateChatLoading(false);
-        // setFoundUser({ isClick: false, ...user });
         return;
       }
 
@@ -301,12 +309,13 @@ function ChatList({ userData, setSelectedChatroom }) {
         logoutLoading={logoutLoading}
       />
 
+      {/* Main */}
       <div className="shadow-inner h-screen flex flex-col w-[300px] min-w-[200px] users-mobile">
         {/* Navbar */}
         <div className="navbar h-[60px] bg-base-30">
           <BrandTitle />
 
-          {/* add friend icon */}
+          {/* add-friend icon */}
           <BsPersonAdd
             className={`${
               activeTab == "privateChat" ? "navbar-show" : "hidden"
@@ -316,7 +325,7 @@ function ChatList({ userData, setSelectedChatroom }) {
             }
           />
 
-          {/* add group icon */}
+          {/* add-group icon */}
           <MdGroupAdd
             className={`${
               activeTab == "groupChat" ? "navbar-show" : "hidden"
@@ -326,7 +335,7 @@ function ChatList({ userData, setSelectedChatroom }) {
             }
           />
 
-          {/* avatar icon wrapper with drawer */}
+          {/* avatar-icon wrapper with drawer */}
           <div className="flex-none hidden navbar-show">
             <div className="drawer z-[200]">
               <input
@@ -417,8 +426,8 @@ function ChatList({ userData, setSelectedChatroom }) {
           </div>
         </div>
 
-        {/* Body */}
-        <div className="pt-1 overflow-y-auto h-full shadow-inner">
+        {/* Section */}
+        <div className="pt-1 overflow-y-auto h-full shadow-inner chatlist-mb-mobile">
           {/* {activeTab === "add" && (
             <>
               <div className="my-3 px-3 input-padding">
@@ -571,7 +580,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         <div className="modal-box">
           <form method="dialog">
             <button
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              className="btn btn-sm btn-circle btn-ghost border-none absolute right-2 top-2"
               onClick={resestAddFriendInfo}
             >
               ✕
@@ -579,41 +588,48 @@ function ChatList({ userData, setSelectedChatroom }) {
           </form>
           <h3 className="font-bold text-lg">Add friend</h3>
 
-          {/* search friend by name or email */}
-          <div className="my-3 input-paddin">
-            <div className="relative">
-              {userInfo && (
-                <div className="absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1">
-                  <IoCloseCircleOutline
-                    className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
-                    onClick={resetUserInfoAndFoundUsers}
-                  />
-                </div>
-              )}
-              <input
-                type="text"
-                value={userInfo}
-                onChange={(e) => setUserInfo(e.target.value)}
-                onKeyDown={handleUserInfoKeyDown}
-                placeholder="Enter name or email"
-                className={`bg-base-300 rounded-md ${
-                  userInfo ? "pl-8" : "pl-4"
-                } pr-8 py-3 w-full text-base-content`}
+          {/* search input */}
+          <div className="mt-3 input-paddin relative">
+            <div
+              className={`${
+                userInfo ? "block" : "hidden"
+              } absolute left-1 top-[50%] translate-y-[-50%] py-2 px-1`}
+            >
+              <IoCloseCircleOutline
+                className={`w-[20px] h-[20px] hover:cursor-pointer 
+                ${loading ? "text-neutral-content" : "text-base-content"}
+                `}
+                onClick={resetUserInfoAndFoundUsers}
               />
-              {userInfo && (
-                <div className="border- absolute right-1 top-[50%] translate-y-[-50%] py-2 px-1">
-                  <IoIosSearch
-                    className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
-                    onClick={searchUserByNameOrEmail}
-                  />
-                </div>
-              )}
             </div>
+            <input
+              type="text"
+              value={userInfo}
+              onChange={(e) => setUserInfo(e.target.value)}
+              onKeyDown={handleUserInfoKeyDown}
+              placeholder="Enter name or email"
+              className={`bg-base-300 rounded-md pr-8 py-3 w-full
+                ${userInfo ? "pl-8" : "pl-4"}
+                ${loading ? "text-neutral-content" : "text-base-content"}
+              `}
+              disabled={loading ? true : false}
+            />
+            <IoIosSearch
+              className={`${
+                userInfo && !loading ? "block" : "hidden"
+              } w-[20px] h-[20px] hover:cursor-pointer text-base-content absolute right-[10px] top-[50%] translate-y-[-50%]`}
+              onClick={searchUserByNameOrEmail}
+            />
+            <span
+              className={`${
+                loading ? "block text-neutral-content" : "hidden"
+              } loading loading-spinner loading-sm text-base-conten absolute right-[10px] top-[50%] translate-y-[-50%]`}
+            />
           </div>
 
-          {/* users found by name or email  */}
+          {/* search results */}
           <div className="relative mt-8 flex flex-col">
-            {loading && <UsersCardSkeleton />}
+            {/* {loading && <UsersCardSkeleton />} */}
 
             {!loading &&
               foundUsers &&
@@ -621,9 +637,9 @@ function ChatList({ userData, setSelectedChatroom }) {
                 <>
                   <div
                     key={user.id}
-                    className={`relative mb-2 shadow-sm ${
-                      createChatLoading ? "btn-disabled" : ""
-                    }`}
+                    className={`relative mb-[6px] shadow-md border- border-blue-30
+                     ${createChatLoading ? "btn-disabled" : ""}
+                    `}
                   >
                     <UsersCard
                       name={user.name}
@@ -635,13 +651,13 @@ function ChatList({ userData, setSelectedChatroom }) {
                     <span
                       className={`${
                         createChatLoading ? "block" : "hidden"
-                      } loading loading-spinner loading-sm text-base-content absolute right-5 top-[50%] translate-y-[-50%]`}
+                      } loading loading-spinner loading-sm text-base-content absolute right-3 top-0`}
                     />
-                    <IoIosPersonAdd
+                    <IoIosAddCircleOutline
                       className={`${
                         createChatLoading ? "hidden" : "block"
-                      } w-6 h-6 text-base-content absolute right-5 top-[50%] translate-y-[-50%] hover:cursor-pointer`}
-                      onClick={() => createChat(user)}
+                      } w-6 h-6 text-base-content absolute right-3 top-0 hover:cursor-pointer`}
+                      onClick={() => createChat(user, foundUsers.length)}
                     />
                   </div>
                 </>

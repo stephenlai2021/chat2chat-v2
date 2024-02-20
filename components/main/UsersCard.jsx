@@ -34,9 +34,9 @@ function UsersCard({
       hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative 
       `}
     >
+      {/* avatar && new-message-indicator */}
       <div className="flex-shrink-0 mr-4 relative">
-        {/* Render avatar && new-message-indicator */}
-        <div className="w-12 h-12 rounded-full overflow-hidden">
+        <div className="w-12 h-12 rounded-full overflow-hidden avatar-bg">
           <img
             className="w-full h-full object-cover"
             src={
@@ -46,15 +46,16 @@ function UsersCard({
             }
             alt="Avatar"
           />
-
-          {newMessage && (
-            <span className="bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full" />
-          )}
+          <span
+            className={`${
+              newMessage ? "block" : "hidden"
+            } bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full`}
+          />
         </div>
       </div>
 
-      {/* Render name and last-message-sent-time */}
       <div className="flex-1">
+        {/* name and last-message-sent-time */}
         <div className="flex items-center justify-between text-desktop text-phone border-1 border-green-30">
           <h2 className="border-1 border-blue-30 text-md font-semibold truncate text-base-content">
             {name}
@@ -65,35 +66,45 @@ function UsersCard({
         </div>
 
         {/* When we add friend, if user found, render email instead of last mesage */}
-        {found && (
-          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
+        {/* {found && (
+          <p className="max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {email}
           </p>
-        )}
+        )} */}
+
         {/* {!found && (
           <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {lastMessage}
           </p>
         )} */}
 
-        {!found && lastMessage && !lastImage && (
-          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
-            {lastMessage}
-          </p>
-        )}
+        {/* Render message if user submit message only */}
+        <p
+          className={`${
+            !found && lastMessage && !lastImage ? "block" : "hidden"
+          } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+        >
+          {lastMessage}
+        </p>
 
-        {!found && !lastMessage && lastImage && (
-          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
-            <IoImageOutline className="w-5 h-5" />
-          </p>
-        )}
+        {/* Render image icon if use send image only */}
+        <p
+          className={`${
+            !found && !lastMessage && lastImage ? "block" : "hidden"
+          } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+        >
+          <IoImageOutline className="w-5 h-5" />
+        </p>
 
-        {!found && lastMessage && lastImage && (
-          <div className="border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone">
-            <IoImageOutline className="w-5 h-5" />
-            <span className="ml-2 truncate">{lastMessage}</span>
-          </div>
-        )}
+        {/* Render image and message if user send them both */}
+        <div
+          className={`${
+            !found && lastMessage && lastImage ? "block" : "hidden"
+          } border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+        >
+          <IoImageOutline className="w-5 h-5" />
+          <span className="ml-2 truncate">{lastMessage}</span>
+        </div>
       </div>
     </div>
   );

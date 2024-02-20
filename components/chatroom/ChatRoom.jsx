@@ -23,6 +23,7 @@ import { firestore } from "@/lib/firebase/client";
 import MessageCard from "./MessageCard";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "@/components/skeleton/MessageSkeleton";
+import AvatarImg from "@/components/images/avatar.png";
 
 /* react-icons */
 import { FaArrowLeft, FaBullseye } from "react-icons/fa";
@@ -162,7 +163,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [loading]);
 
@@ -176,8 +177,10 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
             <div className="flex items-end ml-4 pb-1">
               <div className="skeleton rounded w-[18px] h-[18px] pt-"></div>
             </div>
+
             {/* user avatar loading skeleton */}
             <div className="skeleton rounded-full w-9 h-9 ml-[6px]"></div>
+
             {/* user name loading skeleton */}
             <div className="flex items-end pb-1 border-1 ml-2">
               <div className="skeleton rounded w-[72px] h-4"></div>
@@ -197,14 +200,17 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
 
             {/* user avatar */}
             <div className="border- border-base-content avatar avatar-margin-mobile avatar-margin-desktop relative">
-              <div className="w-9 h-9 rounded-full">
+              <div className="w-9 h-9 rounded-full bg-[url('/avatar.png')]">
                 {otherUser?.avatarUrl ? (
                   <img src={otherUser?.avatarUrl} />
-                ) : (
-                  <div className="w-9 h-9 rounded-full bg-primary flex justify-center items-center text-xl shadow-lg font-bold">
-                    {otherUser?.name.charAt(0).toUpperCase()}
-                  </div>
+                  ) : (
+                    <img src="/avatar.png" />
                 )}
+
+                {/* <div className={`${!otherUser?.avatarUrl ? 'bg-primary' : ''} w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}> */}
+                {/* <div className={`w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}>
+                  {otherUser?.name.charAt(0).toUpperCase()}
+                </div> */}
               </div>
             </div>
 
@@ -219,7 +225,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-4 px-6 chatroom-padding pt-[56px]"
+        className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-5 px-6 chatroom-padding"
       >
         {!loading &&
           messages?.map((message) => (

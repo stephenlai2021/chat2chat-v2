@@ -365,7 +365,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                         name={userData.name}
                         email={userData.email}
                         avatarUrl={userData.avatarUrl}
-                        found={true}
+                        found={false}
                       />
                     </a>
                   </li>

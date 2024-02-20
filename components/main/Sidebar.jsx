@@ -85,7 +85,7 @@ export default function Sidabar({
                     name={userData.name}
                     email={userData.email}
                     avatarUrl={userData.avatarUrl}
-                    found={true}
+                    found={false}
                   />
                 </a>
               </li>

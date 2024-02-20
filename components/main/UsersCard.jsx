@@ -25,7 +25,7 @@ function UsersCard({
 
   return (
     <div
-      className="hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative"
+      className={`${found ? 'hover:cursor-pointer hover:bg-base-300' : ''} px-4 w-full flex items-center justify-between rounded p-3 relative`}
     >
       {/* avatar && new-message-indicator */}
       <div className="flex-shrink-0 mr-4 relative">
@@ -43,16 +43,18 @@ function UsersCard({
       </div>
 
       <div className="flex-1">
-        {/* name and last-message-sent-time */}
-        <div className="flex items-center justify-between text-desktop text-phone border-1 border-green-30">
-          <h2 className="border-1 border-blue-30 text-md font-semibold truncate text-base-content">
+        {/* name and last message sent time */}
+        {/* <div className="flex items-center justify-between text-desktop text-phone"> */}
+        <div className="flex items-center justify-between text-deskto text-phon">
+          <h2 className="text-md font-semibold truncate text-base-content">
             {name}
           </h2>
-          <div className="text-xs text-base-content truncate time-stamp-desktop">
+          <div className="text-xs text-base-content truncate time-stamp-deskto">
             {lastMessageSentTime ? formatTimeAgo(lastMessageSentTime) : ""}
           </div>
         </div>
 
+        {/* last message && new message badge */}
         <div className="flex justify-between">
           <p
             className={`${

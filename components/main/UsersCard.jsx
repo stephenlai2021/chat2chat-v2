@@ -15,11 +15,6 @@ function UsersCard({
   lastMessage,
   lastMessageSentTime,
   found,
-  where,
-
-  status,
-  timeStamp,
-  otherData,
 }) {
   /* 時間格式 */
   const formatTimeAgo = (timestamp) => {
@@ -70,13 +65,16 @@ function UsersCard({
           Donot delete this block !!!
           When we add friend, if user found, render email instead of last mesage 
         */}
-        {where == "drawer" && (
-          <p className="max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone">
-            {email}
-          </p>
-        )}
 
         <div className="flex justify-between">
+          <p
+            className={`${
+              found ? "block" : "hidden"
+            } max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+          >
+            {email}
+          </p>
+
           {/* Render message if user submit message only */}
           <p
             className={`${
@@ -107,7 +105,7 @@ function UsersCard({
 
           <div
             className={`${
-              newMessage !== 0 ? "block" : "hidden"
+              !found && newMessage !== 0 ? "block" : "hidden"
             } badge badge-primary`}
           >
             {newMessage}

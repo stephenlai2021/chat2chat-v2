@@ -646,7 +646,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                       avatarUrl={user.avatarUrl}
                       email={user.email}
                       lastMessage={user.lastMessage}
-                      found={true}
+                      // found={true}
                     />
                     <span
                       className={`${

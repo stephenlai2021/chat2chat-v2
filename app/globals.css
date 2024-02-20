@@ -194,7 +194,7 @@
 }
 
 @media (max-width: 300px) {
-  .text-phone {
-    max-width: 200px;
+  .text-watch {
+    max-width: 120px;
   }
 }

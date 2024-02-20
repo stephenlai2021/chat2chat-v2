@@ -25,10 +25,7 @@ function UsersCard({
 
   return (
     <div
-      className={`
-      ${!found ? "hover:cursor-pointer" : ""} 
-      hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative 
-      `}
+      className="hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative"
     >
       {/* avatar && new-message-indicator */}
       <div className="flex-shrink-0 mr-4 relative">
@@ -42,11 +39,6 @@ function UsersCard({
             }
             alt="Avatar"
           />
-          {/* <span
-            className={`${
-              newMessage ? "block" : "hidden"
-            } bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full`}
-          /> */}
         </div>
       </div>
 
@@ -61,16 +53,11 @@ function UsersCard({
           </div>
         </div>
 
-        {/* 
-          Donot delete this block !!!
-          When we add friend, if user found, render email instead of last mesage 
-        */}
-
         <div className="flex justify-between">
           <p
             className={`${
-              found ? "block" : "hidden"
-            } max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+              !lastMessage && !lastImage ? "block" : "hidden"
+            } text-base-content truncate text-sm text-desktop text-tablet text-phone text-watch`}
           >
             {email}
           </p>
@@ -78,7 +65,7 @@ function UsersCard({
           {/* Render message if user submit message only */}
           <p
             className={`${
-              !found && lastMessage && !lastImage ? "block" : "hidden"
+              found && lastMessage && !lastImage ? "block" : "hidden"
             } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
           >
             {lastMessage}
@@ -87,7 +74,7 @@ function UsersCard({
           {/* Render image icon if user submit image only */}
           <p
             className={`${
-              !found && !lastMessage && lastImage ? "block" : "hidden"
+              found && !lastMessage && lastImage ? "block" : "hidden"
             } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
           >
             <IoImageOutline className="w-5 h-5" />
@@ -96,7 +83,7 @@ function UsersCard({
           {/* Render image icon and message if user submit image and message both */}
           <div
             className={`${
-              !found && lastMessage && lastImage ? "block" : "hidden"
+              found && lastMessage && lastImage ? "block" : "hidden"
             } border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone`}
           >
             <IoImageOutline className="w-5 h-5" />
@@ -105,8 +92,9 @@ function UsersCard({
 
           <div
             className={`${
-              !found && newMessage !== 0 ? "block" : "hidden"
-            } badge badge-primary`}
+              // !found && newMessage !== 0 ? "block" : "hidden"
+              newMessage >= 1 ? "block badge badge-primary" : "hidden"
+            }`}
           >
             {newMessage}
           </div>

@@ -524,17 +524,17 @@ function ChatList({ userData, setSelectedChatroom }) {
                         chatroom.users.find((id) => id !== userData?.id)
                       ].avatarUrl
                     }
-                    email={
-                      chatroom.usersData[
-                        chatroom.users.find((id) => id !== userData?.id)
-                      ].email
-                    }
+                    // email={
+                    //   chatroom.usersData[
+                    //     chatroom.users.find((id) => id !== userData?.id)
+                    //   ].email
+                    // }
                     newMessage={chatroom.newMessage}
                     lastImage={chatroom.lastImage}
                     lastMessage={chatroom.lastMessage}
                     lastMessageSentTime={chatroom.lastMessageSentTime}
                     loginUser={userData}
-                    found={false}
+                    found={true}
                     otherData={otherData}
                   />
                 </div>
@@ -644,9 +644,9 @@ function ChatList({ userData, setSelectedChatroom }) {
                     <UsersCard
                       name={user.name}
                       avatarUrl={user.avatarUrl}
-                      // email={user.email}
+                      email={user.email}
                       lastMessage={user.lastMessage}
-                      // found={true}
+                      found={true}
                     />
                     <span
                       className={`${

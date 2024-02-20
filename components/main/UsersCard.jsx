@@ -46,11 +46,11 @@ function UsersCard({
             }
             alt="Avatar"
           />
-          <span
+          {/* <span
             className={`${
               newMessage ? "block" : "hidden"
             } bg-red-500 absolute bottom-0 right-0 w-[14px] h-[14px] border border-2 rounded-full`}
-          />
+          /> */}
         </div>
       </div>
 
@@ -65,45 +65,52 @@ function UsersCard({
           </div>
         </div>
 
-        {/* When we add friend, if user found, render email instead of last mesage */}
+        {/* 
+          Donot delete this block !!!
+          When we add friend, if user found, render email instead of last mesage 
+        */}
         {/* {found && (
           <p className="max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {email}
           </p>
         )} */}
 
-        {/* {!found && (
-          <p className="text-base-content truncate text-sm text-desktop text-tablet text-phone">
+        <div className="flex justify-between">
+          {/* Render message if user submit message only */}
+          <p
+            className={`${
+              !found && lastMessage && !lastImage ? "block" : "hidden"
+            } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+          >
             {lastMessage}
           </p>
-        )} */}
 
-        {/* Render message if user submit message only */}
-        <p
-          className={`${
-            !found && lastMessage && !lastImage ? "block" : "hidden"
-          } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
-        >
-          {lastMessage}
-        </p>
+          {/* Render image icon if user submit image only */}
+          <p
+            className={`${
+              !found && !lastMessage && lastImage ? "block" : "hidden"
+            } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+          >
+            <IoImageOutline className="w-5 h-5" />
+          </p>
 
-        {/* Render image icon if use send image only */}
-        <p
-          className={`${
-            !found && !lastMessage && lastImage ? "block" : "hidden"
-          } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
-        >
-          <IoImageOutline className="w-5 h-5" />
-        </p>
+          {/* Render image icon and message if user submit image and message both */}
+          <div
+            className={`${
+              !found && lastMessage && lastImage ? "block" : "hidden"
+            } border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+          >
+            <IoImageOutline className="w-5 h-5" />
+            <span className="ml-2 truncate">{lastMessage}</span>
+          </div>
 
-        {/* Render image and message if user send them both */}
-        <div
-          className={`${
-            !found && lastMessage && lastImage ? "block" : "hidden"
-          } border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone`}
-        >
-          <IoImageOutline className="w-5 h-5" />
-          <span className="ml-2 truncate">{lastMessage}</span>
+          <div
+            className={`${
+              newMessage !== 0 ? "block" : "hidden"
+            } badge badge-primary`}
+          >
+            {newMessage}
+          </div>
         </div>
       </div>
     </div>

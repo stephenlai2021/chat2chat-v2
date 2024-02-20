@@ -15,6 +15,7 @@ function UsersCard({
   lastMessage,
   lastMessageSentTime,
   found,
+  where,
 
   status,
   timeStamp,
@@ -69,11 +70,11 @@ function UsersCard({
           Donot delete this block !!!
           When we add friend, if user found, render email instead of last mesage 
         */}
-        {/* {found && (
+        {where == "drawer" && (
           <p className="max-w-[150px] text-base-content truncate text-sm text-desktop text-tablet text-phone">
             {email}
           </p>
-        )} */}
+        )}
 
         <div className="flex justify-between">
           {/* Render message if user submit message only */}

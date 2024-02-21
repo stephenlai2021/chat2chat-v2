@@ -33,7 +33,7 @@ import Sidebar from "./Sidebar";
 import BottomNavbar from "./BottomNavbar";
 import UsersCardSkeleton from "../skeleton/UsersCardSkeleton";
 import AddFriendModal from "../modal/AddFriendModal";
-import CreateGroupModal from '../modal/CreateGroupModal'
+import CreateGroupModal from "../modal/CreateGroupModal";
 import BrandTitle from "./BrandTitle";
 
 /* data */
@@ -46,13 +46,19 @@ import { useTheme } from "next-themes";
 import { RxAvatar } from "react-icons/rx";
 import { BsPersonAdd } from "react-icons/bs";
 import { MdGroupAdd } from "react-icons/md";
+import { IoIosSearch } from "react-icons/io";
+import { GrFormViewHide } from "react-icons/gr";
+import { IoArrowUpCircleOutline } from "react-icons/io5";
 
 function ChatList({ userData, setSelectedChatroom }) {
   const [activeTab, setActiveTab] = useState("privateChat");
   const [otherData, setOtherData] = useState({});
-  const [userChatrooms, setUserChatrooms] = useState([]);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [chatListLoading, setChatListLoading] = useState(true);
+  const [isSearch, setIsSearch] = useState(false);
+  const [userChatrooms, setUserChatrooms] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredChatrooms, setFilteredChatrooms] = useState([]);
   // const [users, setUsers] = useState([]);
 
   const { setTheme } = useTheme();
@@ -62,7 +68,7 @@ function ChatList({ userData, setSelectedChatroom }) {
   const handleTabClick = (tab) => setActiveTab(tab);
 
   /* 
-    Donot delete this block !!! 
+    Donot delete this effect !!! 
     get users once
   */
   // useEffect(() => {
@@ -86,7 +92,7 @@ function ChatList({ userData, setSelectedChatroom }) {
     // setChatListLoading(true);
     const chatroomsQuery = query(
       collection(firestore, "chatrooms"),
-      where("users", "array-contains", userData.id),
+      where("users", "array-contains", userData.id)
       // orderBy("timestamp", "asc")
     );
     const unsubChatrooms = onSnapshot(chatroomsQuery, (snapshot) => {
@@ -95,6 +101,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         chatrooms.push({ id: doc.id, ...doc.data() });
       });
       setUserChatrooms(chatrooms);
+      setFilteredChatrooms(chatrooms)
       if (chatrooms.length !== 0) setChatListLoading(false);
       console.log("get chatrooms: ", chatrooms);
     });
@@ -102,6 +109,7 @@ function ChatList({ userData, setSelectedChatroom }) {
   }, [userData]);
 
   /* 
+    Do not delete this function !!!
     This function reads through chatrooms collection, 
     finding out documents containing login user data, 
     then set status 'offline'  
@@ -220,6 +228,18 @@ function ChatList({ userData, setSelectedChatroom }) {
     }
   };
 
+  const handleInputChange = (e) => {
+    const searchItem = e.target.value
+    setSearchTerm(searchItem);
+
+    const filterdItem = userChatrooms.filter((chatroom) => {
+      return chatroom.usersData[
+        chatroom.users.find((id) => id !== userData?.id)
+      ].name.toLowerCase().includes(searchItem.toLowerCase())
+    });
+    setFilteredChatrooms(filterdItem)
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setChatListLoading(false);
@@ -242,11 +262,22 @@ function ChatList({ userData, setSelectedChatroom }) {
         <div className="navbar h-[60px] bg-base-30">
           <BrandTitle />
 
+          {/* search icon */}
+          <div className="relative">
+            <IoIosSearch
+              className={`
+                w-[23px] h-[23px] mx-2 hover:cursor-pointer text-base-content hidde navbar-sho
+                ${isSearch ? "hidden" : "block"}
+              `}
+              onClick={() => setIsSearch((current) => !current)}
+            />
+          </div>
+
           {/* add-friend icon */}
           <BsPersonAdd
             className={`${
               activeTab == "privateChat" ? "navbar-show" : "hidden"
-            } w-[23px] h-[23px] mr-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
+            } w-[23px] h-[23px] mx-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
             onClick={() =>
               document.getElementById("addFriendModal").showModal()
             }
@@ -256,7 +287,7 @@ function ChatList({ userData, setSelectedChatroom }) {
           <MdGroupAdd
             className={`${
               activeTab == "groupChat" ? "navbar-show" : "hidden"
-            } w-[23px] h-[23px] mr-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
+            } w-[23px] h-[23px] mx-2 hover:cursor-pointer text-base-content hidde navbar-sho`}
             onClick={() =>
               document.getElementById("createGroupModal").showModal()
             }
@@ -274,7 +305,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                 <label
                   htmlFor="navbar-drawer-settings"
                   aria-label="close sidebar"
-                  className="px-3 py-2"
+                  className="mx-2 py-2"
                 >
                   <RxAvatar className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" />
                 </label>
@@ -355,8 +386,30 @@ function ChatList({ userData, setSelectedChatroom }) {
           </div>
         </div>
 
-        {/* Section */}
-        <div className="py-3 overflow-y-auto h-full shadow-inner chatlist-mb-mobile">
+        {/* Body */}
+        <div className="py-3 overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
+          {/* search icon */}
+          <div className="relative flex justify-center">
+            <input
+              type="text"
+              value={searchTerm}
+              autoFocus
+              onChange={handleInputChange}
+              placeholder="Enter name or email"
+              className={`mx-3 px-3 bg-base-300 rounded-md py-[10px] w-full outline-none 
+              ${isSearch ? "block" : "hidden"}
+            `}
+            />
+            {/* <GrFormViewHide  */}
+            <IoArrowUpCircleOutline
+              className={`
+                w-[22px] h-[22px] absolute top-[50%] translate-y-[-50%] right-6 hover:cursor-pointer
+                ${isSearch ? "block" : "hidden"}
+              `}
+              onClick={() => setIsSearch(false)}
+            />
+          </div>
+
           {activeTab === "groupChat" && (
             <div className="h-full flex flex-col items-center justify-center">
               <h1>Group Chat</h1>
@@ -369,7 +422,9 @@ function ChatList({ userData, setSelectedChatroom }) {
           */}
           {activeTab === "privateChat" && !chatListLoading && (
             <>
-              {userChatrooms?.map((chatroom) => (
+              {/* {userChatrooms && filteredChatrooms && filteredChatrooms.map((chatroom) => ( */}
+              {/* {userChatrooms?.map((chatroom) => ( */}
+              {filteredChatrooms?.map((chatroom) => (
                 <div
                   key={chatroom.id}
                   onClick={() => {

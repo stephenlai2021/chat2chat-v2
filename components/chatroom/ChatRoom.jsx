@@ -147,25 +147,43 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     }
   };
 
+  /* 
+    Method 1 
+  */
+  // useEffect(() => {
+  //   if (messagesContainerRef) {
+  //     messagesContainerRef.current.addEventListener('DOMNodeInserted', event => {
+  //       const {currentTarget: target} = event
+  //       target.scroll({ top: target.scrollHeight, behavior: 'smooth' })
+  //     })
+  //   }
+  // }, []);
+
+  /* 
+    Method 2 
+  */
+  // useEffect(() => {
+  //   if (messagesContainerRef && messagesContainerRef.current) {
+  //     const element = messagesContainerRef.current;
+  //     element.scroll({
+  //       top: element.scrollHeight,
+  //       left: 0,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [messagesContainerRef, messages, loading]);
+
+  /*
+    Method 3
+    This method is simple and works except not working 
+    at first messages finished loading !!!
+  */
   useEffect(() => {
-    // if (!loading)
-    // messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, []);
-
-  /*
-    After user click chat list and open chatroom, 
-    scroll to the bottom after messages fully loaded 
-    It is not working !!!
-  */
-  // useEffect(() => {
-  //   if (!loading && messages.length !== 0) {
-  //     messagesContainerRef.scrollTop = messagesContainerRef.scrollHeight;
-  //   }
-  // }, [loading, messages]);
+  }, [messagesContainerRef, messages, loading]);
 
   const gotoUsersMenu = () => {
     setSelectedChatroom(null);
@@ -237,8 +255,13 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-5 px-6 chatroom-padding"
+        // className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-5 px-6 chatroom-padding"
+        className="shadow-inner flex-1 overflow-auto py-5 px-6 chatroom-padding"
       >
+        {/* {messages &&
+          messages.map((message) => ( */}
+        {/* {!loading && messages &&
+          messages.map((message) => ( */}
         {!loading &&
           messages?.map((message) => (
             <MessageCard

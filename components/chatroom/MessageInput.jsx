@@ -161,7 +161,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleSubmit}
           type="text"
-          autoFocus
+          // autoFocus
           ref={messageInput}
           placeholder="Type a message..."
           className={`${

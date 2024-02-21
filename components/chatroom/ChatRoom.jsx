@@ -46,7 +46,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const [otherUser, setOtherUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isMessageBottom, setIsMessageBottom] = useState(false);
-  const [msgCount, setMsgCount]=useState(0)
+  const [msgCount, setMsgCount] = useState(0);
 
   /* get other user data in realtime */
   useEffect(() => {
@@ -148,19 +148,24 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   };
 
   useEffect(() => {
-    messagesContainerRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [])
+    // if (!loading)
+    // messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, []);
 
   /*
     After user click chat list and open chatroom, 
     scroll to the bottom after messages fully loaded 
     It is not working !!!
   */
-  useEffect(() => {
-    if (!loading && messages.length !== 0) {
-      messagesContainerRef.scrollTop = messagesContainerRef.scrollHeight;
-    }
-  }, [loading, messages]);
+  // useEffect(() => {
+  //   if (!loading && messages.length !== 0) {
+  //     messagesContainerRef.scrollTop = messagesContainerRef.scrollHeight;
+  //   }
+  // }, [loading, messages]);
 
   const gotoUsersMenu = () => {
     setSelectedChatroom(null);
@@ -210,8 +215,8 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
               <div className="w-9 h-9 rounded-full bg-[url('/avatar.png')]">
                 {otherUser?.avatarUrl ? (
                   <img src={otherUser?.avatarUrl} />
-                  ) : (
-                    <img src="/avatar.png" />
+                ) : (
+                  <img src="/avatar.png" />
                 )}
 
                 {/* <div className={`${!otherUser?.avatarUrl ? 'bg-primary' : ''} w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}> */}
@@ -244,7 +249,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
             />
           ))}
 
-        {/* hide loading screen after 5 seconds */}
+        {/* hide loading screen after 3 seconds */}
         {loading && <MessageSkeleton />}
       </div>
 

@@ -161,11 +161,12 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleSubmit}
           type="text"
+          autoFocus
           ref={messageInput}
           placeholder="Type a message..."
           className={`${
             message ? "pl-[76px]" : "pl-[52px]"
-          } pr-10 input-bordered bg-base-300 inpu input-m h-[56px] text-base-content flex-1 w-full`}
+          } border-none outline-none pr-10 input-bordered bg-base-300 inpu input-m h-[56px] text-base-content flex-1 w-full`}
         />
       )}
 

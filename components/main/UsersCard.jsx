@@ -25,7 +25,7 @@ function UsersCard({
 
   return (
     <div
-      className={`${found ? 'hover:cursor-pointer hover:bg-base-300' : ''} px-4 w-full flex items-center justify-between rounded p-3 relative`}
+      className={`${found ? 'hover:cursor-pointer' : ''} hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative`}
     >
       {/* avatar && new-message-indicator */}
       <div className="flex-shrink-0 mr-4 relative">

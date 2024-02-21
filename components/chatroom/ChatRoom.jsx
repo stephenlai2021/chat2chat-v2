@@ -147,6 +147,10 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     }
   };
 
+  useEffect(() => {
+    messagesContainerRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [])
+
   /*
     After user click chat list and open chatroom, 
     scroll to the bottom after messages fully loaded 

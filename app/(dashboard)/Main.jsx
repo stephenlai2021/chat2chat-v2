@@ -64,7 +64,7 @@ function Main({ data }) {
           <img
             src="./undraw_chat_mobile-removebg.png"
             alt="cha illustration"
-            className="max-w-[400px]"
+            className="max-w-[300px]"
           />
           {/* <div className="text-3xl text-base-content italic">Chat2Chat</div> */}
         </div>

@@ -356,7 +356,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         </div>
 
         {/* Section */}
-        <div className="pt-1 overflow-y-auto h-full shadow-inner chatlist-mb-mobile">
+        <div className="py-3 overflow-y-auto h-full shadow-inner chatlist-mb-mobile">
           {activeTab === "groupChat" && (
             <div className="h-full flex flex-col items-center justify-center">
               <h1>Group Chat</h1>
@@ -420,7 +420,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                 <img
                   src="./begin_chat.svg"
                   alt=""
-                  className="max-w-[300px] m-5"
+                  className="max-w-[200px] m-5"
                 />
                 {/* Add frined to begin chat ! */}
               </div>

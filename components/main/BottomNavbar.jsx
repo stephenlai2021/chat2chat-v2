@@ -9,7 +9,8 @@ import { GrGroup } from "react-icons/gr";
 
 export default function BottomNavbar({ userData, activeTab, handleTabClick }) {
   return (
-    <div className="mt-auto hidden users-mobile">
+    // <div className="mt-auto hidden users-mobile">
+    <div className="hidden users-mobile absolute bottom-0">
       <div className="btm-nav h-14 w-full flex">
         {/* group button */}
         <button

@@ -368,7 +368,10 @@ function ChatList({ userData, setSelectedChatroom }) {
         {/* Body */}
         <div className="overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
           {/* search input */}
-          <div className="relative flex justify-center my-3 mx-3">
+          <div 
+            className={`relative flex justify-center mx-3
+            ${isSearch ? 'my-3' : 'my-1'}
+          `}>
             <input
               type="text"
               value={searchTerm}
@@ -376,7 +379,7 @@ function ChatList({ userData, setSelectedChatroom }) {
               onFocus={e => e.currentTarget.select()}
               onChange={handleInputChange}
               placeholder="Enter name"
-              className={`mx- px-3 bg-base-300 py-3 rounded-xl w-full outline-none 
+              className={`px-3 bg-base-300 py-3 rounded-xl w-full outline-none 
               ${isSearch ? "block" : "hidden"}
               `}
             />

@@ -27,6 +27,9 @@ import { useRouter } from "next/navigation";
 /* supabase */
 import useSupabaseClient from "@/lib/supabase/client";
 
+/* utils */
+import { languages } from "@/data/utils";
+
 /* components */
 import UsersCard from "./UsersCard";
 import Sidebar from "./Sidebar";
@@ -35,12 +38,7 @@ import UsersCardSkeleton from "../skeleton/UsersCardSkeleton";
 import AddFriendModal from "../modal/AddFriendModal";
 import CreateGroupModal from "../modal/CreateGroupModal";
 import BrandTitle from "./BrandTitle";
-
-/* data */
-import { themes, languages } from "@/data/utils";
-
-/* next-themes */
-import { useTheme } from "next-themes";
+import ThemeSwitcher from "../switcher/ThemeSwitcher";
 
 /* react-icons */
 import { RxAvatar } from "react-icons/rx";
@@ -49,6 +47,8 @@ import { MdGroupAdd } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
 import { GrFormViewHide } from "react-icons/gr";
 import { IoArrowUpCircleOutline } from "react-icons/io5";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 
 function ChatList({ userData, setSelectedChatroom }) {
   const [activeTab, setActiveTab] = useState("privateChat");
@@ -61,7 +61,6 @@ function ChatList({ userData, setSelectedChatroom }) {
   const [filteredChatrooms, setFilteredChatrooms] = useState([]);
   // const [users, setUsers] = useState([]);
 
-  const { setTheme } = useTheme();
   const router = useRouter();
   const supabase = useSupabaseClient();
 
@@ -101,7 +100,7 @@ function ChatList({ userData, setSelectedChatroom }) {
         chatrooms.push({ id: doc.id, ...doc.data() });
       });
       setUserChatrooms(chatrooms);
-      setFilteredChatrooms(chatrooms)
+      setFilteredChatrooms(chatrooms);
       if (chatrooms.length !== 0) setChatListLoading(false);
       console.log("get chatrooms: ", chatrooms);
     });
@@ -229,15 +228,17 @@ function ChatList({ userData, setSelectedChatroom }) {
   };
 
   const handleInputChange = (e) => {
-    const searchItem = e.target.value
+    const searchItem = e.target.value;
     setSearchTerm(searchItem);
 
     const filterdItem = userChatrooms.filter((chatroom) => {
       return chatroom.usersData[
         chatroom.users.find((id) => id !== userData?.id)
-      ].name.toLowerCase().includes(searchItem.toLowerCase())
+      ].name
+        .toLowerCase()
+        .includes(searchItem.toLowerCase());
     });
-    setFilteredChatrooms(filterdItem)
+    setFilteredChatrooms(filterdItem);
   };
 
   useEffect(() => {
@@ -294,7 +295,7 @@ function ChatList({ userData, setSelectedChatroom }) {
           />
 
           {/* avatar-icon with drawer wrapper */}
-          <div className="flex-none hidden navbar-show">
+          <div className="flex-none hidde navbar-sho">
             <div className="drawer z-[200]">
               <input
                 id="navbar-drawer-settings"
@@ -307,7 +308,8 @@ function ChatList({ userData, setSelectedChatroom }) {
                   aria-label="close sidebar"
                   className="mx-2 py-2"
                 >
-                  <RxAvatar className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" />
+                  {/* <RxAvatar className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" /> */}
+                  <IoSettingsOutline className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" />
                 </label>
               </div>
               <div className="drawer-side">
@@ -317,7 +319,8 @@ function ChatList({ userData, setSelectedChatroom }) {
                   className="drawer-overlay"
                 ></label>
                 <ul className="pt-4 w-80 min-h-full bg-base-200 text-base-content">
-                  <li className="pl-2">
+                  {/* User Info */}
+                  <li className="pl-2 hidden mobile-show">
                     <a>
                       <UsersCard
                         name={userData.name}
@@ -326,41 +329,16 @@ function ChatList({ userData, setSelectedChatroom }) {
                         found={false}
                       />
                     </a>
+                    <div className="divider" />
                   </li>
-                  {/* Menu list */}
                   <li>
                     <ul className="menu bg-base-200 w-ful rounded-box">
-                      <div className="divider" />
-                      {/* Theme */}
                       <li>
                         <details>
                           <summary className="">Theme</summary>
-                          <ul>
-                            {themes.map((theme) => (
-                              <div
-                                key={theme.label}
-                                className="form-control"
-                                onClick={() => setTheme(theme.value)}
-                              >
-                                <label className="label cursor-pointer gap-4">
-                                  <span className="label-text">
-                                    {theme.label}
-                                  </span>
-                                  <input
-                                    type="radio"
-                                    name="theme-radios"
-                                    className="radio theme-controller"
-                                    value={theme.value}
-                                    // checked={theme.value ? true : false}
-                                    // checked={true}
-                                  />
-                                </label>
-                              </div>
-                            ))}
-                          </ul>
+                          <ThemeSwitcher />
                         </details>
                       </li>
-                      {/* Language */}
                       <li>
                         <details>
                           <summary>Language</summary>
@@ -374,7 +352,6 @@ function ChatList({ userData, setSelectedChatroom }) {
                         </details>
                       </li>
                       <div className="divider" />
-                      {/* Logout */}
                       <li>
                         <a onClick={logoutClick}>Logout</a>
                       </li>
@@ -390,6 +367,12 @@ function ChatList({ userData, setSelectedChatroom }) {
         <div className="py-3 overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
           {/* search icon */}
           <div className="relative flex justify-center">
+            {/* <IoCloseCircleOutline className={`
+              w-[22px] h-[22px] absolute left-6 top-[50%] translate-y-[-50%] hover:cursor-pointer
+              ${searchTerm != "" ? 'block' : 'hidden'}
+              `}
+              onClick={() => setSearchTerm("")} 
+            /> */}
             <input
               type="text"
               value={searchTerm}
@@ -398,9 +381,8 @@ function ChatList({ userData, setSelectedChatroom }) {
               placeholder="Enter name or email"
               className={`mx-3 px-3 bg-base-300 rounded-md py-[10px] w-full outline-none 
               ${isSearch ? "block" : "hidden"}
-            `}
+              `}
             />
-            {/* <GrFormViewHide  */}
             <IoArrowUpCircleOutline
               className={`
                 w-[22px] h-[22px] absolute top-[50%] translate-y-[-50%] right-6 hover:cursor-pointer
@@ -422,8 +404,6 @@ function ChatList({ userData, setSelectedChatroom }) {
           */}
           {activeTab === "privateChat" && !chatListLoading && (
             <>
-              {/* {userChatrooms && filteredChatrooms && filteredChatrooms.map((chatroom) => ( */}
-              {/* {userChatrooms?.map((chatroom) => ( */}
               {filteredChatrooms?.map((chatroom) => (
                 <div
                   key={chatroom.id}
@@ -486,6 +466,7 @@ function ChatList({ userData, setSelectedChatroom }) {
           userData={userData}
           activeTab={activeTab}
           handleTabClick={handleTabClick}
+          logoutClick={logoutClick}
         />
       </main>
 

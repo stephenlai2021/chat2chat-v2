@@ -82,8 +82,12 @@
   word-wrap: break-word;
 }
 
-.menu-active {
+.menu-left-active {
   border-left-width: 2px;
+}
+
+.menu-top-active {
+  border-top-width: 2px;
 }
 
 /* .img-bg {
@@ -103,6 +107,9 @@
 }
 
 @media (max-width: 800px) {
+  .mobile-show {
+    display: block;
+  }
   .chatlist-mb-mobile {
     margin-bottom: 56px;
   }

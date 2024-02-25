@@ -48,6 +48,8 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 
 function ChatList({ userData, setSelectedChatroom }) {
+  // console.log('user data: ', userData)
+
   const [activeTab, setActiveTab] = useState("privateChat");
   const [otherData, setOtherData] = useState({});
   const [logoutLoading, setLogoutLoading] = useState(false);
@@ -207,6 +209,7 @@ function ChatList({ userData, setSelectedChatroom }) {
       myData: userData,
       otherData:
         chatroom.usersData[chatroom.users.find((id) => id !== userData.id)],
+      newMessage: chatroom.newMessage
     };
     setSelectedChatroom(data);
 
@@ -413,6 +416,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                 >
                   <UsersCard
                     key={chatroom.id}
+                    // userData={userData}
                     name={
                       chatroom.usersData[
                         chatroom.users.find((id) => id !== userData?.id)
@@ -423,7 +427,12 @@ function ChatList({ userData, setSelectedChatroom }) {
                         chatroom.users.find((id) => id !== userData?.id)
                       ].avatarUrl
                     }
-                    newMessage={chatroom.newMessage}
+                    newMessage={
+                      chatroom.usersData[
+                        chatroom.users.find((id) => id == userData?.id)
+                      ].newMessage
+                    }
+                    // newMessage={chatroom.newMessage}
                     lastImage={chatroom.lastImage}
                     lastMessage={chatroom.lastMessage}
                     lastMessageSentTime={chatroom.lastMessageSentTime}

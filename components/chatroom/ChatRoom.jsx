@@ -10,6 +10,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   serverTimestamp,
   onSnapshot,
   query,
@@ -37,6 +38,10 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const other = selectedChatroom?.otherData;
   const chatRoomId = selectedChatroom?.id;
 
+  // console.log("me id: ", me.id);
+  // console.log("other id: ", other.id);
+  // console.log("chatroom id: ", chatRoomId);
+
   const messagesContainerRef = useRef(null);
 
   // const [message, setMessage] = useState([]);
@@ -47,6 +52,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const [loading, setLoading] = useState(false);
   const [isMessageBottom, setIsMessageBottom] = useState(false);
   const [msgCount, setMsgCount] = useState(0);
+  const [otherUserData, setOtherUserData] = useState(null);
 
   /* get other user data in realtime */
   useEffect(() => {
@@ -66,6 +72,24 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  /* Get realtime new message in chatrooms collection */
+  useEffect(() => {
+    const unsub = onSnapshot(doc(firestore, "chatrooms", chatRoomId), (doc) => {
+      const selectedChatroom = doc.data();
+      console.log("get selected chatroom | ChatRoom: ", selectedChatroom);
+
+      const otherUserData =
+        selectedChatroom.usersData[
+          selectedChatroom.users.find((id) => id !== me.id)
+        ];
+      console.log("other user data: ", otherUserData);
+      setOtherUserData(otherUserData)
+
+      // setMsgCount(doc.data().newMessage);
+    });
+    return () => unsub();
+  }, [chatRoomId]);
 
   /* 
     get messages 
@@ -112,7 +136,6 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
           content: message,
           time: serverTimestamp(),
           image,
-          // msgCout: msgCount++
         };
 
         /* 
@@ -129,11 +152,13 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         // update last message in chatrooms collection
         const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
         await updateDoc(chatroomRef, {
-          newMessage: 1,
           lastImage: image ? image : "",
           lastMessage: message ? message : "",
           lastMessageSentTime: serverTimestamp(),
-          // msgCount: first read chatroom.msgCount then plus 1
+          // newMessage: msgCount + 1,
+          // [`usersData.${me.id}.newMessage`]: msgCount + 1
+          [`usersData.${otherUserData.id}.newMessage`]: otherUserData.newMessage + 1
+          // [`usersData.${me.id}.newMessage`]: otherUserData.newMessage + 1
         });
       } catch (error) {
         console.error("Error sending message:", error.message);
@@ -255,13 +280,8 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        // className="shadow-inner flex-1 overflow-y-auto overflow-x-hidden py-5 px-6 chatroom-padding"
         className="shadow-inner flex-1 overflow-auto py-5 px-6 chatroom-padding"
       >
-        {/* {messages &&
-          messages.map((message) => ( */}
-        {/* {!loading && messages &&
-          messages.map((message) => ( */}
         {!loading &&
           messages?.map((message) => (
             <MessageCard

@@ -171,6 +171,7 @@ function Main() {
         name,
         email,
         avatarUrl,
+        newMessage
       });
       console.log("user data created !");
       setConfirm(true);

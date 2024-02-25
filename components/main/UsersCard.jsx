@@ -7,6 +7,7 @@ import moment from "moment";
 import { IoImageOutline } from "react-icons/io5";
 
 function UsersCard({
+  // userData,
   name,
   avatarUrl,
   email,
@@ -94,7 +95,7 @@ function UsersCard({
 
           <div
             className={`${
-              // !found && newMessage !== 0 ? "block" : "hidden"
+              // newMessage >= 1 && userData.name != name ? "block badge badge-primary" : "hidden"
               newMessage >= 1 ? "block badge badge-primary" : "hidden"
             }`}
           >

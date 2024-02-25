@@ -1,7 +1,7 @@
 "use client";
 
 /* react */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 /* firebase */
 import { firestore } from "@/lib/firebase/client";
@@ -41,12 +41,9 @@ import BrandTitle from "./BrandTitle";
 import ThemeSwitcher from "../switcher/ThemeSwitcher";
 
 /* react-icons */
-import { RxAvatar } from "react-icons/rx";
 import { BsPersonAdd } from "react-icons/bs";
 import { MdGroupAdd } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
-import { GrFormViewHide } from "react-icons/gr";
-import { IoArrowUpCircleOutline } from "react-icons/io5";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 
@@ -62,7 +59,12 @@ function ChatList({ userData, setSelectedChatroom }) {
   // const [users, setUsers] = useState([]);
 
   const router = useRouter();
+  const searchTermRef = useRef(null)
   const supabase = useSupabaseClient();
+
+  useEffect(() => {
+    if (searchTermRef.current) searchTermRef.current.focus()
+  }, [searchTerm])
 
   const handleTabClick = (tab) => setActiveTab(tab);
 
@@ -364,30 +366,25 @@ function ChatList({ userData, setSelectedChatroom }) {
         </div>
 
         {/* Body */}
-        <div className="py-3 overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
+        <div className="overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
           {/* search icon */}
           <div className="relative flex justify-center">
-            {/* <IoCloseCircleOutline className={`
-              w-[22px] h-[22px] absolute left-6 top-[50%] translate-y-[-50%] hover:cursor-pointer
-              ${searchTerm != "" ? 'block' : 'hidden'}
-              `}
-              onClick={() => setSearchTerm("")} 
-            /> */}
             <input
               type="text"
               value={searchTerm}
-              autoFocus
+              // autoFocus
+              onFocus={e => e.currentTarget.select()}
               onChange={handleInputChange}
-              placeholder="Enter name or email"
-              className={`mx-3 px-3 bg-base-300 rounded-md py-[10px] w-full outline-none 
+              placeholder="Enter name"
+              className={`mx- px-3 bg-base-300 py-3 w-full outline-none 
               ${isSearch ? "block" : "hidden"}
               `}
             />
-            <IoArrowUpCircleOutline
+            <IoCloseCircleOutline
               className={`
-                w-[22px] h-[22px] absolute top-[50%] translate-y-[-50%] right-6 hover:cursor-pointer
-                ${isSearch ? "block" : "hidden"}
-              `}
+                w-[22px] h-[22px] absolute top-[50%] translate-y-[-50%] right-3 hover:cursor-pointer
+                ${!searchTerm && isSearch ? "block" : "hidden"}
+                `}
               onClick={() => setIsSearch(false)}
             />
           </div>
@@ -438,11 +435,11 @@ function ChatList({ userData, setSelectedChatroom }) {
 
           {/* 組件載入後立刻顯示加載圖示 */}
           {activeTab === "privateChat" && chatListLoading && (
-            <>
+            <div className="py-3">
               {"abcd".split("").map((i) => (
                 <UsersCardSkeleton key={i} />
               ))}
-            </>
+            </div>
           )}
 
           {/* 
@@ -455,7 +452,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                 <img
                   src="./begin_chat.svg"
                   alt=""
-                  className="max-w-[200px] m-5"
+                  className="max-w-[100px] m-5"
                 />
                 {/* Add frined to begin chat ! */}
               </div>

@@ -23,7 +23,7 @@ export default function BottomNavbar({
 }) {
   return (
     <div className="mt-auto hidden users-mobile">
-      <div className="btm-na h-14 w-full flex">
+      <div className="btm-nav h-14 w-full flex bg-base-200 shadow-inner">
         
         {/* group button */}
         <button

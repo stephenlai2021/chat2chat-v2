@@ -17,11 +17,20 @@ function UsersCard({
   lastMessageSentTime,
   found,
 }) {
-  /* 時間格式 */
+  /* 
+    時間格式 
+    - a few seconds ago
+    - 6 minutes ago
+    - 3 hours ago
+    - 5 days ago
+  */
   const formatTimeAgo = (timestamp) => {
     const date = timestamp?.toDate();
     const momentDate = moment(date);
-    return momentDate.fromNow();
+    if (momentDate.fromNow().includes('minutes')) return momentDate.fromNow().replace(' minutes ago', ' min')
+    if (momentDate.fromNow().includes('hours')) return momentDate.fromNow().replace(' hours ago', ' hour')
+    if (momentDate.fromNow().includes('days')) return momentDate.fromNow().replace(' days ago', ' day')
+    if (momentDate.fromNow() == 'a few seconds ago') return "just now"
   };
 
   return (
@@ -93,14 +102,15 @@ function UsersCard({
             <span className="ml-2 truncate">{lastMessage}</span>
           </div>
 
-          <div
+          {/* message count is optional !!! */}
+          {/* <div
             className={`${
-              // newMessage >= 1 && userData.name != name ? "block badge badge-primary" : "hidden"
               newMessage >= 1 ? "block badge badge-primary" : "hidden"
             }`}
           >
             {newMessage}
-          </div>
+          </div> */}
+
         </div>
       </div>
     </div>

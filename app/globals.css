@@ -107,6 +107,9 @@
 }
 
 @media (max-width: 800px) {
+  .navbar-avatar-margin {
+    margin-left: 8px;
+  }
   .mobile-show {
     display: block;
   }

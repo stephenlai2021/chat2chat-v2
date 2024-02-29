@@ -5,16 +5,19 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 /* firebase */
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase/client";
+import {
+  doc,
+  addDoc,
+  updateDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { firestore, storage } from "@/lib/firebase/client";
 
 /* react-icons */
-import { FaPaperclip, FaPaperPlane } from "react-icons/fa";
-import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoImageOutline } from "react-icons/io5";
-import { AiOutlineCloudUpload } from "react-icons/ai";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { IoIosSearch } from "react-icons/io";
 import { LuSend } from "react-icons/lu";
 
 /* utils */
@@ -22,14 +25,20 @@ import EmojiPicker from "emoji-picker-react";
 import ImagePreviewModal from "../modal/ImagePreviewModal";
 
 function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
+// function MessageInput({ me, chatRoomId }) {
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showUploadBtn, setShowUploadBtn] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  // Move from ChatRoom
+  // const [message, setMessage] = useState("");
+  // const [image, setImage] = useState(null);
 
   const inputFile = useRef(null);
   const messageInput = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -91,11 +100,6 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
     );
   };
 
-  useEffect(() => {
-    // console.log("image | downloadURL: ", image);
-    sendMessage();
-  }, [image]);
-
   const handleEmojiClick = (emojiData, event) => {
     setMessage((prevMessage) => prevMessage + emojiData.emoji);
   };
@@ -110,9 +114,70 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
     document.getElementById("imagePreviewModal").close();
   };
 
+  /* 
+    put messages in db 
+  */
+  // const sendMessage = async () => {
+  //   // if (message == "" && image == null) return;
+
+  //   if (
+  //     (message == "" && image !== null) ||
+  //     (message !== "" && image == null) ||
+  //     (message !== "" && image !== null)
+  //   ) {
+  //     try {
+  //       let newMessage = {
+  //         chatRoomId,
+  //         sender: me.id,
+  //         content: message,
+  //         time: serverTimestamp(),
+  //         image,
+  //       };
+
+  //       /* 
+  //         Clear the input field before sending the message
+  //         This is important to clear input field in here !!!
+  //       */
+  //       // setMessage("");
+  //       // setImage(null);
+
+  //       // add new message in messages collection
+  //       const messagesCollection = collection(firestore, "messages");
+  //       await addDoc(messagesCollection, newMessage);
+
+  //       // update last message in chatrooms collection
+  //       const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
+  //       await updateDoc(chatroomRef, {
+  //         lastImage: image ? image : "",
+  //         lastMessage: message ? message : "",
+  //         lastMessageSentTime: serverTimestamp(),
+  //         // [`usersData.${otherUserData.id}.newMessage`]:
+  //         //   otherUserData.newMessage + 1,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error sending message:", error.message);
+  //     }
+  //   }
+
+  //   // Scroll to the bottom after sending a message
+  //   if (messagesContainerRef.current) {
+  //     messagesContainerRef.current.scrollTop =
+  //       messagesContainerRef.current.scrollHeight;
+  //   }
+  // };
+
+  /* 
+    Once we get the image, send message 
+    because it takes time to set image, 
+    so we put the logic inside useEffect hook !!!
+  */
+  useEffect(() => {
+    // console.log("image | downloadURL: ", image);
+    sendMessage();
+  }, [image]);
+
   return (
     <div className="relative flex items-center px-0 py-0 shadow-inner">
-      
       {/* image icon */}
       <div className="absolute left-4 mr-4">
         <IoImageOutline
@@ -174,6 +239,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
       {message && (
         <LuSend
           onClick={sendMessage}
+          // onClick={() => sendMessage(message)}
           className={`absolute right-4 ml-4 text-base-content cursor-pointer w-[20px] h-[20px]`}
         />
       )}

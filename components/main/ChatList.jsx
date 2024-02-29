@@ -209,7 +209,7 @@ function ChatList({ userData, setSelectedChatroom }) {
       myData: userData,
       otherData:
         chatroom.usersData[chatroom.users.find((id) => id !== userData.id)],
-      newMessage: chatroom.newMessage
+      // newMessage: chatroom.newMessage
     };
     setSelectedChatroom(data);
 
@@ -314,7 +314,7 @@ function ChatList({ userData, setSelectedChatroom }) {
                   className="mx-2 py-2"
                 >
                   {/* <RxAvatar className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" /> */}
-                  <IoSettingsOutline className="w-[24px] h-[24px] hover:cursor-pointer text-base-content" />
+                  <IoSettingsOutline className="w-[23px] h-[23px] hover:cursor-pointer text-base-content" />
                 </label>
               </div>
               <div className="drawer-side">
@@ -427,11 +427,11 @@ function ChatList({ userData, setSelectedChatroom }) {
                         chatroom.users.find((id) => id !== userData?.id)
                       ].avatarUrl
                     }
-                    newMessage={
-                      chatroom.usersData[
-                        chatroom.users.find((id) => id == userData?.id)
-                      ].newMessage
-                    }
+                    // newMessage={
+                    //   chatroom.usersData[
+                    //     chatroom.users.find((id) => id == userData?.id)
+                    //   ].newMessage
+                    // }
                     // newMessage={chatroom.newMessage}
                     lastImage={chatroom.lastImage}
                     lastMessage={chatroom.lastMessage}

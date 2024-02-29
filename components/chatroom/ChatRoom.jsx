@@ -7,16 +7,17 @@ import backgroundImage from "../../public/avatar.png";
 
 /* firebase */
 import {
-  addDoc,
-  collection,
   doc,
-  getDoc,
-  serverTimestamp,
-  onSnapshot,
   query,
   where,
+  addDoc,
+  getDoc,
   orderBy,
   updateDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+  serverTimestamp,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
 
@@ -44,52 +45,98 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
 
   const messagesContainerRef = useRef(null);
 
-  // const [message, setMessage] = useState([]);
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [image, setImage] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [isMessageBottom, setIsMessageBottom] = useState(false);
-  const [msgCount, setMsgCount] = useState(0);
   const [otherUserData, setOtherUserData] = useState(null);
 
-  /* get other user data in realtime */
-  useEffect(() => {
-    const unsubOtherUser = onSnapshot(
-      doc(firestore, "users", other.email),
-      (doc) => {
-        setOtherUser(doc.data());
-      }
-    );
-    return () => unsubOtherUser();
-  }, [other]);
+  const [msgCount, setMsgCount] = useState(0);
+  const [isMessageBottom, setIsMessageBottom] = useState(false);
 
-  // Scroll to the bottom when messages change
+  const gotoUsersMenu = () => setSelectedChatroom(null);
+
+  const deleteMsg = async (id) => {
+    try {
+      await deleteDoc(doc(firestore, "messages", id));
+    } catch (err) {
+      console.log("error: ", err);
+    }
+  };
+
+  /* 
+    put messages in db 
+    This function triggers realtime snapshot (messages && chatrooms) twice !!!
+  */
+  const sendMessage = async () => {
+    if (message == "" && image == null) return 
+    // if (
+    //   (message == "" && image !== null) ||
+    //   (message !== "" && image == null) ||
+    //   (message !== "" && image !== null)
+    // ) {
+      try {
+        let newMessage = {
+          chatRoomId,
+          sender: me.id,
+          content: message,
+          time: serverTimestamp(),
+          image,
+        };
+
+        /*
+          Clear the input field before sending the message
+          This is important to clear input field in here !!!
+        */
+        setMessage("");
+        setImage(null);
+
+        // add new message in messages collection
+        const messagesCollection = collection(firestore, "messages");
+        await addDoc(messagesCollection, newMessage);
+
+        /* update last message in chatrooms collection */
+        const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
+        await updateDoc(chatroomRef, {
+          lastImage: image ? image : "",
+          lastMessage: message ? message : "",
+          lastMessageSentTime: serverTimestamp(),
+          // [`usersData.${otherUserData.id}.newMessage`]: otherUserData.newMessage + 1
+        });
+      } catch (error) {
+        console.error("Error sending message:", error.message);
+      }
+    // }
+
+    // Scroll to the bottom after sending a message
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
+  /*
+    Auto scroll to the bottom of the messages container after
+    click user card component.
+    Not working at the first loading !!!
+  */
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messagesContainerRef, messages, loading]);
 
-  /* Get realtime new message in chatrooms collection */
+  /* 
+  handle chat bubble loading time 
+  */
   useEffect(() => {
-    const unsub = onSnapshot(doc(firestore, "chatrooms", chatRoomId), (doc) => {
-      const selectedChatroom = doc.data();
-      console.log("get selected chatroom | ChatRoom: ", selectedChatroom);
-
-      const otherUserData =
-        selectedChatroom.usersData[
-          selectedChatroom.users.find((id) => id !== me.id)
-        ];
-      console.log("other user data: ", otherUserData);
-      setOtherUserData(otherUserData)
-
-      // setMsgCount(doc.data().newMessage);
-    });
-    return () => unsub();
-  }, [chatRoomId]);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   /* 
     get messages 
@@ -110,6 +157,10 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
           id: doc.id,
           ...doc.data(),
         }));
+        
+        // const messages = []
+        // snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data()}))
+        
         setMessages(messages);
         if (messages.length !== 0) setLoading(false);
         console.log("get messages: ", messages);
@@ -118,132 +169,64 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     return () => unsubMsgs();
   }, [chatRoomId]);
 
-  /* 
-    put messages in db 
-  */
-  const sendMessage = async () => {
-    // if (message == "" && image == null) return;
-
-    if (
-      (message == "" && image !== null) ||
-      (message !== "" && image == null) ||
-      (message !== "" && image !== null)
-    ) {
-      try {
-        let newMessage = {
-          chatRoomId,
-          sender: me.id,
-          content: message,
-          time: serverTimestamp(),
-          image,
-        };
-
-        /* 
-          Clear the input field before sending the message
-          This is important to clear input field in here !!!
-        */
-        setMessage("");
-        setImage(null);
-
-        // add new message in messages collection
-        const messagesCollection = collection(firestore, "messages");
-        await addDoc(messagesCollection, newMessage);
-
-        // update last message in chatrooms collection
-        const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
-        await updateDoc(chatroomRef, {
-          lastImage: image ? image : "",
-          lastMessage: message ? message : "",
-          lastMessageSentTime: serverTimestamp(),
-          // newMessage: msgCount + 1,
-          // [`usersData.${me.id}.newMessage`]: msgCount + 1
-          [`usersData.${otherUserData.id}.newMessage`]: otherUserData.newMessage + 1
-          // [`usersData.${me.id}.newMessage`]: otherUserData.newMessage + 1
-        });
-      } catch (error) {
-        console.error("Error sending message:", error.message);
-      }
-    }
-
-    // Scroll to the bottom after sending a message
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  };
-
-  /* 
-    Method 1 
-  */
-  // useEffect(() => {
-  //   if (messagesContainerRef) {
-  //     messagesContainerRef.current.addEventListener('DOMNodeInserted', event => {
-  //       const {currentTarget: target} = event
-  //       target.scroll({ top: target.scrollHeight, behavior: 'smooth' })
-  //     })
-  //   }
-  // }, []);
-
-  /* 
-    Method 2 
-  */
-  // useEffect(() => {
-  //   if (messagesContainerRef && messagesContainerRef.current) {
-  //     const element = messagesContainerRef.current;
-  //     element.scroll({
-  //       top: element.scrollHeight,
-  //       left: 0,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // }, [messagesContainerRef, messages, loading]);
-
   /*
-    Method 3
-    This method is simple and works except not working 
-    at first messages finished loading !!!
+    Scroll to the bottom when messages change
   */
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messagesContainerRef, messages, loading]);
+  }, [messages]);
 
-  const gotoUsersMenu = () => {
-    setSelectedChatroom(null);
-  };
+  /* get other user in realtime */
+  // useEffect(() => {
+  //   const unsubOtherUser = onSnapshot(
+  //     doc(firestore, "users", other.email),
+  //     (doc) => {
+  //       setOtherUser(doc.data());
+  //     }
+  //   );
+  //   return () => unsubOtherUser();
+  // }, [other]);
 
-  /* handle chat bubble loading time */
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [loading]);
+  /* 
+    Do not delete this block !!!
+    Get other user data
+    We need realtime other user data to set the message count,
+    This is optional, because it increases the cost !!!
+  */
+  // useEffect(() => {
+  //   const unsub = onSnapshot(doc(firestore, "chatrooms", chatRoomId), (doc) => {
+  //     const selectedChatroom = doc.data();
+  //     console.log("get selected chatroom | ChatRoom: ", selectedChatroom);
+
+  //     const otherUserData =
+  //       selectedChatroom.usersData[
+  //         selectedChatroom.users.find((id) => id !== me.id)
+  //       ];
+  //     console.log("other user data: ", otherUserData);
+  //     setOtherUserData(otherUserData);
+  //   });
+  //   return () => unsub();
+  // }, [chatRoomId]);
 
   return (
     <div className="flex flex-col h-screen shadow-inner">
       {/* top menu */}
       <div className="h-[64px] flex items-center shadow-inner bg-base-30">
-        {loading && !otherUser ? (
-          <div className="hidden show-flex">
-            {/* arrow icon loading skeleton */}
-            <div className="flex items-end ml-4 pb-1">
+        {loading ? (
+          <div className="hidde show-fle flex">
+            <div className="flex items-end ml-4 pb-1 hidden show-flex">
               <div className="skeleton rounded w-[18px] h-[18px] pt-"></div>
             </div>
-
-            {/* user avatar loading skeleton */}
-            <div className="skeleton rounded-full w-9 h-9 ml-[6px]"></div>
-
-            {/* user name loading skeleton */}
+            <div className="skeleton rounded-full w-9 h-9 ml-4 navbar-avatar-margin"></div>
             <div className="flex items-end pb-1 border-1 ml-2">
               <div className="skeleton rounded w-[72px] h-4"></div>
             </div>
           </div>
         ) : (
           <>
-            {/* arrow icon */}
             <div
               className={`${
                 selectedChatroom ? "arrow-show" : "hidden"
@@ -253,29 +236,25 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
               <FaArrowLeft className="text-base-content w-[18px] h-[18px]" />
             </div>
 
-            {/* user avatar */}
             <div className="border- border-base-content avatar avatar-margin-mobile avatar-margin-desktop relative">
               <div className="w-9 h-9 rounded-full bg-[url('/avatar.png')]">
-                {otherUser?.avatarUrl ? (
-                  <img src={otherUser?.avatarUrl} />
+                {other?.avatarUrl ? (
+                  <img src={other?.avatarUrl} />
                 ) : (
                   <img src="/avatar.png" />
                 )}
-
-                {/* <div className={`${!otherUser?.avatarUrl ? 'bg-primary' : ''} w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}> */}
-                {/* <div className={`w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}>
-                  {otherUser?.name.charAt(0).toUpperCase()}
-                </div> */}
               </div>
             </div>
-
-            {/* user name */}
             <div className="h-8 font-semibold flex items-end ml-2 text-base-content">
-              {otherUser?.name}
+              {other?.name}
             </div>
           </>
         )}
       </div>
+      {/* <div className={`${!otherUser?.avatarUrl ? 'bg-primary' : ''} w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}> */}
+      {/* <div className={`w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}>
+          {otherUser?.name.charAt(0).toUpperCase()}
+        </div> */}
 
       {/* Messages container with overflow and scroll */}
       <div
@@ -283,12 +262,14 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         className="shadow-inner flex-1 overflow-auto py-5 px-6 chatroom-padding"
       >
         {!loading &&
-          messages?.map((message) => (
+          messages?.map((message, index) => (
             <MessageCard
-              key={message.id}
-              message={message}
               me={me}
+              key={message.id}
+              index={index}
               other={otherUser}
+              message={message}
+              deleteMsg={deleteMsg}
             />
           ))}
 
@@ -298,12 +279,18 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
 
       {/* Input box at the bottom */}
       <MessageInput
-        message={message}
-        sendMessage={sendMessage}
-        setMessage={setMessage}
         image={image}
+        message={message}
         setImage={setImage}
+        setMessage={setMessage}
+        sendMessage={sendMessage}
       />
+
+      {/* <MessageInput
+        me={me}
+        chatRoomId={chatRoomId}
+        selectedChatroom={selectedChatroom}
+      /> */}
     </div>
   );
 }

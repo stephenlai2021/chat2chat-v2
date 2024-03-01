@@ -1,5 +1,5 @@
 /* react */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 /* next */
 import Image from "next/image";
@@ -32,16 +32,10 @@ import { FaArrowLeft, FaBullseye } from "react-icons/fa";
 
 import UserAvatar from "@/components/images/avatar.png";
 
-let setTimeoutInstance;
-
 function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const me = selectedChatroom?.myData;
   const other = selectedChatroom?.otherData;
   const chatRoomId = selectedChatroom?.id;
-
-  // console.log("me id: ", me.id);
-  // console.log("other id: ", other.id);
-  // console.log("chatroom id: ", chatRoomId);
 
   const messagesContainerRef = useRef(null);
 
@@ -60,6 +54,13 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const deleteMsg = async (id) => {
     try {
       await deleteDoc(doc(firestore, "messages", id));
+
+      /* updateDoc triggers snapshot twice which is a bug !!! */
+      const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
+      await updateDoc(chatroomRef, {
+        lastMessage: 'message withdrawn',
+        lastMessageSentTime: serverTimestamp(),
+      });
     } catch (err) {
       console.log("error: ", err);
     }
@@ -70,43 +71,43 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     This function triggers realtime snapshot (messages && chatrooms) twice !!!
   */
   const sendMessage = async () => {
-    if (message == "" && image == null) return 
+    if (message == "" && image == null) return;
     // if (
     //   (message == "" && image !== null) ||
     //   (message !== "" && image == null) ||
     //   (message !== "" && image !== null)
     // ) {
-      try {
-        let newMessage = {
-          chatRoomId,
-          sender: me.id,
-          content: message,
-          time: serverTimestamp(),
-          image,
-        };
+    try {
+      let newMessage = {
+        chatRoomId,
+        sender: me.id,
+        content: message,
+        time: serverTimestamp(),
+        image,
+      };
 
-        /*
+      /*
           Clear the input field before sending the message
           This is important to clear input field in here !!!
         */
-        setMessage("");
-        setImage(null);
+      setMessage("");
+      setImage(null);
 
-        // add new message in messages collection
-        const messagesCollection = collection(firestore, "messages");
-        await addDoc(messagesCollection, newMessage);
+      // add new message in messages collection
+      const messagesCollection = collection(firestore, "messages");
+      await addDoc(messagesCollection, newMessage);
 
-        /* update last message in chatrooms collection */
-        const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
-        await updateDoc(chatroomRef, {
-          lastImage: image ? image : "",
-          lastMessage: message ? message : "",
-          lastMessageSentTime: serverTimestamp(),
-          // [`usersData.${otherUserData.id}.newMessage`]: otherUserData.newMessage + 1
-        });
-      } catch (error) {
-        console.error("Error sending message:", error.message);
-      }
+      /* update last message in chatrooms collection */
+      const chatroomRef = doc(firestore, "chatrooms", chatRoomId);
+      await updateDoc(chatroomRef, {
+        lastImage: image ? image : "",
+        lastMessage: message ? message : "",
+        lastMessageSentTime: serverTimestamp(),
+        // [`usersData.${otherUserData.id}.newMessage`]: otherUserData.newMessage + 1
+      });
+    } catch (error) {
+      console.error("Error sending message:", error.message);
+    }
     // }
 
     // Scroll to the bottom after sending a message
@@ -153,14 +154,11 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
         orderBy("time", "asc")
       ),
       (snapshot) => {
+        setMessages([]);
         const messages = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        
-        // const messages = []
-        // snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data()}))
-        
         setMessages(messages);
         if (messages.length !== 0) setLoading(false);
         console.log("get messages: ", messages);
@@ -259,7 +257,7 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        className="shadow-inner flex-1 overflow-auto py-5 px-6 chatroom-padding"
+        className="shadow-inner flex-1 overflow-auto py-5 pl-6 chatroom-paddin"
       >
         {!loading &&
           messages?.map((message, index) => (

@@ -27,6 +27,7 @@ function UsersCard({
   const formatTimeAgo = (timestamp) => {
     const date = timestamp?.toDate();
     const momentDate = moment(date);
+    if (momentDate.fromNow().includes('minute')) return momentDate.fromNow().replace(' minute ago', ' min')
     if (momentDate.fromNow().includes('minutes')) return momentDate.fromNow().replace(' minutes ago', ' min')
     if (momentDate.fromNow().includes('hours')) return momentDate.fromNow().replace(' hours ago', ' hour')
     if (momentDate.fromNow().includes('days')) return momentDate.fromNow().replace(' days ago', ' day')

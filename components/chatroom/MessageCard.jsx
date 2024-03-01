@@ -17,21 +17,25 @@ import DeleteMsgModal from "../modal/DeleteMsgModal";
 function MessageCard({ message, me, other, index, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
 
-  const [showMenu, setShowMenu] = useState(false);
   const [deleteMsgMenu, setDeleteMsgMenu] = useState(false);
 
   const formatTimeAgo = (timestamp) => {
     const date = timestamp?.toDate();
     const momentDate = moment(date);
-    // return momentDate.fromNow();
-    // return momentDate.format("LT");
-    return momentDate.format("lll");
+
+    if (momentDate.fromNow().includes('minute')) return momentDate.fromNow().replace('a minute ago', '1 min')
+    if (momentDate.fromNow().includes('minutes')) return momentDate.fromNow().replace(' minutes ago', ' min')
+    if (momentDate.fromNow().includes('hours')) return momentDate.fromNow().replace(' hours ago', ' hour')
+    if (momentDate.fromNow().includes('days')) return momentDate.fromNow().replace(' days ago', ' day')
+    if (momentDate.fromNow() == 'a few seconds ago') return "just now"
   };
 
   return (
     <div
       key={message.id}
-      className={`${isMessageFromMe ? "chat chat-end" : "chat chat-start"}`}
+      className={`
+        ${isMessageFromMe ? "chat chat-end" : "chat chat-start"}
+      `}
     >
       {/* chat avatar */}
       {/* {isMessageFromMe && (
@@ -82,8 +86,8 @@ function MessageCard({ message, me, other, index, deleteMsg }) {
             {formatTimeAgo(message.time)}
           </div>
         </div>
+        
         <CiMenuKebab
-          // <IoIosClose
           className={`
             ${isMessageFromMe ? "right-[-8px] top-0" : "hidden"} 
             absolute w-5 h-5 hover:cursor-pointer text-warning
@@ -112,6 +116,7 @@ function MessageCard({ message, me, other, index, deleteMsg }) {
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );

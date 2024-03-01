@@ -1,7 +1,7 @@
 "use client";
 
 /* react */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 /* firebase */
 import { firestore } from "@/lib/firebase/client";
@@ -61,12 +61,12 @@ function ChatList({ userData, setSelectedChatroom }) {
   // const [users, setUsers] = useState([]);
 
   const router = useRouter();
-  const searchTermRef = useRef(null)
+  const searchTermRef = useRef(null);
   const supabase = useSupabaseClient();
 
   useEffect(() => {
-    if (searchTermRef.current) searchTermRef.current.focus()
-  }, [searchTerm])
+    if (searchTermRef.current) searchTermRef.current.focus();
+  }, [searchTerm]);
 
   const handleTabClick = (tab) => setActiveTab(tab);
 
@@ -358,7 +358,12 @@ function ChatList({ userData, setSelectedChatroom }) {
                       </li>
                       <div className="divider" />
                       <li>
-                        <a onClick={logoutClick}>Logout</a>
+                        <a onClick={logoutClick}>
+                          Logout{" "}
+                          {logoutLoading && (
+                            <div className="loading loading-spinner loading-xs text-base-content flex justify-center ml-2"></div>
+                          )}
+                        </a>
                       </li>
                     </ul>
                   </li>
@@ -371,15 +376,16 @@ function ChatList({ userData, setSelectedChatroom }) {
         {/* Body */}
         <div className="overflow-y-auto overflow-x-hidden h-full shadow-inner chatlist-mb-mobile">
           {/* search input */}
-          <div 
+          <div
             className={`relative flex justify-center mx-3
-            ${isSearch ? 'my-3' : 'my-1'}
-          `}>
+            ${isSearch ? "my-3" : "my-1"}
+          `}
+          >
             <input
               type="text"
               value={searchTerm}
               // autoFocus
-              onFocus={e => e.currentTarget.select()}
+              onFocus={(e) => e.currentTarget.select()}
               onChange={handleInputChange}
               placeholder="Enter name"
               className={`px-3 bg-base-300 py-3 rounded-xl w-full outline-none 

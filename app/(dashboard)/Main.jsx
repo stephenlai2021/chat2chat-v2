@@ -11,8 +11,7 @@ import { doc, getDoc } from "firebase/firestore";
 import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
 
-// function Main({ userCred }) {
-function Main({ data }) {
+export default function Main({ data }) {
   const [user, setUser] = useState({});
   const [selectedChatroom, setSelectedChatroom] = useState(null);
 
@@ -27,10 +26,6 @@ function Main({ data }) {
       console.log("Cannot find this user !");
     }
   };
-
-  // useEffect(() => {
-  //   getLoginUserData();
-  // }, [userCred]);
 
   return (
     <div className="flex h-screen">
@@ -66,11 +61,8 @@ function Main({ data }) {
             alt="cha illustration"
             className="max-w-[300px]"
           />
-          {/* <div className="text-3xl text-base-content italic">Chat2Chat</div> */}
         </div>
       )}
     </div>
   );
 }
-
-export default Main;

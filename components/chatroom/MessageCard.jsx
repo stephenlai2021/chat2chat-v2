@@ -7,6 +7,8 @@ import Image from "next/image";
 /* react-icons */
 import { CiMenuKebab } from "react-icons/ci";
 import { IoIosClose } from "react-icons/io";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { MdOutlineModeEditOutline } from "react-icons/md";
 
 /* react */
 import { useState } from "react";
@@ -14,47 +16,76 @@ import { useState } from "react";
 /* components */
 import DeleteMsgModal from "../modal/DeleteMsgModal";
 
-function MessageCard({ message, me, other, index, deleteMsg }) {
+export default function MessageCard({ message, me, other, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
 
   const [deleteMsgMenu, setDeleteMsgMenu] = useState(false);
+  const [isEdited, setIsEdited] = useState(false);
 
-  const formatTimeAgo = (timestamp) => {
+  const getCurrentDate = () => {
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const currentDate = `${month}/${day}/${year}`;
+    return currentDate;
+  };
+
+  const getYesterday = () => {
+    const date = new Date();
+    const day = date.getDate() - 1;
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const yesterday = `${month}/${day}/${year}`;
+    return yesterday;
+  };
+
+  // Format: 03/12/2024
+  const formatDate = (timestamp) => {
     const date = timestamp?.toDate();
     const momentDate = moment(date);
+    return momentDate.format("l");
+  };
 
-    if (momentDate.fromNow().includes('minute')) return momentDate.fromNow().replace('a minute ago', '1 min')
-    if (momentDate.fromNow().includes('minutes')) return momentDate.fromNow().replace(' minutes ago', ' min')
-    if (momentDate.fromNow().includes('hours')) return momentDate.fromNow().replace(' hours ago', ' hour')
-    if (momentDate.fromNow().includes('days')) return momentDate.fromNow().replace(' days ago', ' day')
-    if (momentDate.fromNow() == 'a few seconds ago') return "just now"
+  // 2:21PM
+  const formatTimeClock = (timestamp) => {
+    const date = timestamp?.toDate();
+    const momentDate = moment(date);
+    return momentDate.format("LT");
   };
 
   return (
-    <div
-      key={message.id}
-      className={`
-        ${isMessageFromMe ? "chat chat-end" : "chat chat-start"}
-      `}
-    >
-      {/* chat avatar */}
-      {/* {isMessageFromMe && (
-        <div className="chat-image avatar avatar-show hidden">
-          <div className="w-10 rounded-full">
-            <img src={me.avatarUrl} alt="Avatar" />
+    <>
+      <div
+        key={message.id}
+        className={`
+          ${isMessageFromMe ? "chat-end" : "chat-start"}
+          chat border- border-red-30
+        `}
+      >
+        <div className="chat-image avatar">
+          <div className="w-6 rounded-full bg-[url('/avatar.png')]">
+            <img
+              tabIndex={0}
+              src={isMessageFromMe ? me?.avatarUrl : other?.avatarUrl}
+              alt="Avatar"
+              role="button"
+              className="object-cover"
+            />
           </div>
         </div>
-      )}
-      {!isMessageFromMe && (
-        <div className="chat-image avatar avatar-show hidden">
-          <div className="w-10 rounded-full">
-            <img src={other?.avatarUrl} alt="Avatar" />
-          </div>
-        </div>
-      )} */}
 
-      {/* chat bubble */}
-      <div className="relative">
+        <div
+          className={`
+            chat-header flex ml-1
+            ${isMessageFromMe ? "mr-2" : "ml-2"}
+          `}
+        >
+          <time className="opacity-50 text-[10px]">
+            {formatTimeClock(message.time)}
+          </time>
+        </div>
+
         <div
           className={`
             ${
@@ -62,64 +93,60 @@ function MessageCard({ message, me, other, index, deleteMsg }) {
                 ? "chat-bubble chat-bubble-accent"
                 : "chat-bubble chat-bubble-primary"
             } 
+            flex flex-col items-center justify-center border- border-green-30                      
+            string-break relative
           `}
         >
-          {message.image && (
-            <div className="flex justify-center">
-              <img src={message.image} className="max-h-60 mb-4 rounded" />
-            </div>
-          )}
+          <img src={message.image} className="max-h-60 rounded" />
           <p
-            // className={`max-w-[360px] text-wrap leading-tight ${
-            className={`text-wrap leading-tight min-w-[150px] ${
-              isMessageFromMe ? "text-accent-content" : "text-primary-content"
-            }`}
+            className={`
+                leading-tight string-break text-sm border- border-red-30
+                ${
+                  isMessageFromMe
+                    ? "text-accent-content"
+                    : "text-primary-content"
+                }
+                ${message.image ? "mt-2" : "flex justify-start"}             
+            `}
           >
             {message.content}
           </p>
-          {/* isMessageFromMe ? "text-accent-content justify-end" : "text-primary-content justify-start" */}
-          <div
-            className={`text-xs mt-1 min-w-[60px] flex ${
-              isMessageFromMe ? "text-accent-content" : "text-primary-content"
-            }`}
-          >
-            {formatTimeAgo(message.time)}
-          </div>
         </div>
-        
-        <CiMenuKebab
-          className={`
-            ${isMessageFromMe ? "right-[-8px] top-0" : "hidden"} 
-            absolute w-5 h-5 hover:cursor-pointer text-warning
-          `}
-          onClick={() => setDeleteMsgMenu(!deleteMsgMenu)}
-        />
-        <div
-          className={`
-            ${deleteMsgMenu ? "block" : "hidden"}
-            flex p-2 bg-info rounded-box absolute right-4 top-6 bg-info
-          `}
-        >
-          <h3 className="text-sm mr-2 text-info-content flex items-center">Delete ?</h3>
-          <div className="join">
-            <button
-              className="btn join-item btn-xs bg-error"
-              onClick={() => deleteMsg(message.id)}
-            >
-              Yes
-            </button>
-            <button
-              className="btn join-item btn-xs"
-              onClick={() => setDeleteMsgMenu(false)}
-            >
-              No
-            </button>
-          </div>
-        </div>
+        <div className="chat-footer opacity-50 ml-1 text-[10px]">Read</div>
 
+        {/* Option Icon */}
+        <div className="dropdown dropdown-left dropdown-end">
+          <CiMenuKebab
+            tabIndex={0}
+            role="button"
+            className={`
+              ${isMessageFromMe ? "left-[-20px]" : "hidden"} 
+              absolute left-[-47px] top-[-45px] w-5 h-5 hover:cursor-pointer text-warning opacity-50
+            `}
+          />
+          <ul
+            tabIndex={0}
+            className={`
+                dropdown-content z-[100] menu menu-horizontal
+                flex bg-base-300 rounded-box shadow
+              `}
+          >
+            <li>
+              <a className="toolti tooltip-lef" data-tip="Edit">
+                <MdOutlineModeEditOutline className="w-5 h-5" />
+              </a>
+            </li>
+            <li>
+              <a className="toolti tooltip-lef" data-tip="Delete">
+                <MdOutlineDeleteOutline
+                  className="w-5 h-5"
+                  onClick={() => deleteMsg(message.id)}
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
-
-export default MessageCard;

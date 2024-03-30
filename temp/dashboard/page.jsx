@@ -12,7 +12,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
 /* zustand */
-import { useLoginUserStore } from '@/zustand/loginUserStore'
+import { useLoginUserStore } from '@/zustand/store'
 
 /* components */
 import Users from "@/components/main/ChatList";

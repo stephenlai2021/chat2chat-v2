@@ -12,8 +12,8 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { firestore, storage } from "@/lib/firebase/client";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 /* react-icons */
 import { IoImageOutline } from "react-icons/io5";
@@ -24,8 +24,8 @@ import { LuSend } from "react-icons/lu";
 import EmojiPicker from "emoji-picker-react";
 import ImagePreviewModal from "../modal/ImagePreviewModal";
 
-function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
-// function MessageInput({ me, chatRoomId }) {
+export default function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
+  // function MessageInput({ me, chatRoomId }) {
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [showUploadBtn, setShowUploadBtn] = useState(false);
@@ -110,6 +110,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
 
   const closeAndClearModal = () => {
     inputFile.current.value = "";
+    setMessage("")
     setImagePreview(null);
     document.getElementById("imagePreviewModal").close();
   };
@@ -134,7 +135,7 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
   //         image,
   //       };
 
-  //       /* 
+  //       /*
   //         Clear the input field before sending the message
   //         This is important to clear input field in here !!!
   //       */
@@ -210,55 +211,56 @@ function MessageInput({ sendMessage, message, setMessage, image, setImage }) {
         </div>
       )} */}
 
-      {/* When user type something in message input, show clear button */}
-      {message && (
-        <div className="border- absolute left-12 top-[50%] translate-y-[-50%] py-2 px-1">
-          <IoCloseCircleOutline
-            className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
-            onClick={() => setMessage("")}
-          />
-        </div>
-      )}
-
-      {!imagePreview && (
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleSubmit}
-          type="text"
-          // autoFocus
-          ref={messageInput}
-          placeholder="Type a message..."
-          className={`${
-            message ? "pl-[76px]" : "pl-[52px]"
-          } border-none outline-none pr-10 input-bordered bg-base-300 inpu input-m h-[56px] text-base-content flex-1 w-full`}
+      {/* When user type something in message input, show close button */}
+      <div
+        className={`
+          border- absolute left-12 top-[50%] translate-y-[-50%] py-2 px-1
+          ${message ? "block" : "hidden"}
+        `}
+      >
+        <IoCloseCircleOutline
+          className="w-[20px] h-[20px] hover:cursor-pointer text-base-content"
+          onClick={() => setMessage("")}
         />
-      )}
+      </div>
+
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleSubmit}
+        type="text"
+        // autoFocus
+        ref={messageInput}
+        placeholder="Type a message..."
+        className={`
+          ${message ? "pl-[76px]" : "pl-[52px]"} 
+          ${!imagePreview ? "block" : "hidden"}
+          border-none outline-none pr-10 input-bordered bg-base-300 inpu input-m h-[56px] text-base-content flex-1 w-full
+        `}
+      />
 
       {/* if message input is not empty, show submit icon  */}
-      {message && (
-        <LuSend
-          onClick={sendMessage}
-          // onClick={() => sendMessage(message)}
-          className={`absolute right-4 ml-4 text-base-content cursor-pointer w-[20px] h-[20px]`}
-        />
-      )}
+      <LuSend
+        onClick={sendMessage}
+        className={`
+          absolute right-4 ml-4 text-base-content cursor-pointer w-[20px] h-[20px]
+          ${message ? "block" : "hidden"}
+        `}
+      />
 
       <ImagePreviewModal
+        from="MessageInput"
         id="imagePreviewModal"
-        handleFileChange={handleFileChange}
         handleUpload={handleUpload}
+        handleFileChange={handleFileChange}
         closeAndClearModal={closeAndClearModal}
-        imagePreview={imagePreview}
-        uploadProgress={uploadProgress}
         message={message}
         setMessage={setMessage}
         inputFile={inputFile}
+        imagePreview={imagePreview}
         showUploadBtn={showUploadBtn}
-        from="MessageInput"
+        uploadProgress={uploadProgress}
       />
     </div>
   );
 }
-
-export default MessageInput;

@@ -1,5 +1,5 @@
 /* react */
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* next */
 import Image from "next/image";
@@ -32,7 +32,7 @@ import { FaArrowLeft, FaBullseye } from "react-icons/fa";
 
 import UserAvatar from "@/components/images/avatar.png";
 
-function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
+export default function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   const me = selectedChatroom?.myData;
   const other = selectedChatroom?.otherData;
   const chatRoomId = selectedChatroom?.id;
@@ -72,11 +72,6 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   */
   const sendMessage = async () => {
     if (message == "" && image == null) return;
-    // if (
-    //   (message == "" && image !== null) ||
-    //   (message !== "" && image == null) ||
-    //   (message !== "" && image !== null)
-    // ) {
     try {
       let newMessage = {
         chatRoomId,
@@ -108,7 +103,6 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     } catch (error) {
       console.error("Error sending message:", error.message);
     }
-    // }
 
     // Scroll to the bottom after sending a message
     if (messagesContainerRef.current) {
@@ -178,15 +172,15 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   }, [messages]);
 
   /* get other user in realtime */
-  // useEffect(() => {
-  //   const unsubOtherUser = onSnapshot(
-  //     doc(firestore, "users", other.email),
-  //     (doc) => {
-  //       setOtherUser(doc.data());
-  //     }
-  //   );
-  //   return () => unsubOtherUser();
-  // }, [other]);
+  useEffect(() => {
+    const unsubOtherUser = onSnapshot(
+      doc(firestore, "users", other.email),
+      (doc) => {
+        setOtherUser(doc.data());
+      }
+    );
+    return () => unsubOtherUser();
+  }, [other]);
 
   /* 
     Do not delete this block !!!
@@ -236,46 +230,38 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
 
             <div className="border- border-base-content avatar avatar-margin-mobile avatar-margin-desktop relative">
               <div className="w-9 h-9 rounded-full bg-[url('/avatar.png')]">
-                {other?.avatarUrl ? (
-                  <img src={other?.avatarUrl} />
+                {otherUser?.avatarUrl ? (
+                  <img src={otherUser?.avatarUrl} />
                 ) : (
                   <img src="/avatar.png" />
                 )}
               </div>
             </div>
             <div className="h-8 font-semibold flex items-end ml-2 text-base-content">
-              {other?.name}
+              {otherUser?.name}
             </div>
           </>
         )}
       </div>
-      {/* <div className={`${!otherUser?.avatarUrl ? 'bg-primary' : ''} w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}> */}
-      {/* <div className={`w-9 h-9 rounded-full flex justify-center items-center text-xl shadow-lg font-bold`}>
-          {otherUser?.name.charAt(0).toUpperCase()}
-        </div> */}
-
-      {/* Messages container with overflow and scroll */}
       <div
         ref={messagesContainerRef}
-        className="shadow-inner flex-1 overflow-auto py-5 pl-6 chatroom-paddin"
+        className="shadow-inner flex-1 overflow-auto py-5 px-3"
       >
         {!loading &&
           messages?.map((message, index) => (
             <MessageCard
               me={me}
-              key={message.id}
               index={index}
-              other={otherUser}
+              key={message.id}
               message={message}
+              other={otherUser}
               deleteMsg={deleteMsg}
             />
           ))}
 
-        {/* hide loading screen after 3 seconds */}
         {loading && <MessageSkeleton />}
       </div>
 
-      {/* Input box at the bottom */}
       <MessageInput
         image={image}
         message={message}
@@ -293,4 +279,3 @@ function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
   );
 }
 
-export default ChatRoom;

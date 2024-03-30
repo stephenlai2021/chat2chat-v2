@@ -1,131 +1,132 @@
 export const themes = [
   {
-    label: "Light",
-    value: "light",
-  },
-  {
-    label: "Dark",
-    value: "dark",
-  },
-  {
-    label: "Cupcake",
-    value: "cupcake",
-  },
-  {
-    label: "Bumblebee",
-    value: "bumblebee",
-  },
-  {
-    label: "Emerald",
-    value: "emerald",
-  },
-  {
-    label: "Corporate",
-    value: "corporate",
-  },
-  {
-    label: "Synthwave",
-    value: "synthwave",
-  },
-  {
-    label: "Retro",
-    value: "retro",
-  },
-  {
-    label: "Cyberpunk",
-    value: "cyberpunk",
-  },
-  {
-    label: "Valentine",
-    value: "valentine",
-  },
-  {
-    label: "Halloween",
-    value: "halloween",
-  },
-  {
-    label: "Garden",
-    value: "garden",
-  },
-  {
-    label: "Forest",
-    value: "forest",
+    label: "Acid",
+    value: "acid",
   },
   {
     label: "Aqua",
     value: "aqua",
   },
   {
-    label: "Lofi",
-    value: "lofi",
-  },
-  {
-    label: "Pastel",
-    value: "pastel",
-  },
-  {
-    label: "Fantasy",
-    value: "fantasy",
-  },
-  {
-    label: "Wireframe",
-    value: "wireframe",
+    label: "Autumn",
+    value: "autumn",
   },
   {
     label: "Black",
     value: "black",
   },
   {
-    label: "Luxury",
-    value: "luxury",
+    label: "Business",
+    value: "business",
   },
   {
-    label: "Dracula",
-    value: "dracula",
+    label: "Bumblebee",
+    value: "bumblebee",
   },
   {
     label: "Cmyk",
     value: "cmyk",
   },
   {
-    label: "Autumn",
-    value: "autumn",
-  },
-  {
-    label: "Business",
-    value: "business",
-  },
-  {
-    label: "Acid",
-    value: "acid",
-  },
-  {
-    label: "Lemonade",
-    value: "lemonade",
-  },
-  {
-    label: "Night",
-    value: "night",
-  },
-  {
     label: "Coffee",
     value: "coffee",
   },
   {
-    label: "Winter",
-    value: "winter",
+    label: "Cupcake",
+    value: "cupcake",
+  },
+  {
+    label: "Corporate",
+    value: "corporate",
+  },
+  {
+    label: "Cyberpunk",
+    value: "cyberpunk",
   },
   {
     label: "Dim",
     value: "dim",
   },
   {
+    label: "Dark",
+    value: "dark",
+  },
+  {
+    label: "Dracula",
+    value: "dracula",
+  },
+  {
+    label: "Emerald",
+    value: "emerald",
+  },
+  {
+    label: "Forest",
+    value: "forest",
+  },
+  {
+    label: "Fantasy",
+    value: "fantasy",
+  },
+  {
+    label: "Garden",
+    value: "garden",
+  },
+  {
+    label: "Halloween",
+    value: "halloween",
+  },
+  {
+    label: "Lofi",
+    value: "lofi",
+  },
+  {
+    label: "Light",
+    value: "light",
+  },
+  {
+    label: "Luxury",
+    value: "luxury",
+  },
+  {
+    label: "Lemonade",
+    value: "lemonade",
+  },
+  {
     label: "Nord",
     value: "nord",
   },
   {
+    label: "Night",
+    value: "night",
+  },
+
+  {
+    label: "Pastel",
+    value: "pastel",
+  },
+  {
+    label: "Retro",
+    value: "retro",
+  },
+  {
     label: "Sunset",
     value: "sunset",
+  },
+  {
+    label: "Synthwave",
+    value: "synthwave",
+  },
+  {
+    label: "Valentine",
+    value: "valentine",
+  },
+  {
+    label: "Winter",
+    value: "winter",
+  },
+  {
+    label: "Wireframe",
+    value: "wireframe",
   },
 ];
 
@@ -142,4 +143,4 @@ export const languages = [
     label: "jp",
     value: "Japanese",
   },
-]
+];

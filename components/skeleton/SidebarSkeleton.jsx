@@ -1,9 +1,10 @@
+import { BsPersonAdd } from "react-icons/bs";
+
 export default function SidebarSkeleton() {
   return (
-    <div className="shadow-inner h-full p-5 flex flex-col items-center sidebar-hide">
-      <div className="skeleton rounded mb-6 w-[22px] h-[22px]"></div>
-      <div className="skeleton rounded mb-6 w-[22px] h-[22px]"></div>
-      <div className="skeleton mt-auto w-[30px] h-[30px]"></div>
+    <div className="shadow-inner w-[64px] h-full p-5 flex flex-col items-center sidebar-hide">
+      <BsPersonAdd className="w-[23px] h-[23px] text-base-content" />
+      <img src="/avatar.png" className={`w-6 h-6 rounded-full object-cover mt-auto`} />
     </div>
   );
 }

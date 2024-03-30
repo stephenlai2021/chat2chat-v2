@@ -2,12 +2,11 @@
 
 ## Tech Stack
 
-- Nextjs 14
-- Supabase Auth
-- Firebase 
-  - Firestore
-  - Storage
-- Tailwindcss
+Framework - Nextjs 14
+Auth - Supabase Server Side Auth
+Database - Firestore
+Storage - Firebase storage
+Styles - Tailwindcss && DaisyUI
 
 ## Feacures
 

@@ -51,7 +51,7 @@ export default function DashoardPage() {
 
   useEffect(() => {
     getUserData()
-    if (!userCred) return;
+    // if (!userCred) return;
     const unsubUser = onSnapshot(
       doc(firestore, "users", userCred?.email),
       (doc) => {

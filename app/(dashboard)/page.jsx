@@ -65,6 +65,11 @@ export default function DashoardPage() {
     getUserData();
   }, []);
 
-  if (userData != null) return <Main data={userData} />   
+  useEffect(() => {
+    console.log('userData: ', userData)
+  }, [userData])
+
+  // if (userData != null) return <Main data={userData} />   
+  if (userData) return <Main data={userData} />   
   return <LoadingSkeleton />
 }

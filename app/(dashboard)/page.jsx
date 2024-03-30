@@ -18,7 +18,7 @@
 //   if (docSnap.exists()) {
 //     const data = docSnap.data();
 //     return <Main data={data} />;
-//   } 
+//   }
 // }
 
 /* Get userData realtime */
@@ -39,19 +39,18 @@ import { doc, onSnapshot } from "firebase/firestore";
 import getUserSession from "@/lib/supabase/getUserSession";
 
 export default function DashoardPage() {
-  const [userData, setUserData] = useState(null)
+  const [userData, setUserData] = useState(null);
   const [userCred, setUserCred] = useState(null);
 
   const getUserData = async () => {
     const {
       data: { session },
     } = await getUserSession();
-    setUserCred(session?.user);   
+    setUserCred(session?.user);
   };
 
   useEffect(() => {
-    getUserData()
-    // if (!userCred) return;
+    if (!userCred) return;
     const unsubUser = onSnapshot(
       doc(firestore, "users", userCred?.email),
       (doc) => {
@@ -62,15 +61,18 @@ export default function DashoardPage() {
     return () => unsubUser();
   }, [userCred]);
 
-  // useEffect(() => {
-  //   getUserData();
-  // }, []);
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   useEffect(() => {
-    console.log('userData: ', userData)
-  }, [userData])
+    console.log("userData: ", userData);
+  }, [userData]);
 
-  // if (userData != null) return <Main data={userData} />   
-  if (userData) return <Main data={userData} />   
-  return <LoadingSkeleton />
+  // if (userData != null) return <Main data={userData} />
+  if (userData) {
+    return <Main data={userData} />;
+  } else {
+    return <LoadingSkeleton />;
+  }
 }

@@ -15,17 +15,17 @@ export default function Main({ data }) {
   const [user, setUser] = useState({});
   const [selectedChatroom, setSelectedChatroom] = useState(null);
 
-  const getLoginUserData = async () => {
-    const docRef = doc(firestore, "users", userCred.email);
-    const docSnap = await getDoc(docRef);
+  // const getLoginUserData = async () => {
+  //   const docRef = doc(firestore, "users", userCred.email);
+  //   const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setUser(data);
-    } else {
-      console.log("Cannot find this user !");
-    }
-  };
+  //   if (docSnap.exists()) {
+  //     const data = docSnap.data();
+  //     setUser(data);
+  //   } else {
+  //     console.log("Cannot find this user !");
+  //   }
+  // };
 
   return (
     <div className="flex h-screen">

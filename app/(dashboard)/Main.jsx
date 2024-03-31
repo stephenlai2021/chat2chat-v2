@@ -16,7 +16,8 @@ import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
 import LoadingSkeleton from '@/components/skeleton/LoadingSkeleton'
 
-export default function Main({userData}) {
+// export default function Main({userData}) {
+export default function Main() {
   // const [user, setUser] = useState({});
   const [userCred, setUserCred] = useState(null);
   const [userData, setUserData] = useState(null);

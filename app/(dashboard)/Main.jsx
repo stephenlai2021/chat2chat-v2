@@ -4,15 +4,20 @@
 import { useEffect, useState } from "react";
 
 /* firebase */
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
-import { doc, getDoc } from "firebase/firestore";
+
+import getUserSession from "@/lib/supabase/getUserSession";
 
 /* components */
 import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
+import LoadingSkeleton from '@/components/skeleton/LoadingSkeleton'
 
-export default function Main({ data }) {
+export default function Main() {
   const [user, setUser] = useState({});
+  const [userCred, setUserCred] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
 
   // const getLoginUserData = async () => {
@@ -27,42 +32,75 @@ export default function Main({ data }) {
   //   }
   // };
 
-  return (
-    <div className="flex h-screen">
-      <div
-        className={`relative ${
-          selectedChatroom == null ? "users-mobile" : "users-hide"
-        }`}
-      >
-        <ChatList userData={data} setSelectedChatroom={setSelectedChatroom} />
-      </div>
+  const getUserData = async () => {
+    const {
+      data: { session },
+    } = await getUserSession();
+    setUserCred(session?.user);
+  };
 
-      {selectedChatroom && (
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    console.log("userData: ", userData);
+  }, [userData]);
+
+  useEffect(() => {
+    if (!userCred) return;
+    const unsubUser = onSnapshot(
+      doc(firestore, "users", userCred?.email),
+      (doc) => {
+        console.log("userData: ", doc.data());
+        setUserData(doc.data());
+      }
+    );
+    return () => unsubUser();
+  }, [userCred]);
+
+  if (userData) {
+    return (
+      <div className="flex h-screen">
         <div
-          className={`w-9/12 ${
-            selectedChatroom ? "chatroom-mobile" : "chatroom-hide"
+          className={`relative ${
+            selectedChatroom == null ? "users-mobile" : "users-hide"
           }`}
         >
-          <ChatRoom
-            selectedChatroom={selectedChatroom}
+          <ChatList
+            userData={userData}
             setSelectedChatroom={setSelectedChatroom}
           />
         </div>
-      )}
 
-      {selectedChatroom == null && (
-        <div
-          className={`${
-            selectedChatroom == null ? "chatroom-hide" : "chatroom-mobile"
-          } shadow-inner w-9/12 flex flex-col items-center justify-center h-full chatroom-none`}
-        >
-          <img
-            src="./undraw_chat_mobile-removebg.png"
-            alt="cha illustration"
-            className="max-w-[300px]"
-          />
-        </div>
-      )}
-    </div>
-  );
+        {selectedChatroom && (
+          <div
+            className={`w-9/12 ${
+              selectedChatroom ? "chatroom-mobile" : "chatroom-hide"
+            }`}
+          >
+            <ChatRoom
+              selectedChatroom={selectedChatroom}
+              setSelectedChatroom={setSelectedChatroom}
+            />
+          </div>
+        )}
+
+        {selectedChatroom == null && (
+          <div
+            className={`${
+              selectedChatroom == null ? "chatroom-hide" : "chatroom-mobile"
+            } shadow-inner w-9/12 flex flex-col items-center justify-center h-full chatroom-none`}
+          >
+            <img
+              src="./undraw_chat_mobile-removebg.png"
+              alt="cha illustration"
+              className="max-w-[300px]"
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+  return <LoadingSkeleton />
 }

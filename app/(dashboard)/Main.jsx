@@ -14,10 +14,10 @@ import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
 import LoadingSkeleton from '@/components/skeleton/LoadingSkeleton'
 
-export default function Main() {
-  const [user, setUser] = useState({});
-  const [userCred, setUserCred] = useState(null);
-  const [userData, setUserData] = useState(null);
+export default function Main({userData}) {
+  // const [user, setUser] = useState({});
+  // const [userCred, setUserCred] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
 
   // const getLoginUserData = async () => {
@@ -40,24 +40,24 @@ export default function Main() {
   };
 
   useEffect(() => {
-    getUserData();
+    // getUserData();
   }, []);
 
   useEffect(() => {
-    console.log("userData: ", userData);
+    // console.log("userData: ", userData);
   }, [userData]);
 
-  useEffect(() => {
-    if (!userCred) return;
-    const unsubUser = onSnapshot(
-      doc(firestore, "users", userCred?.email),
-      (doc) => {
-        console.log("userData: ", doc.data());
-        setUserData(doc.data());
-      }
-    );
-    return () => unsubUser();
-  }, [userCred]);
+  // useEffect(() => {
+  //   if (!userCred) return;
+  //   const unsubUser = onSnapshot(
+  //     doc(firestore, "users", userCred?.email),
+  //     (doc) => {
+  //       console.log("userData: ", doc.data());
+  //       setUserData(doc.data());
+  //     }
+  //   );
+  //   return () => unsubUser();
+  // }, [userCred]);
 
   if (userData) {
     return (

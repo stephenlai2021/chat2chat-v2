@@ -90,6 +90,11 @@
   border-top-width: 2px;
 }
 
+.string-break {
+  max-width: 250px;
+  word-break:break-all;
+}
+
 /* .img-bg {
   background-image: url('avatar.png');
 } */

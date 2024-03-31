@@ -1,34 +1,20 @@
 /* utils */
 import moment from "moment";
 
-/* next */
-import Image from "next/image";
-
 /* react-icons */
-import { CiMenuKebab } from "react-icons/ci";
-import { IoIosClose } from "react-icons/io";
+import { IoIosMenu } from "react-icons/io";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import { MdOutlineModeEditOutline } from "react-icons/md";
-
-/* react */
-import { useState } from "react";
-
-/* components */
-import DeleteMsgModal from "../modal/DeleteMsgModal";
 
 export default function MessageCard({ message, me, other, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
 
-  const [deleteMsgMenu, setDeleteMsgMenu] = useState(false);
-  const [isEdited, setIsEdited] = useState(false);
-
-  const getCurrentDate = () => {
+  const getToday = () => {
     const date = new Date();
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    const currentDate = `${month}/${day}/${year}`;
-    return currentDate;
+    const today = `${month}/${day}/${year}`;
+    return today;
   };
 
   const getYesterday = () => {
@@ -112,18 +98,23 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             {message.content}
           </p>
         </div>
-        {/* <div className="chat-footer opacity-50 ml-1 text-[10px]">Read</div> */}
-        <div className="chat-footer opacity-50 ml-1 text-[10px]">{formatDate(message.time)}</div>
+        <div className="chat-footer opacity-50 ml-1 text-[10px]">
+          {formatDate(message.time) == getToday()
+            ? "Today"
+            : formatDate(message.time) == getYesterday()
+            ? "Yesterday"
+            : formatDate(message.time)}
+        </div>
 
-        {/* Option Icon */}
+        {/* Menu Icon */}
         <div className="dropdown dropdown-left dropdown-end">
-          <CiMenuKebab
+          <IoIosMenu
             tabIndex={0}
             role="button"
             className={`
               ${isMessageFromMe ? "left-[-20px]" : "hidden"} 
-              absolute left-[-40px] top-[-45px] w-5 h-5 hover:cursor-pointer text-warning opacity-50
-            `}
+              absolute left-[-20px] bottom-[2px] w-4 h-4 hover:cursor-pointer text-warnin opacity-50
+              `}
           />
           <ul
             tabIndex={0}

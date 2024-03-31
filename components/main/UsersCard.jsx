@@ -6,16 +6,15 @@ import moment from "moment";
 /* react-icons */
 import { IoImageOutline } from "react-icons/io5";
 
-function UsersCard({
-  // userData,
+export default function UsersCard({
   name,
-  avatarUrl,
   email,
-  newMessage,
+  found,
+  avatarUrl,
   lastImage,
+  newMessage,
   lastMessage,
   lastMessageSentTime,
-  found,
 }) {
   /* 
     時間格式 
@@ -27,11 +26,7 @@ function UsersCard({
   const formatTimeAgo = (timestamp) => {
     const date = timestamp?.toDate();
     const momentDate = moment(date);
-    if (momentDate.fromNow().includes('minute')) return momentDate.fromNow().replace(' minute ago', ' min')
-    if (momentDate.fromNow().includes('minutes')) return momentDate.fromNow().replace(' minutes ago', ' min')
-    if (momentDate.fromNow().includes('hours')) return momentDate.fromNow().replace(' hours ago', ' hour')
-    if (momentDate.fromNow().includes('days')) return momentDate.fromNow().replace(' days ago', ' day')
-    if (momentDate.fromNow() == 'a few seconds ago') return "just now"
+    return momentDate.fromNow(); 
   };
 
   return (
@@ -102,20 +97,8 @@ function UsersCard({
             <IoImageOutline className="w-5 h-5" />
             <span className="ml-2 truncate">{lastMessage}</span>
           </div>
-
-          {/* message count is optional !!! */}
-          {/* <div
-            className={`${
-              newMessage >= 1 ? "block badge badge-primary" : "hidden"
-            }`}
-          >
-            {newMessage}
-          </div> */}
-
         </div>
       </div>
     </div>
   );
 }
-
-export default UsersCard;

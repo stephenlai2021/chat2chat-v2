@@ -112,7 +112,8 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             {message.content}
           </p>
         </div>
-        <div className="chat-footer opacity-50 ml-1 text-[10px]">Read</div>
+        {/* <div className="chat-footer opacity-50 ml-1 text-[10px]">Read</div> */}
+        <div className="chat-footer opacity-50 ml-1 text-[10px]">{formatDate(message.time)}</div>
 
         {/* Option Icon */}
         <div className="dropdown dropdown-left dropdown-end">
@@ -121,21 +122,21 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             role="button"
             className={`
               ${isMessageFromMe ? "left-[-20px]" : "hidden"} 
-              absolute left-[-47px] top-[-45px] w-5 h-5 hover:cursor-pointer text-warning opacity-50
+              absolute left-[-40px] top-[-45px] w-5 h-5 hover:cursor-pointer text-warning opacity-50
             `}
           />
           <ul
             tabIndex={0}
             className={`
                 dropdown-content z-[100] menu menu-horizontal
-                flex bg-base-300 rounded-box shadow
+                flex bg-base-300 rounded-box shadow m-0 p-0
               `}
           >
-            <li>
+            {/* <li>
               <a className="toolti tooltip-lef" data-tip="Edit">
                 <MdOutlineModeEditOutline className="w-5 h-5" />
               </a>
-            </li>
+            </li> */}
             <li>
               <a className="toolti tooltip-lef" data-tip="Delete">
                 <MdOutlineDeleteOutline

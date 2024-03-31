@@ -49,11 +49,7 @@ export default function Main() {
   useEffect(() => {
     getUserData();
   }, []);
-
-  useEffect(() => {
-    console.log("userData: ", userData);
-  }, [userData]);
-
+  
   useEffect(() => {
     if (!userCred) return;
     console.log("userCred: ", userCred);

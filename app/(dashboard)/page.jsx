@@ -1,25 +1,22 @@
 /* Get userData server side */
-import Main from "./Main";
+// import Main from "./Main";
+// import { firestore } from "@/lib/firebase/client";
+// import { doc, getDoc } from "firebase/firestore";
+// import getUserSession from "@/lib/supabase/getUserSession";
+// export default async function DashoardPage() {
+//   const {
+//     data: { session },
+//   } = await getUserSession();
+//   const userCred = session?.user;
 
-import { firestore } from "@/lib/firebase/client";
-import { doc, getDoc } from "firebase/firestore";
+//   const docRef = doc(firestore, "users", userCred.email);
+//   const docSnap = await getDoc(docRef);
 
-import getUserSession from "@/lib/supabase/getUserSession";
-
-export default async function DashoardPage() {
-  const {
-    data: { session },
-  } = await getUserSession();
-  const userCred = session?.user;
-
-  const docRef = doc(firestore, "users", userCred.email);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    return <Main userData={data} />;
-  }
-}
+//   if (docSnap.exists()) {
+//     const data = docSnap.data();
+//     return <Main userData={data} />;
+//   }
+// }
 
 /* Get userData realtime */
 // "use client";
@@ -69,7 +66,7 @@ export default async function DashoardPage() {
 //   if (userData == null) return <LoadingSkeleton />;
 // }
 
-// import Main from "./Main";
-// export default function DashoardPage() {
-//   return <Main />
-// }
+import Main from "./Main";
+export default function DashoardPage() {
+  return <Main />
+}

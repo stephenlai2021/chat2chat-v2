@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
 
+/* supabase */
+import { createBrowserClient } from '@supabase/ssr'
 import getUserSession from "@/lib/supabase/getUserSession";
 
 /* components */
@@ -16,9 +18,14 @@ import LoadingSkeleton from '@/components/skeleton/LoadingSkeleton'
 
 export default function Main({userData}) {
   // const [user, setUser] = useState({});
-  // const [userCred, setUserCred] = useState(null);
-  // const [userData, setUserData] = useState(null);
+  const [userCred, setUserCred] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 
   // const getLoginUserData = async () => {
   //   const docRef = doc(firestore, "users", userCred.email);
@@ -33,31 +40,32 @@ export default function Main({userData}) {
   // };
 
   const getUserData = async () => {
-    const {
-      data: { session },
-    } = await getUserSession();
-    setUserCred(session?.user);
+    const { data, error } = await supabase.auth.getUser()
+    if (error || !data?.user) console.log('Error getting userCred')
+    if (data) setUserCred(data?.user)
   };
 
   useEffect(() => {
-    // getUserData();
+    getUserData();
   }, []);
 
   useEffect(() => {
-    // console.log("userData: ", userData);
+    console.log("userData: ", userData);
   }, [userData]);
 
-  // useEffect(() => {
-  //   if (!userCred) return;
-  //   const unsubUser = onSnapshot(
-  //     doc(firestore, "users", userCred?.email),
-  //     (doc) => {
-  //       console.log("userData: ", doc.data());
-  //       setUserData(doc.data());
-  //     }
-  //   );
-  //   return () => unsubUser();
-  // }, [userCred]);
+  useEffect(() => {
+    if (!userCred) return;
+    console.log("userCred: ", userCred);
+
+    const unsubUser = onSnapshot(
+      doc(firestore, "users", userCred?.email),
+      (doc) => {
+        console.log("userData: ", doc.data());
+        setUserData(doc.data());
+      }
+    );
+    return () => unsubUser();
+  }, [userCred]);
 
   if (userData) {
     return (

@@ -210,7 +210,9 @@ function ChatList({ userData, setSelectedChatroom }) {
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto overflow-x-hidden h-full shadow-inner">
+        <div className="overflow-y-auto overflow-x
+        
+        -hidden h-full shadow-inner">
           {/* search input */}
           <div
             className={`relative flex justify-center mx-3

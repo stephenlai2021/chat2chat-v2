@@ -1,45 +1,17 @@
-/* utils */
-import moment from "moment";
-
 /* react-icons */
 import { IoIosMenu } from "react-icons/io";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
+import {
+  getToday,
+  getYesterday,
+  formatDate,
+  formatTimeClock,
+} from "@/lib/utils";
+
 export default function MessageCard({ message, me, other, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
-
-  const getToday = () => {
-    const date = new Date();
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const today = `${month}/${day}/${year}`;
-    return today;
-  };
-
-  const getYesterday = () => {
-    const date = new Date();
-    const day = date.getDate() - 1;
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const yesterday = `${month}/${day}/${year}`;
-    return yesterday;
-  };
-
-  // Format: 03/12/2024
-  const formatDate = (timestamp) => {
-    const date = timestamp?.toDate();
-    const momentDate = moment(date);
-    return momentDate.format("l");
-  };
-
-  // 2:21PM
-  const formatTimeClock = (timestamp) => {
-    const date = timestamp?.toDate();
-    const momentDate = moment(date);
-    return momentDate.format("LT");
-  };
-
+  
   return (
     <>
       <div

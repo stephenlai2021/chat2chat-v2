@@ -1,8 +1,5 @@
 "use client";
 
-/* moments */
-import moment from "moment";
-
 /* utils */
 import {
   getToday,
@@ -51,7 +48,7 @@ export default function UsersCard({
           <h2 className="text-md font-semibold truncate text-base-content">
             {name}
           </h2>
-          <div className="text-xs text-base-content truncate time-stamp-deskto">
+          <div className="text-base-content truncate text-[10px] opacity-50">
             {lastMessageSentTime ? formatTimeClock(lastMessageSentTime) : ""}
           </div>
         </div>
@@ -92,9 +89,9 @@ export default function UsersCard({
             <IoImageOutline className="w-5 h-5" />
             <span className="ml-2 truncate">{lastMessage}</span>
           </div>
-          
+
           {found && (
-            <div className="text-xs text-base-content">
+            <div className="text-[10px] opacity-50 text-base-content">
               {formatDate(lastMessageSentTime) == getToday()
                 ? "Today"
                 : formatDate(lastMessageSentTime) == getYesterday()

@@ -11,7 +11,7 @@ import {
 
 export default function MessageCard({ message, me, other, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
-  
+
   return (
     <>
       <div
@@ -35,7 +35,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
 
         <div
           className={`
-            chat-header flex ml-1
+            chat-header flex ml-1 h-4
             ${isMessageFromMe ? "mr-2" : "ml-2"}
           `}
         >
@@ -58,7 +58,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
           <img src={message.image} className="max-h-60 rounded" />
           <p
             className={`
-                leading-tight string-break text-sm border- border-red-30
+                leading-tight string-break text-sm
                 ${
                   isMessageFromMe
                     ? "text-accent-content"
@@ -70,7 +70,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             {message.content}
           </p>
         </div>
-        <div className="chat-footer opacity-50 ml-1 text-[10px]">
+        <div className="chat-foote opacity-50 ml-1 text-[10px] border- border-red-30 h-">
           {formatDate(message.time) == getToday()
             ? "Today"
             : formatDate(message.time) == getYesterday()

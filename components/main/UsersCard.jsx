@@ -1,7 +1,15 @@
 "use client";
 
-/* utils */
+/* moments */
 import moment from "moment";
+
+/* utils */
+import {
+  getToday,
+  getYesterday,
+  formatDate,
+  formatTimeClock,
+} from "@/lib/utils";
 
 /* react-icons */
 import { IoImageOutline } from "react-icons/io5";
@@ -9,29 +17,18 @@ import { IoImageOutline } from "react-icons/io5";
 export default function UsersCard({
   name,
   email,
-  found,
+  found = true,
   avatarUrl,
   lastImage,
   newMessage,
   lastMessage,
   lastMessageSentTime,
 }) {
-  /* 
-    時間格式 
-    - a few seconds ago
-    - 6 minutes ago
-    - 3 hours ago
-    - 5 days ago
-  */
-  const formatTimeAgo = (timestamp) => {
-    const date = timestamp?.toDate();
-    const momentDate = moment(date);
-    return momentDate.fromNow(); 
-  };
-
   return (
     <div
-      className={`${found ? 'hover:cursor-pointer' : ''} hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative`}
+      className={`${
+        found ? "hover:cursor-pointer" : ""
+      } hover:bg-base-300 px-4 w-full flex items-center justify-between rounded p-3 relative`}
     >
       {/* avatar && new-message-indicator */}
       <div className="flex-shrink-0 mr-4 relative">
@@ -50,13 +47,12 @@ export default function UsersCard({
 
       <div className="flex-1">
         {/* name and last message sent time */}
-        {/* <div className="flex items-center justify-between text-desktop text-phone"> */}
         <div className="flex items-center justify-between text-deskto text-phon">
           <h2 className="text-md font-semibold truncate text-base-content">
             {name}
           </h2>
           <div className="text-xs text-base-content truncate time-stamp-deskto">
-            {lastMessageSentTime ? formatTimeAgo(lastMessageSentTime) : ""}
+            {lastMessageSentTime ? formatTimeClock(lastMessageSentTime) : ""}
           </div>
         </div>
 
@@ -70,7 +66,6 @@ export default function UsersCard({
             {email}
           </p>
 
-          {/* Render message if user submit message only */}
           <p
             className={`${
               found && lastMessage && !lastImage ? "block" : "hidden"
@@ -97,6 +92,16 @@ export default function UsersCard({
             <IoImageOutline className="w-5 h-5" />
             <span className="ml-2 truncate">{lastMessage}</span>
           </div>
+          
+          {found && (
+            <div className="text-xs text-base-content">
+              {formatDate(lastMessageSentTime) == getToday()
+                ? "Today"
+                : formatDate(lastMessageSentTime) == getYesterday()
+                ? "Yesterday"
+                : formatDate(lastMessageSentTime).substring(0, 4)}
+            </div>
+          )}
         </div>
       </div>
     </div>

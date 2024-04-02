@@ -70,7 +70,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             {message.content}
           </p>
         </div>
-        <div className="chat-foote opacity-50 ml-1 text-[10px] border- border-red-30 h-">
+        <div className="chat-footer opacity-50 ml-1 text-[10px]">
           {formatDate(message.time) == getToday()
             ? "Today"
             : formatDate(message.time) == getYesterday()

@@ -12,7 +12,7 @@ export default function Sidabar({ userData}) {
       <div
         className={`
           w-full mt-2 px-5 flex items-center justify-center
-          tooltip tooltip-bottom
+          toolti tooltip-bottom
           border- border-red-30
         `}
         data-tip="Add Friend"
@@ -38,7 +38,7 @@ export default function Sidabar({ userData}) {
       </div> */}
 
       {/* User Avatar */}
-      <div className="mt-auto mb-4 tooltip tooltip-top" data-tip="Edit profile">
+      <div className="mt-auto mb-4 toolti tooltip-top" data-tip="Edit profile">
         <div className="w-6 h-6 hover:cursor-pointer">
           {userData?.avatarUrl ? (
             <img

@@ -96,7 +96,8 @@ export default function UsersCard({
                 ? "Today"
                 : formatDate(lastMessageSentTime) == getYesterday()
                 ? "Yesterday"
-                : formatDate(lastMessageSentTime).substring(0, 4)}
+                // : formatDate(lastMessageSentTime).substring(0, 4)}
+                : formatDate(lastMessageSentTime)}
             </div>
           )}
         </div>

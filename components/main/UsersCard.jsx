@@ -91,13 +91,12 @@ export default function UsersCard({
           </div>
 
           {found && (
-            <div className="text-[10px] opacity-50 text-base-content">
+            <div className="text-[11px] opacity-60 text-base-content">
               {formatDate(lastMessageSentTime) == getToday()
                 ? "Today"
                 : formatDate(lastMessageSentTime) == getYesterday()
                 ? "Yesterday"
-                // : formatDate(lastMessageSentTime).substring(0, 4)}
-                : formatDate(lastMessageSentTime)}
+                : formatDate(lastMessageSentTime).slice(0, -5)}         
             </div>
           )}
         </div>

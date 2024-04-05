@@ -75,7 +75,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             ? "Today"
             : formatDate(message.time) == getYesterday()
             ? "Yesterday"
-            : formatDate(message.time)}
+            : formatDate(message.time).slice(0, -5)}
         </div>
 
         {/* Menu Icon */}

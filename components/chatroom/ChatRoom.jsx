@@ -121,7 +121,7 @@ export default function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messagesContainerRef, messages, loading]);
+  }, [messagesContainerRef, messages]);
 
   /* 
   handle chat bubble loading time 
@@ -160,16 +160,6 @@ export default function ChatRoom({ selectedChatroom, setSelectedChatroom }) {
     );
     return () => unsubMsgs();
   }, [chatRoomId]);
-
-  /*
-    Scroll to the bottom when messages change
-  */
-  useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
 
   /* get other user in realtime */
   useEffect(() => {

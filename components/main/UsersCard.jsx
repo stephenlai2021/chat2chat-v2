@@ -66,7 +66,7 @@ export default function UsersCard({
           <p
             className={`${
               found && lastMessage && !lastImage ? "block" : "hidden"
-            } text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+            } text-base-content max-w-[166px] truncate text-sm text-deskto text-table text-phon`}
           >
             {lastMessage}
           </p>
@@ -84,7 +84,7 @@ export default function UsersCard({
           <div
             className={`${
               found && lastMessage && lastImage ? "block" : "hidden"
-            } border- flex text-base-content truncate text-sm text-desktop text-tablet text-phone`}
+            } flex text-base-content max-w-[166px] truncate text-sm text-desktop text-tablet text-phone`}
           >
             <IoImageOutline className="w-5 h-5" />
             <span className="ml-2 truncate">{lastMessage}</span>

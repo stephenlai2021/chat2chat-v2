@@ -13,9 +13,12 @@ import { BsPersonAdd } from "react-icons/bs";
 /* utils */
 import { languages } from "@/data/utils";
 
+/* next */
+import Image from "next/image";
+
 export default function Sidabar({ userData, logoutClick, logoutLoading }) {
   return (
-    <div className="bg-base-30 w-[64px] shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
+    <div className="w-[64px] shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
       <div className="w-full mt-2 px-5 flex items-center justify-center">
         <BsPersonAdd
           className={`w-[23px] h-[23px] hover:cursor-pointer text-base-content`}
@@ -56,16 +59,46 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
             >
               <div className="w-6 h-6 hover:cursor-pointer">
                 {userData?.avatarUrl ? (
-                  <img
+                  // <img
+                  //   src={userData?.avatarUrl}
+                  //   className={`w-full h-full rounded-full object-cover`}
+                  // />
+                  <Image
                     src={userData?.avatarUrl}
-                    className={`w-full h-full rounded-full object-cover`}
+                    width={24}
+                    height={24}
+                    alt="user avatar"
+                    className="rounded-full object-cover"
                   />
                 ) : (
-                  <img
+                  // <img
+                  //   src="/avatar.png"
+                  //   className={`w-full h-full rounded-full`}
+                  // />
+                  <Image
                     src="/avatar.png"
-                    className={`w-full h-full rounded-full`}
+                    width={24}
+                    height={24}
+                    alt="default user avatar"
+                    className="rounded-full object-cover"
                   />
                 )}
+
+                {/* <img
+                  src={
+                    userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
+                  }
+                  className={`w-full h-full rounded-full object-cover`}
+                /> */}
+
+                {/* <Image
+                  src={
+                    userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
+                  }
+                  width={24}
+                  height={24}
+                  alt="user avatar"
+                /> */}
               </div>
             </label>
           </div>

@@ -101,6 +101,10 @@
   text-decoration: none;
 }
 
+.avatar-bg-img {
+  background-image: url('/avatar.png');
+}
+
 @media (min-width: 800px) {  
   .text-desktop {
     max-width: 205px;

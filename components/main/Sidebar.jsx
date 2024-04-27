@@ -58,7 +58,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
               className="mx-2 py-2"
             >
               <div className="w-6 h-6 hover:cursor-pointer">
-                {userData?.avatarUrl ? (
+                {/* {userData?.avatarUrl ? (
                   // <img
                   //   src={userData?.avatarUrl}
                   //   className={`w-full h-full rounded-full object-cover`}
@@ -82,7 +82,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                     alt="default user avatar"
                     className="rounded-full object-cover"
                   />
-                )}
+                )} */}
 
                 {/* <img
                   src={
@@ -91,14 +91,15 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   className={`w-full h-full rounded-full object-cover`}
                 /> */}
 
-                {/* <Image
+                <Image
                   src={
                     userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
                   }
                   width={24}
                   height={24}
                   alt="user avatar"
-                /> */}
+                  className="rounded-full object-cover"
+                />
               </div>
             </label>
           </div>

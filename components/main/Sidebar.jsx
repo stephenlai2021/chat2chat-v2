@@ -58,17 +58,17 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
               className="mx-2 py-2"
             >
               <div className="w-6 h-6 hover:cursor-pointer avatar-bg-img">
-                {!userData?.avatarUrl ? (
-                  <img
-                    src="/avatar.png"
-                    className={`w-full h-full rounded-full`}
-                  />
-                ) : (
+                {/* {userData?.avatarUrl ? (
                   <img
                     src={userData?.avatarUrl}
                     className={`w-full h-full rounded-full object-cover`}
                   />
-                )}
+                ) : (
+                  <img
+                    src="/avatar.png"
+                    className={`w-full h-full rounded-full`}
+                  />
+                )} */}
 
                 {/* <img
                   src={
@@ -77,15 +77,15 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   className="w-full h-full rounded-full object-cover"
                 /> */}
 
-                {/* <Image
+                <Image
                   src={
                     userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
                   }
                   width={24}
                   height={24}
-                  alt="user avatar"
+                  alt="Use avatar"
                   className="rounded-full object-cover"
-                /> */}
+                />
               </div>
             </label>
           </div>

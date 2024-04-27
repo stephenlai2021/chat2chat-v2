@@ -29,7 +29,11 @@ import UsersCardSkeleton from "../skeleton/UsersCardSkeleton";
 /* react-icons */
 import { RxAvatar } from "react-icons/rx";
 import { IoIosSearch } from "react-icons/io";
+import { GoPlusCircle } from "react-icons/go";
 import { IoCloseCircleOutline } from "react-icons/io5";
+
+/* hooks */
+import useWindowSize from "@/hooks/useWindowSize";
 
 function ChatList({ userData, setSelectedChatroom }) {
   const [otherData, setOtherData] = useState({});
@@ -41,6 +45,7 @@ function ChatList({ userData, setSelectedChatroom }) {
   const [filteredChatrooms, setFilteredChatrooms] = useState([]);
 
   const router = useRouter();
+  const size = useWindowSize();
   const searchTermRef = useRef(null);
   const supabase = useSupabaseClient();
 
@@ -121,7 +126,11 @@ function ChatList({ userData, setSelectedChatroom }) {
 
   return (
     <div className="flex h-full">
-      <Sidebar userData={userData} />
+      <Sidebar
+        userData={userData}
+        logoutClick={logoutClick}
+        logoutLoading={logoutLoading}
+      />
 
       <main className="shadow-inner h-screen flex flex-col w-[300px] min-w-[200px] users-mobile">
         {/* Navbar */}
@@ -139,80 +148,40 @@ function ChatList({ userData, setSelectedChatroom }) {
             />
           </div>
 
-          {/* avatar-icon with drawer wrapper */}
-          <div className="flex-none">
-            <div className="drawer z-[200]">
-              <input
-                id="navbar-drawer-settings"
-                type="checkbox"
-                className="drawer-toggle"
-              />
-              <div className={`flex justify-center`} data-tip="Settings">
-                <label
-                  htmlFor="navbar-drawer-settings"
-                  aria-label="close sidebar"
-                  className="mx-2 py-2"
-                >
-                  <RxAvatar className="w-[23px] h-[23px] hover:cursor-pointer text-base-content" />
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label
-                  htmlFor="navbar-drawer-settings"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
-                <ul className="pt-4 w-80 min-h-full bg-base-200 text-base-content">
-                  <UsersCard
-                    found={false}
-                    component="drawer"
-                    name={userData?.name}
-                    email={userData?.email}
-                    avatarUrl={userData?.avatarUrl}
-                  />
-                  <li>
-                    <ul className="menu bg-base-200 w-ful rounded-box">
-                      <div className="divider" />
-                      <li>
-                        <details>
-                          <summary className="">Theme</summary>
-                          <ThemeSwitcher />
-                        </details>
-                      </li>
-                      <li>
-                        <details>
-                          <summary>Language</summary>
-                          <ul>
-                            {languages.map((language) => (
-                              <li key={language.label}>
-                                <a>{language.value}</a>
-                              </li>
-                            ))}
-                          </ul>
-                        </details>
-                      </li>
-                      <div className="divider" />
-                      <li>
-                        <div onClick={logoutClick}>
-                          {logoutLoading ? (
-                            <div className="loading loading-spinner loading-xs opacity-30 text-base-content flex justify-center ml-2" />
-                          ) : (
-                            "Logout"
-                          )}
-                        </div>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
+          <div
+            className={`dropdown dropdown-bottom dropdown-end ${
+              size.width > 800 ? "hidden" : "block"
+            }`}
+          >
+            <div tabIndex={0} role="button" className="mx-[6px]">
+              <GoPlusCircle className="w-[22px] h-[22px] hover:cursor-pointer text-base-content" />
             </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40"
+            >
+              <li>
+                <a
+                  onClick={() =>
+                    document.getElementById("addFriendModalNavbar").showModal()
+                  }
+                >
+                  Add Friend
+                </a>
+              </li>
+              <li>
+                <a className="opacity-30 disabled">Create Group</a>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto overflow-x
+        <div
+          className="overflow-y-auto overflow-x
         
-        -hidden h-full shadow-inner">
+        -hidden h-full shadow-inner"
+        >
           {/* search input */}
           <div
             className={`relative flex justify-center mx-3
@@ -300,11 +269,15 @@ function ChatList({ userData, setSelectedChatroom }) {
           )}
         </div>
 
-        <BottomNavbar userData={userData} />
+        <BottomNavbar
+          userData={userData}
+          logoutClick={logoutClick}
+          logoutLoading={logoutLoading}
+        />
       </main>
 
       <CreateGroupModal id="createGroupModal" />
-      <AddFriendModal id="addFriendModal" userData={userData} />
+      <AddFriendModal id="addFriendModalNavbar" userData={userData} />
     </div>
   );
 }

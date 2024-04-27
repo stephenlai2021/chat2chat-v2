@@ -95,9 +95,11 @@
   word-break:break-all;
 }
 
-/* .img-bg {
-  background-image: url('avatar.png');
-} */
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}
 
 @media (min-width: 800px) {  
   .text-desktop {

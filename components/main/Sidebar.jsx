@@ -57,7 +57,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
               aria-label="close sidebar"
               className="mx-2 py-2"
             >
-              <div className="w-6 h-6 hover:cursor-pointer">
+              <div className="w-6 h-6 hover:cursor-pointer avatar-bg-img">
                 {/* {userData?.avatarUrl ? (
                   // <img
                   //   src={userData?.avatarUrl}
@@ -84,9 +84,10 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   />
                 )} */}
 
-                {/* src={userData?.avatarUrl} */}
                 {/* <img
-                  src="/avatar.png"
+                  src={
+                    userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
+                  }
                   className="w-full h-full rounded-full object-cover"
                 /> */}
 

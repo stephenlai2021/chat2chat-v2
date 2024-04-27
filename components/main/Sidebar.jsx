@@ -16,28 +16,14 @@ import { languages } from "@/data/utils";
 export default function Sidabar({ userData, logoutClick, logoutLoading }) {
   return (
     <div className="bg-base-30 w-[64px] shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
-      <div
-        className={`
-          w-full mt-2 px-5 flex items-center justify-center
-          toolti tooltip-bottom
-          border- border-red-30
-        `}
-        data-tip="Add Friend"
-      >
+      <div className="w-full mt-2 px-5 flex items-center justify-center">
         <BsPersonAdd
           className={`w-[23px] h-[23px] hover:cursor-pointer text-base-content`}
           onClick={() => document.getElementById("addFriendModal").showModal()}
         />
       </div>
 
-      <div
-        className={`
-          w-full mt-8 py- px-5 flex items-center justify-center
-          toolti tooltip-bottom
-          border- border-red-30
-        `}
-        data-tip="Create Group"
-      >
+      <div className="w-full mt-8 px-5 flex items-center justify-center">
         <MdGroupAdd
           className={`w-6 h-6 opacity-30 hover:cursor-pointe text-base-content`}
           onClick={() =>
@@ -45,7 +31,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
           }
         />
       </div>
-      <div className="mt-8 toolti tooltip-top" data-tip="Edit profile">
+      <div className="mt-8">
         <RxAvatar
           className="w-[23px] h-[23px] hover:cursor-pointer text-base-content"
           onClick={() =>

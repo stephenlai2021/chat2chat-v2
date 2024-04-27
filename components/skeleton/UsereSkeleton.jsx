@@ -7,8 +7,14 @@ import BottomMenuSkeleton from "./BottomMenuSkeleton";
 /* react-icons */
 import { RxAvatar } from "react-icons/rx";
 import { IoIosSearch } from "react-icons/io";
+import { GoPlusCircle } from "react-icons/go";
+
+/* hooks */
+import useWindowSize from "@/hooks/useWindowSize";
 
 export default function UsersSkeleton() {
+  const size = useWindowSize();
+
   return (
     <div className="flex users-mobile">
       <SidebarSkeleton />
@@ -20,7 +26,8 @@ export default function UsersSkeleton() {
           </h1>
           <div className="flex">
             <IoIosSearch className="w-[23px] h-[23px] mx-2 text-base-content m-2" />
-            <RxAvatar className="w-[23px] h-[23px] text-base-content m-2" />
+            <GoPlusCircle 
+              className={`w-[22px] h-[22px] text-base-content m-2 ${size.width > 800 ? 'hidden' : 'block'}`} />
           </div>
         </div>
 

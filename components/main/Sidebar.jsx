@@ -84,14 +84,14 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   />
                 )} */}
 
-                {/* <img
+                <img
                   src={
                     userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
                   }
                   className={`w-full h-full rounded-full object-cover`}
-                /> */}
+                />
 
-                <Image
+                {/* <Image
                   src={
                     userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
                   }
@@ -99,7 +99,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   height={24}
                   alt="user avatar"
                   className="rounded-full object-cover"
-                />
+                /> */}
               </div>
             </label>
           </div>

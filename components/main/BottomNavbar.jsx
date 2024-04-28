@@ -49,17 +49,23 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
                   aria-label="close sidebar"
                   className="mx-2 py-2"
                 >
-                  {userData?.avatarUrl ? (
+                  <div className="w-6 h-6 hover:cursor-pointer avatar-bg-img">
+                    {/* {userData?.avatarUrl ? (
+                      <img
+                        src={userData?.avatarUrl}
+                        className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
+                      />
+                    ) : (
+                      <img
+                        src="/avatar.png"
+                        className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
+                      />
+                    )} */}
                     <img
                       src={userData?.avatarUrl}
-                      className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
+                      className="w-full h-full rounded-full object-cover"
                     />
-                  ) : (
-                    <img
-                      src="/avatar.png"
-                      className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
-                    />
-                  )}
+                  </div>
                 </label>
               </div>
               <div className="drawer-side">

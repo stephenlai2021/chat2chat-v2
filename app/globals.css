@@ -103,6 +103,10 @@
 
 .avatar-bg-img {
   background-image: url('/avatar.png');
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  /* background-position: center; */
+  background-size: cover;
 }
 
 @media (min-width: 800px) {  

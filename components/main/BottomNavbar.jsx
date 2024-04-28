@@ -24,7 +24,7 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
           `}
           >
             <RxAvatar
-              className="w-[23px] h-[23px] hover:cursor-pointer text-base-content"
+              className="w-6 h-6 hover:cursor-pointer text-base-content"
               onClick={() =>
                 document.getElementById("editProfileModalBottomNav").showModal()
               }

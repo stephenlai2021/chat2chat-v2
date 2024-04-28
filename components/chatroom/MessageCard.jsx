@@ -12,6 +12,10 @@ import {
 export default function MessageCard({ message, me, other, deleteMsg }) {
   const isMessageFromMe = message.sender === me.id;
 
+  const showOptionMenu = () => {
+    setTimeout(() => {}, 1500);
+  };
+
   return (
     <>
       <div
@@ -27,7 +31,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
               tabIndex={0}
               src={isMessageFromMe ? me?.avatarUrl : other?.avatarUrl}
               alt="Avatar"
-              role="button"
+              role="butto"
               className="object-cover"
             />
           </div>
@@ -55,8 +59,8 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             string-break relative
           `}
         >
-          <img src={message.image} className="max-h-60 rounded" />
-          <p
+          {/* <img src={message.image} className="max-h-60 rounded" /> */}
+          {/* <p
             className={`
                 leading-tight string-break text-sm
                 ${
@@ -66,9 +70,51 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
                 }
                 ${message.image ? "mt-2" : "flex justify-start"}             
             `}
-          >
+            onClick={showOptionMenu}
+            >
             {message.content}
-          </p>
+          </p> */}
+
+          <div className="dropdown dropdown-left dropdown-en dropdown-bottom">
+            <img
+              tabIndex={0}
+              role="button"
+              src={message.image}
+              className="max-h-60 rounded"
+            />
+            <p
+              tabIndex={0}
+              role={isMessageFromMe ? 'button' : ''}
+              className={`
+                leading-tight string-break text-sm
+                ${
+                  isMessageFromMe
+                    ? "text-accent-content"
+                    : "text-primary-content"
+                }
+                ${message.image ? "mt-2" : "flex justify-start"}             
+            `}
+            >
+              {message.content}
+            </p>
+            <ul
+              tabIndex={0}
+              className={`
+                dropdown-content z-[100] menu menu-horizontal
+                flex bg-base-300 rounded-box shadow m-0 p-0
+                ${isMessageFromMe ? "block" : "hidden"} 
+              `}
+            >
+              <li>
+                <a className="toolti tooltip-lef" data-tip="Delete">
+                  <MdOutlineDeleteOutline
+                    className="w-5 h-5 opacity-50"
+                    onClick={() => deleteMsg(message.id)}
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="chat-footer opacity-50 ml-1 text-[10px]">
           {formatDate(message.time) == getToday()
@@ -79,7 +125,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
         </div>
 
         {/* Menu Icon */}
-        <div className="dropdown dropdown-left dropdown-end">
+        {/* <div className="dropdown dropdown-left dropdown-end">
           <IoIosMenu
             tabIndex={0}
             role="button"
@@ -95,11 +141,6 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
                 flex bg-base-300 rounded-box shadow m-0 p-0
               `}
           >
-            {/* <li>
-              <a className="toolti tooltip-lef" data-tip="Edit">
-                <MdOutlineModeEditOutline className="w-5 h-5" />
-              </a>
-            </li> */}
             <li>
               <a className="toolti tooltip-lef" data-tip="Delete">
                 <MdOutlineDeleteOutline
@@ -109,7 +150,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
               </a>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </>
   );

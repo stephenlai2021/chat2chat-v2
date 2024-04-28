@@ -36,7 +36,7 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
       </div>
       <div className="mt-8">
         <RxAvatar
-          className="w-[23px] h-[23px] hover:cursor-pointer text-base-content"
+          className="w-6 h-6 hover:cursor-pointer text-base-content"
           onClick={() =>
             document.getElementById("editProfileModal").showModal()
           }
@@ -80,16 +80,6 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                     userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
                   }
                   className="w-full h-full rounded-full object-cover"
-                /> */}
-
-                {/* <Image
-                  src={
-                    userData?.avatarUrl ? userData?.avatarUrl : "/avatar.png"
-                  }
-                  width={24}
-                  height={24}
-                  alt="Use avatar"
-                  className="rounded-full object-cover"
                 /> */}
               </div>
             </label>

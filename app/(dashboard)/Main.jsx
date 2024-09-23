@@ -68,7 +68,7 @@ export default function Main() {
     return () => unsubUser();
   }, [user]);
 
-  /* supabase */
+  /** supabase **/
   // useEffect(() => {
   //   if (userCred === null) return;
 

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "upload": "git add . && git commit -m 'commit' && git push origin master"
+    "upload": "git add . && git commit -m 'commit' && git push -u origin master"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.6.0",

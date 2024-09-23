@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { account, ID } from "./appwrite";
+import { account, ID } from "../appwrite";
 
 /* firebase */
 import { auth, googleAuthProvider, firestore } from "@/lib/firebase/client";

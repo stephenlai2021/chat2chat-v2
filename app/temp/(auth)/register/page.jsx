@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 /* appwrite */
-import { account, ID } from "../../appwrite";
+import { account, ID } from "./appwrite";
 
 /* supabase */
 import useSupabaseClient from "@/lib/supabase/client";

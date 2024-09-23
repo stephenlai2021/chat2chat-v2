@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 /* utils */
 import { toast } from "react-hot-toast";
 
+/* appwrite */
+import { account, ID } from "../../appwrite";
+
 /* supabase */
 import useSupabaseClient from "@/lib/supabase/client";
 
@@ -37,6 +40,7 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import ImagePreviewModal from "@/components/modal/ImagePreviewModal";
 
 function Main() {
+  const [user, setUser] = useState(null)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -178,6 +182,22 @@ function Main() {
     }
   };
 
+  const handleAppwriteSignup = async (evt) => {
+    evt.preventDefault()
+    setLoading(true);
+
+    if (validateForm()) { 
+      try {
+        await account.create(ID.unique(), email, password)
+        await account.createEmailPasswordSession(email, password)
+        setUser(account.get())
+      } catch (e) {
+        console.error(e)
+      }
+
+    }
+  }
+
   if (confirm)
     return (
       <>
@@ -190,7 +210,7 @@ function Main() {
   return (
     <div className="flex justify-center items-center h-screen font-primary px-8">
       <form
-        onSubmit={handleRegister}
+        onSubmit={handleAppwriteSignup}
         className="space-y-4 w-full h-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         {/* Title */}

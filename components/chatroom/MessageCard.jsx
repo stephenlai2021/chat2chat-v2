@@ -84,7 +84,7 @@ export default function MessageCard({ message, me, other, deleteMsg }) {
             />
             <p
               tabIndex={0}
-              role={isMessageFromMe ? 'button' : ''}
+              role={isMessageFromMe ? 'button' : '  `'}
               className={`
                 leading-tight string-break text-sm
                 ${

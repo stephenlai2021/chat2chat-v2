@@ -29,8 +29,10 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
                 document.getElementById("editProfileModalBottomNav").showModal()
               }
             />
+            <span className="text-[12px]">Profile</span>
           </div>
         </div>
+
         <div
           className={`
             w-1/2 flex flex-col justify-center items-center 
@@ -43,30 +45,24 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
                 type="checkbox"
                 className="drawer-toggle"
               />
-              <div className={`flex justify-center`} data-tip="Settings">
+              <div
+                className={`flex flex-col justify-center`}
+                data-tip="Settings"
+              >
                 <label
                   htmlFor="navbar-drawer-settings-bottom-navbar"
                   aria-label="close sidebar"
-                  className="mx-2 py-2"
+                  className="mx-2 py-"
                 >
                   <div className="w-6 h-6 hover:cursor-pointer avatar-bg-img">
-                    {/* {userData?.avatarUrl ? (
-                      <img
-                        src={userData?.avatarUrl}
-                        className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
-                      />
-                    ) : (
-                      <img
-                        src="/avatar.png"
-                        className="object-cover rounded-full w-[24px] h-[24px] font-bold text-base-content hover:cursor-pointer"
-                      />
-                    )} */}
                     <img
                       src={userData?.avatarUrl}
                       className="w-full h-full rounded-full object-cover"
                     />
                   </div>
                 </label>
+
+                <span className="text-[12px]">Settings</span>
               </div>
               <div className="drawer-side">
                 <label
@@ -120,10 +116,31 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
             </div>
           </div>
         </div>
-
-        <AddFriendModal id="addFriendModalBottomNav" userData={userData} />
-        <EditProfileModal id="editProfileModalBottomNav" userData={userData} />
       </div>
+
+      {/* <div className="btm-nav">
+        <button
+          className="
+          active bg-base-200 text-base-content"
+          onClick={() =>
+            document.getElementById("editProfileModalBottomNav").showModal()
+          }
+        >
+          <RxAvatar className="w-5 h-5 hover:cursor-pointer text-base-content" />
+          <span className="text-[12px] text-base-content">Profile</span>
+        </button>
+        <button className="bg-base-200 text-base-200">
+          <div className="w-5 h-5 hover:cursor-pointer avatar-bg-img">
+            <img
+              src={userData?.avatarUrl}
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
+          <span className="text-base-content text-[12px]">Settings</span>
+        </button>
+      </div> */}
+      <AddFriendModal id="addFriendModalBottomNav" userData={userData} />
+      <EditProfileModal id="editProfileModalBottomNav" userData={userData} />
     </div>
   );
 }

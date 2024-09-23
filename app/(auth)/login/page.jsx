@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { account, ID } from "../../appwrite";
 
 /* firebase */
 import { auth, googleAuthProvider, firestore } from "@/lib/firebase/client";
@@ -30,6 +31,7 @@ import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 function Main() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -93,20 +95,36 @@ function Main() {
 
       if (data?.user === null) return;
 
-      /* 
-        set user status is optional, because it cost too much ! 
-      */
-      // const user = data?.user;
-      // setUserStatusOnline(user);
-
       router.push("/");
     }
   };
 
+  const handleAppwriteLogin = async (evt) => {
+    evt.preventDefault()
+    setLoading(true);
+
+    if (validateForm()) {
+      try {
+        await account.createEmailPasswordSession(email, password);
+        setLoggedInUser(account.get())
+        console.log(loggedInUser)
+        router.push("/")
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    console.log("Sign in with Google!");
+  };
+
+  // if (loggedInUser) router.push("/")
+
   return (
     <div className="flex flex-col justify-center items-center h-screen font-primary px-8">
       <form
-        onSubmit={handleLogin}
+        // onSubmit={() => handleAppwriteLogin(email, password)}
         className="space-y-4 w-full max-w-[600px] pt-10 pl-10 pr-10 form-padding"
       >
         {/* Title */}
@@ -149,7 +167,8 @@ function Main() {
         {/* Signin Button */}
         <div>
           <button
-            type="submit"
+            type="button"
+            onClick={() => handleAppwriteLogin(email, password)}
             className={`${
               loading ? "btn-disabled" : ""
             } btn btn-block btn-accent text-accent-content rounded-xl`}
@@ -175,7 +194,7 @@ function Main() {
         <div className="divider divider-base-300 text-base-content">OR</div>
         <button
           className="btn bg-info text-info-content w-full rounded-xl"
-          onClick={() => signIn()}
+          onClick={() => signInWithGoogle()}
         >
           <FcGoogle className="w-[20px] h-[20px]" />
           Sign in with Google

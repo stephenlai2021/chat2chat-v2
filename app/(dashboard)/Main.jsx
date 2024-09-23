@@ -3,30 +3,34 @@
 /* react */
 import { useEffect, useState } from "react";
 
+/* clerk */
+import { useAuth, useUser } from "@clerk/nextjs";
+
 /* firebase */
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
 
 /* supabase */
-import { createBrowserClient } from '@supabase/ssr'
+import { createBrowserClient } from "@supabase/ssr";
 import getUserSession from "@/lib/supabase/getUserSession";
 
 /* components */
 import ChatList from "@/components/main/ChatList";
 import ChatRoom from "../../components/chatroom/ChatRoom";
-import LoadingSkeleton from '@/components/skeleton/LoadingSkeleton'
+import LoadingSkeleton from "@/components/skeleton/LoadingSkeleton";
 
-// export default function Main({userData}) {
 export default function Main() {
-  // const [user, setUser] = useState({});
   const [userCred, setUserCred] = useState(null);
   const [userData, setUserData] = useState(null);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
-  
+
+  // const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const { isLoaded, isSignedIn, user } = useUser();
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
+  );
 
   // const getLoginUserData = async () => {
   //   const docRef = doc(firestore, "users", userCred.email);
@@ -40,29 +44,43 @@ export default function Main() {
   //   }
   // };
 
-  const getUserData = async () => {
-    const { data, error } = await supabase.auth.getUser()
-    if (error || !data?.user) console.log('Error getting userCred')
-    if (data) setUserCred(data?.user)
-  };
+  /* supabase */
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     const { data, error } = await supabase.auth.getUser();
+  //     if (error || !data?.user) console.log("Error getting userCred");
+  //     if (data) setUserCred(data?.user);
+  //   };
+  //   getUserData();
+  // }, []);
 
+  /* clerk */
   useEffect(() => {
-    getUserData();
-  }, []);
-  
-  useEffect(() => {
-    if (!userCred) return;
-    console.log("userCred: ", userCred);
+    if (!user) return;
 
     const unsubUser = onSnapshot(
-      doc(firestore, "users", userCred?.email),
+      doc(firestore, "users", user.emailAddresses[0].emailAddress),
       (doc) => {
         console.log("userData: ", doc.data());
         setUserData(doc.data());
       }
     );
     return () => unsubUser();
-  }, [userCred]);
+  }, [user]);
+
+  /* supabase */
+  // useEffect(() => {
+  //   if (userCred === null) return;
+
+  //   const unsubUser = onSnapshot(
+  //     doc(firestore, "users", userCred?.email),
+  //     (doc) => {
+  //       console.log("userData: ", doc.data());
+  //       setUserData(doc.data());
+  //     }
+  //   );
+  //   return () => unsubUser();
+  // }, [userCred]);
 
   if (userData) {
     return (
@@ -107,5 +125,5 @@ export default function Main() {
       </div>
     );
   }
-  return <LoadingSkeleton />
+  return <LoadingSkeleton />;
 }

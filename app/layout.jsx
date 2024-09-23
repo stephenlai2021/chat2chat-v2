@@ -2,7 +2,15 @@ import "./globals.css";
 
 /* next */
 import { Inter } from "next/font/google";
-// import { Lateef } from "next/font/google";
+
+/* clerk */
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 /* utils */
 import { Toaster } from "react-hot-toast";
@@ -11,7 +19,6 @@ import { Toaster } from "react-hot-toast";
 import DaisyUIThemeProvider from "@/providers/daisyui-theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
-// const inter = Lateef({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Chat2Chat",
@@ -30,15 +37,17 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className}`} suppressHydrationWarning>
-        <DaisyUIThemeProvider>
-          <div className="max-w-[1200px] mx-auto bg-base-200">
-            <Toaster position="bottom-center" />
-            {children}
-          </div>
-        </DaisyUIThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${inter.className}`} suppressHydrationWarning>
+          <DaisyUIThemeProvider>
+            <div className="max-w-[1200px] mx-auto bg-base-200">
+              <Toaster position="bottom-center" />
+              {children}
+            </div>
+          </DaisyUIThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -23,8 +23,7 @@ export default function Main() {
   const [userCred, setUserCred] = useState(null);
   const [userData, setUserData] = useState(null);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
-
-  // const { isLoaded, userId, sessionId, getToken } = useAuth();
+  
   const { isLoaded, isSignedIn, user } = useUser();
 
   const supabase = createBrowserClient(

@@ -16,6 +16,9 @@ import { languages } from "@/data/utils";
 /* next */
 import Image from "next/image";
 
+/* clerk */
+import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
+
 export default function Sidabar({ userData, logoutClick, logoutLoading }) {
   return (
     <div className="w-[64px] shadow-inner h-full flex flex-col items-center sidebar-hide pt-3">
@@ -123,13 +126,14 @@ export default function Sidabar({ userData, logoutClick, logoutLoading }) {
                   </li>
                   <div className="divider" />
                   <li>
-                    <div onClick={logoutClick}>
+                    {/* <div onClick={logoutClick}>
                       {logoutLoading ? (
                         <div className="loading loading-spinner loading-xs opacity-30 text-base-content flex justify-center ml-2" />
                       ) : (
                         "Logout"
                       )}
-                    </div>
+                    </div> */}
+                    <SignOutButton />
                   </li>
                 </ul>
               </li>

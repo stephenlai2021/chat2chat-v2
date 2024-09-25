@@ -13,6 +13,9 @@ import AddFriendModal from "../modal/AddFriendModal";
 import ThemeSwitcher from "../switcher/ThemeSwitcher";
 import EditProfileModal from "../modal/EditProfileModal";
 
+/* clerk */
+import { SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
+
 export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
   return (
     <div className="mt-auto hidden users-mobile">
@@ -101,13 +104,14 @@ export default function BottomNavbar({ userData, logoutClick, logoutLoading }) {
                       </li>
                       <div className="divider" />
                       <li>
-                        <div onClick={logoutClick}>
+                        {/* <div onClick={logoutClick}>
                           {logoutLoading ? (
                             <div className="loading loading-spinner loading-xs opacity-30 text-base-content flex justify-center ml-2" />
                           ) : (
                             "Logout"
                           )}
-                        </div>
+                        </div> */}
+                        <SignOutButton />
                       </li>
                     </ul>
                   </li>

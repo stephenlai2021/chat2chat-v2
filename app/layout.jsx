@@ -4,13 +4,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 
 /* clerk */
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 
 /* utils */
 import { Toaster } from "react-hot-toast";

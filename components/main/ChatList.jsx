@@ -32,6 +32,9 @@ import { IoIosSearch } from "react-icons/io";
 import { GoPlusCircle } from "react-icons/go";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
+/* lucide-react */
+import { UserPlusIcon } from "lucide-react";
+
 /* hooks */
 import useWindowSize from "@/hooks/useWindowSize";
 
@@ -257,14 +260,42 @@ function ChatList({ userData, setSelectedChatroom }) {
           {/* 
             經過 5 秒後停止加載圖標, 如果讀到的聊天室資料是空的, 印出 "您還沒有任何聊天室, 請加朋友聊天"
           */}
-          {userChatrooms.length === 0 && !chatListLoading && (
+          {userChatrooms.length === 0 && !chatListLoading && size.width < 800 && (
             <div className="mt-10 px-3 flex flex-col items-center justify-center">
-              <img
+              {/* <img
                 src="./begin_chat.svg"
                 alt=""
                 className="max-w-[100px] m-5"
-              />
+              /> */}
               {/* Add frined to begin chat ! */}
+              <svg
+                className="w-24 h-24 mb-4 text-muted-foreground"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="18" rx="2" ry="2" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+                <line x1="8" y1="16" x2="16" y2="16" />
+                <path d="M12 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+              </svg>
+              <h2 className="text-2xl font-semibold mb-2">No contacts found</h2>
+              <p className="text-muted-foreground mb-4 text-center">
+                Your contact list is empty. Add your first contact to get
+                started!
+              </p>
+              <button
+                className="btn"
+                onClick={() =>
+                  document.getElementById("addFriendModal").showModal()
+                }
+              >
+                <UserPlusIcon className="mr-2 h-4 w-4" />
+                Add New Contact
+              </button>
             </div>
           )}
         </div>

@@ -182,7 +182,7 @@ export default function Main() {
             <h1 className="tracking-widest font-secondary text-2xl text-center font-semibold text-base-content">
               CHAT<span className="font-bold text-[#eeab63ff]">2</span>CHAT
             </h1>
-            <p className="uppercase tracking-widest">Bringing people together, one message at a time</p>
+            <p className="uppercase tracking-widest text-center px-2">Bringing people together, one message at a time</p>
           </div>
         )}
       </div>

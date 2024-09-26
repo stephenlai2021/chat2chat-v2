@@ -185,7 +185,6 @@ export default function Main() {
             <p className="uppercase tracking-widest">Bringing people together, one message at a time</p>
           </div>
         )}
-        <AddFriendModal id="addFriendModalNavbar" userData={userData} />
       </div>
     );
   }

@@ -285,7 +285,7 @@ function ChatList({ userData, setSelectedChatroom }) {
               <button
                 className="btn"
                 onClick={() =>
-                  document.getElementById("addFriendModal").showModal()
+                  document.getElementById("addFriendModalChatList").showModal()
                 }
               >
                 <UserPlusIcon className="mr-2 h-4 w-4" />
@@ -302,8 +302,8 @@ function ChatList({ userData, setSelectedChatroom }) {
         />
       </main>
 
-      <CreateGroupModal id="createGroupModal" />
-      <AddFriendModal id="addFriendModalNavbar" userData={userData} />
+      <CreateGroupModal id="createGroupModalChatList" />
+      <AddFriendModal id="addFriendModalChatList" userData={userData} />
     </div>
   );
 }

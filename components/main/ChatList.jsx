@@ -260,16 +260,11 @@ function ChatList({ userData, setSelectedChatroom }) {
           {/* 
             經過 5 秒後停止加載圖標, 如果讀到的聊天室資料是空的, 印出 "您還沒有任何聊天室, 請加朋友聊天"
           */}
-          {userChatrooms.length === 0 && !chatListLoading && size.width < 800 && (
+          {/* {userChatrooms.length === 0 && !chatListLoading && size.width < 800 && ( */}
+          {userChatrooms.length === 0 && !chatListLoading && (
             <div className="mt-10 px-3 flex flex-col items-center justify-center">
-              {/* <img
-                src="./begin_chat.svg"
-                alt=""
-                className="max-w-[100px] m-5"
-              /> */}
-              {/* Add frined to begin chat ! */}
               <svg
-                className="w-24 h-24 mb-4 text-muted-foreground"
+                className="w-20 h-20 my-4 text-muted-foreground"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
